@@ -432,9 +432,14 @@
                     <div class="mt-8">
                         <h4 class="font-heading text-[20px] font-semibold md:text-[16px]">Follow Us</h4>
                         <div class="mt-4 flex gap-3">
-                            @foreach (['IG', 'WA', 'f', '▶'] as $social)
-                                <div class="flex h-11 w-11 items-center justify-center rounded-full border border-indigo/45 text-[14px] text-indigo">
-                                    {{ $social }}
+                            @foreach ([
+                                asset('landing/social/instagram-logo.png'),
+                                asset('landing/social/whatsapp-logo.png'),
+                                asset('landing/social/facebook-logo.png'),
+                                asset('landing/social/youtube-logo.png'),
+                            ] as $social)
+                                <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full">
+                                    <img src="{{ $social }}" alt="Social media" class="h-full w-full object-cover">
                                 </div>
                             @endforeach
                         </div>
@@ -511,9 +516,16 @@
                 <div class="md:pl-8 md:border-l md:border-white/15">
                     <p class="font-heading text-[18px] font-semibold text-white">We Accept</p>
                     <div class="mt-3 flex flex-wrap gap-2">
-                        @foreach (['VISA', 'Mastercard', 'BCA', 'gopay', 'OVO', 'DANA'] as $payment)
-                            <div class="rounded-md bg-white px-3 py-2 text-[13px] font-bold text-[#23304f] shadow-sm">
-                                {{ $payment }}
+                        @foreach ([
+                            asset('landing/payments/visa-logo.png'),
+                            asset('landing/payments/mastercard-logo.png'),
+                            asset('landing/payments/bca-logo.png'),
+                            asset('landing/payments/gopay-logo.png'),
+                            asset('landing/payments/ovo-logo.png'),
+                            asset('landing/payments/dana-logo.png'),
+                        ] as $payment)
+                            <div class="flex h-[42px] items-center justify-center rounded-md bg-white px-2 py-1 shadow-sm">
+                                <img src="{{ $payment }}" alt="Payment method" class="max-h-full w-auto object-contain">
                             </div>
                         @endforeach
                     </div>

@@ -37,25 +37,22 @@
     </style>
 </head>
 <body class="min-h-screen bg-white text-[#22263d]">
-    <main class="grid min-h-screen lg:grid-cols-[0.95fr_1.05fr]">
+    <main class="grid min-h-screen lg:grid-cols-2">
         <section class="relative hidden overflow-hidden lg:block">
-            <img src="{{ asset('landing/login-page-image.png') }}" alt="MatchPoint login stadium" class="absolute inset-0 h-full w-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-br from-[#211b5d]/60 via-[#6f61da]/18 to-[#9a8cff]/18"></div>
-            <div class="relative z-10 flex h-full items-center px-14">
+            <img src="{{ asset('landing/login-page-image.png') }}" alt="MatchPoint multi-sport login" class="absolute inset-0 h-full w-full object-cover object-center opacity-80">
+            <div class="absolute inset-0 bg-gradient-to-br from-[#120d41]/38 via-[#1f1769]/18 to-[#9a8cff]/14"></div>
+            <div class="relative z-10 flex h-full items-start px-14 pt-16">
                 <div class="max-w-[420px] text-white">
                     <div class="flex items-center gap-4">
                         <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="MatchPoint logo" class="h-16 w-16 object-contain">
                         <span class="font-heading text-[52px] font-bold tracking-tight">MatchPoint</span>
                     </div>
-                    <p class="mt-10 text-[28px] leading-[1.5] text-white/95">
-                        Book fields. Join matches. Play.
-                    </p>
                 </div>
             </div>
         </section>
 
         <section class="flex items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(138,118,255,0.14),_transparent_22%),linear-gradient(180deg,_#ffffff_0%,_#faf8ff_100%)] px-6 py-12 lg:px-12">
-            <div class="w-full max-w-[520px] rounded-[2rem] border border-softBorder bg-white p-7 shadow-auth md:p-10">
+            <div class="w-full max-w-[560px] rounded-[2rem] border border-softBorder bg-white p-7 shadow-auth md:p-10">
                 @if (session('status'))
                     <div class="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
                         {{ session('status') }}
@@ -124,7 +121,7 @@
                     </div>
 
                     <button type="button" class="flex w-full items-center justify-center gap-3 rounded-2xl border border-softBorder bg-white px-6 py-4 text-[20px] font-semibold text-[#4a4f68] shadow-sm transition hover:bg-softBg md:text-[17px]">
-                        <span class="text-[24px]">G</span>
+                        <img src="{{ asset('landing/social/google-logo.png') }}" alt="Google" class="h-6 w-6 object-contain">
                         <span>Continue with Google</span>
                     </button>
                 </form>
