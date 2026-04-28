@@ -12,6 +12,7 @@ class FieldSeeder extends Seeder
     public function run(): void
     {
         $james = User::where('email', 'james@matchpoint.test')->firstOrFail();
+        $budi = User::where('email', 'budi@matchpoint.test')->firstOrFail();
         $mutias = User::where('email', 'mutias@matchpoint.test')->firstOrFail();
 
         $fields = [
@@ -59,6 +60,15 @@ class FieldSeeder extends Seeder
                 'sport_type' => 'Tennis',
                 'price'      => 120000,
                 'slots'      => $this->eveningSlots(),
+            ],
+            [
+                'owner'      => $budi,
+                'name'       => 'Volly Arena Malang',
+                'location'   => 'Malang, East Java',
+                'type'       => 'Indoor',
+                'sport_type' => 'Volleyball',
+                'price'      => 180000,
+                'slots'      => $this->volleyballSlots(),
             ],
         ];
 
@@ -153,6 +163,24 @@ class FieldSeeder extends Seeder
 
         return $slots;
     }
-}
 
+    private function volleyballSlots(): array
+    {
+        $slots = [];
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        $times = [
+            ['09:00', '11:00'],
+            ['11:00', '13:00'],
+            ['15:00', '17:00'],
+        ];
+
+        foreach ($days as $day) {
+            foreach ($times as [$start, $end]) {
+                $slots[] = ['day' => $day, 'start' => $start, 'end' => $end];
+            }
+        }
+
+        return $slots;
+    }
+}
 

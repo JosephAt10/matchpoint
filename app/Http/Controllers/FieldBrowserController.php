@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Field;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class FieldBrowserController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|JsonResponse
     {
-        $query = Field::query()
+        $activeApprovedFields = Field::query()
             ->approved()
-            ->with(['owner', 'timeSlots'])
             ->whereHas('owner', fn ($ownerQuery) => $ownerQuery->where('status', 'Active'));
+
+        $query = (clone $activeApprovedFields)
+            ->with(['owner', 'timeSlots']);
 
         if ($request->filled('location')) {
             $query->byLocation($request->string('location')->toString());
@@ -27,11 +30,23 @@ class FieldBrowserController extends Controller
             $query->byType($request->string('type')->toString());
         }
 
+        $fields = $query->latest()->paginate(6)->withQueryString();
+
+        if ($request->boolean('load_more')) {
+            return response()->json([
+                'html' => view('fields.partials.cards', [
+                    'fields' => $fields,
+                ])->render(),
+                'hasMorePages' => $fields->hasMorePages(),
+                'nextPageUrl' => $fields->nextPageUrl(),
+            ]);
+        }
+
         return view('fields.index', [
-            'fields'    => $query->latest()->paginate(9)->withQueryString(),
+            'fields'    => $fields,
             'filters'   => $request->only(['location', 'sport_type', 'type']),
-            'sports'    => Field::approved()->distinct()->orderBy('sport_type')->pluck('sport_type'),
-            'locations' => Field::approved()->distinct()->orderBy('location')->pluck('location'),
+            'sports'    => (clone $activeApprovedFields)->distinct()->orderBy('sport_type')->pluck('sport_type'),
+            'locations' => (clone $activeApprovedFields)->distinct()->orderBy('location')->pluck('location'),
         ]);
     }
 }

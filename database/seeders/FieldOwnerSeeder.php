@@ -21,6 +21,11 @@ class FieldOwnerSeeder extends Seeder
                 'status' => 'Active',
             ],
             [
+                'name'   => 'Budi',
+                'email'  => 'budi@matchpoint.test',
+                'status' => 'Active',
+            ],
+            [
                 'name'   => 'Mutias',
                 'email'  => 'mutias@matchpoint.test',
                 'status' => 'Active',

@@ -39,20 +39,47 @@
 <body class="min-h-screen bg-white text-[#22263d]">
     <main class="grid min-h-screen lg:grid-cols-2">
         <section class="relative hidden overflow-hidden lg:block">
-            <img src="{{ asset('landing/login-page-image.png') }}" alt="MatchPoint multi-sport login" class="absolute inset-0 h-full w-full object-cover object-center opacity-80">
-            <div class="absolute inset-0 bg-gradient-to-br from-[#120d41]/38 via-[#1f1769]/18 to-[#9a8cff]/14"></div>
-            <div class="relative z-10 flex h-full items-start px-14 pt-16">
-                <div class="max-w-[420px] text-white">
-                    <div class="flex items-center gap-4">
-                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="MatchPoint logo" class="h-16 w-16 object-contain">
-                        <span class="font-heading text-[52px] font-bold tracking-tight">MatchPoint</span>
+            <img src="{{ asset('landing/login-page-image.png') }}" alt="MatchPoint multi-sport login" class="absolute inset-0 h-full w-full object-cover object-left opacity-42">
+            <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,7,40,0.88)_0%,rgba(19,16,70,0.76)_34%,rgba(44,35,111,0.52)_64%,rgba(95,77,190,0.26)_100%)]"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(145,118,255,0.18),transparent_34%),linear-gradient(180deg,rgba(8,7,40,0.18)_0%,rgba(8,7,40,0.46)_100%)]"></div>
+            <div class="relative z-10 flex h-full items-start px-14 pt-12">
+                <div class="max-w-[430px] text-white">
+                    <div class="flex items-center gap-3">
+                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="MatchPoint logo" class="h-12 w-12 object-contain">
+                        <span class="font-heading text-[32px] font-bold tracking-tight">MatchPoint</span>
+                    </div>
+                    <div class="mt-16 max-w-[280px]">
+                        <h2 class="font-heading text-[38px] font-bold leading-[1.08] tracking-tight">
+                            Every Game.<br>
+                            Every Player.<br>
+                            <span class="text-[#836dff]">One Platform.</span>
+                        </h2>
+                        <p class="mt-5 text-[16px] leading-8 text-white/88">
+                            Book any sport, any time.
+                            Play, compete, and connect
+                            with players near you.
+                        </p>
+                    </div>
+                    <div class="mt-20 grid max-w-[290px] grid-cols-3 gap-5 text-center">
+                        <div>
+                            <p class="font-heading text-[28px] font-bold text-[#8b78ff]">10K+</p>
+                            <p class="mt-1 text-[12px] text-white/78">Active Players</p>
+                        </div>
+                        <div>
+                            <p class="font-heading text-[28px] font-bold text-[#8b78ff]">500+</p>
+                            <p class="mt-1 text-[12px] text-white/78">Fields</p>
+                        </div>
+                        <div>
+                            <p class="font-heading text-[28px] font-bold text-[#8b78ff]">20+</p>
+                            <p class="mt-1 text-[12px] text-white/78">Sports</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="flex items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(138,118,255,0.14),_transparent_22%),linear-gradient(180deg,_#ffffff_0%,_#faf8ff_100%)] px-6 py-12 lg:px-12">
-            <div class="w-full max-w-[560px] rounded-[2rem] border border-softBorder bg-white p-7 shadow-auth md:p-10">
+        <section class="flex items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(138,118,255,0.14),_transparent_22%),linear-gradient(180deg,_#ffffff_0%,_#faf8ff_100%)] px-6 py-12 lg:px-10">
+            <div class="w-full max-w-[540px] rounded-[2rem] border border-softBorder bg-white p-7 shadow-auth md:p-10">
                 @if (session('status'))
                     <div class="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
                         {{ session('status') }}
@@ -71,7 +98,7 @@
 
                 <div class="text-center">
                     <h1 class="font-heading text-[48px] font-bold tracking-tight text-[#292d43] md:text-[52px]">Welcome Back</h1>
-                    <p class="mt-3 text-[20px] text-copy md:text-[18px]">Login to continue your match journey</p>
+                    <p class="mt-3 text-[20px] text-copy md:text-[18px]">Sign in to continue your match journey</p>
                 </div>
 
                 <form action="{{ route('login.store') }}" method="POST" class="mt-10 space-y-6">
@@ -111,7 +138,7 @@
                     </div>
 
                     <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-indigoDark to-indigo px-6 py-4 text-[22px] font-bold text-white transition hover:opacity-95 md:text-[18px]">
-                        Login
+                        Sign in
                     </button>
 
                     <div class="flex items-center gap-4">
