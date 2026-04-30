@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,6 +58,12 @@ class User extends Authenticatable implements FilamentUser
     public function fields(): HasMany
     {
         return $this->hasMany(Field::class, 'owner_id');
+    }
+
+    public function favoriteFields(): BelongsToMany
+    {
+        return $this->belongsToMany(Field::class, 'favorite_fields')
+            ->withTimestamps();
     }
 
     public function bookings(): HasMany

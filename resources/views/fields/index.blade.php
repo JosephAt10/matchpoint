@@ -1,5 +1,5 @@
 @php
-    $favoritesUrl = auth()->check() ? route('dashboard') : route('login');
+    $favoritesUrl = auth()->check() ? route('favorites.index') : route('login');
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -184,7 +184,7 @@
             </div>
 
             <div id="field-grid" class="grid gap-5 lg:grid-cols-3">
-                @include('fields.partials.cards', ['fields' => $fields])
+                @include('fields.partials.cards', ['fields' => $fields, 'favoriteIds' => $favoriteIds])
             </div>
 
             <div class="mt-8 flex justify-center">

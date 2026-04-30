@@ -20,11 +20,16 @@
     $defaultImage = asset('landing/football-stadium.jpg');
 @endphp
 
+@php
+    $favoriteIds = collect($favoriteIds ?? []);
+@endphp
+
 @forelse ($fields as $field)
     @php
         $image = $sportImages[$field->sport_type] ?? $defaultImage;
         $sportIcon = $sportIcons[$field->sport_type] ?? '🏟️';
         $ownerFirstName = str($field->owner->name)->before(' ');
+        $isFavorited = $favoriteIds->contains($field->id);
     @endphp
     <article class="overflow-hidden rounded-[1.9rem] border border-[#ebe6ff] bg-white shadow-card">
         <div class="relative h-[220px] overflow-hidden">
@@ -51,11 +56,23 @@
                     </div>
                 </div>
 
-                <button type="button" class="mt-2 text-[#7f7ca2] transition hover:text-indigoDeep" aria-label="Save venue">
-                    <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12.1 20.3l-.1.1-.11-.1C7.14 16.24 4 13.39 4 9.84 4 7.03 6.24 5 9.05 5c1.6 0 3.13.75 4.05 1.94A5.17 5.17 0 0117.15 5C19.96 5 22.2 7.03 22.2 9.84c0 3.55-3.14 6.4-8.99 10.46z"/>
-                    </svg>
-                </button>
+                @auth
+                    <form action="{{ route('fields.favorite.toggle', $field) }}" method="POST" class="mt-1">
+                        @csrf
+                        <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
+                        <button type="submit" class="mt-2 transition {{ $isFavorited ? 'text-[#6359eb]' : 'text-[#7f7ca2] hover:text-indigoDeep' }}" aria-label="{{ $isFavorited ? 'Remove from favorites' : 'Add to favorites' }}">
+                            <svg class="h-7 w-7" fill="{{ $isFavorited ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12.1 20.3l-.1.1-.11-.1C7.14 16.24 4 13.39 4 9.84 4 7.03 6.24 5 9.05 5c1.6 0 3.13.75 4.05 1.94A5.17 5.17 0 0117.15 5C19.96 5 22.2 7.03 22.2 9.84c0 3.55-3.14 6.4-8.99 10.46z"/>
+                            </svg>
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="mt-2 text-[#7f7ca2] transition hover:text-indigoDeep" aria-label="Sign in to save favorites">
+                        <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12.1 20.3l-.1.1-.11-.1C7.14 16.24 4 13.39 4 9.84 4 7.03 6.24 5 9.05 5c1.6 0 3.13.75 4.05 1.94A5.17 5.17 0 0117.15 5C19.96 5 22.2 7.03 22.2 9.84c0 3.55-3.14 6.4-8.99 10.46z"/>
+                        </svg>
+                    </a>
+                @endauth
             </div>
 
             <div class="mt-4 flex flex-wrap gap-3 text-[16px] text-[#656a90]">

@@ -31,11 +31,15 @@ class FieldBrowserController extends Controller
         }
 
         $fields = $query->latest()->paginate(6)->withQueryString();
+        $favoriteIds = $request->user()
+            ? $request->user()->favoriteFields()->pluck('fields.id')
+            : collect();
 
         if ($request->boolean('load_more')) {
             return response()->json([
                 'html' => view('fields.partials.cards', [
                     'fields' => $fields,
+                    'favoriteIds' => $favoriteIds,
                 ])->render(),
                 'hasMorePages' => $fields->hasMorePages(),
                 'nextPageUrl' => $fields->nextPageUrl(),
@@ -44,6 +48,7 @@ class FieldBrowserController extends Controller
 
         return view('fields.index', [
             'fields'    => $fields,
+            'favoriteIds' => $favoriteIds,
             'filters'   => $request->only(['location', 'sport_type', 'type']),
             'sports'    => (clone $activeApprovedFields)->distinct()->orderBy('sport_type')->pluck('sport_type'),
             'locations' => (clone $activeApprovedFields)->distinct()->orderBy('location')->pluck('location'),

@@ -42,7 +42,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-white text-[#22263d]">
-    <main class="grid min-h-screen lg:grid-cols-2">
+    <main class="grid min-h-screen lg:grid-cols-[0.4fr_0.6fr]">
         <section class="relative hidden overflow-hidden lg:block">
             <img src="{{ asset('landing/login-page-image.png') }}" alt="MatchPoint multi-sport register" class="absolute inset-0 h-full w-full object-cover object-left opacity-40">
             <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,7,40,0.88)_0%,rgba(19,16,70,0.76)_34%,rgba(44,35,111,0.52)_64%,rgba(95,77,190,0.26)_100%)]"></div>
@@ -86,8 +86,8 @@
             </div>
         </section>
 
-        <section class="flex items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(138,118,255,0.14),_transparent_22%),linear-gradient(180deg,_#ffffff_0%,_#faf8ff_100%)] px-5 py-8 lg:px-10">
-            <div class="w-full max-w-[640px] rounded-[2rem] border border-softBorder bg-white p-6 shadow-auth md:p-8">
+        <section class="flex items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(138,118,255,0.14),_transparent_22%),linear-gradient(180deg,_#ffffff_0%,_#faf8ff_100%)] px-5 py-8 lg:px-8">
+            <div class="w-full max-w-[760px] rounded-[2rem] border border-[#2f3253] bg-white p-6 shadow-auth md:p-8">
                 @if ($errors->any())
                     <div class="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
                         <ul class="space-y-1">
@@ -103,35 +103,43 @@
                     <p class="mt-2 text-[17px] text-copy">Join MatchPoint and start your game journey</p>
                 </div>
 
-                <div class="mt-7 grid grid-cols-4 gap-2 text-center">
-                    <div class="space-y-2">
-                        <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-indigo text-sm font-bold text-white">1</div>
-                        <p class="text-[12px] font-semibold text-indigo">Personal Info</p>
+                <div class="mt-7 flex items-start justify-between gap-2 text-center">
+                    <div class="flex min-w-0 flex-1 items-start">
+                        <div class="w-full space-y-2">
+                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#6d63ea] text-sm font-bold text-white shadow-[0_10px_18px_rgba(96,85,183,0.22)]">1</div>
+                            <p class="text-[12px] font-semibold text-[#6d63ea]">Personal Info</p>
+                        </div>
+                        <span class="mt-5 h-px flex-1 bg-[#e5e0fb]"></span>
                     </div>
-                    <div class="space-y-2">
-                        <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-full border border-softBorder bg-white text-sm font-bold text-[#9a97bb]">2</div>
-                        <p class="text-[12px] text-[#9a97bb]">Account Info</p>
+                    <div class="flex min-w-0 flex-1 items-start">
+                        <div class="w-full space-y-2">
+                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#cfc8f6] bg-white text-sm font-bold text-[#9a97bb]">2</div>
+                            <p class="text-[12px] text-[#9a97bb]">Account Info</p>
+                        </div>
+                        <span class="mt-5 h-px flex-1 bg-[#e5e0fb]"></span>
                     </div>
-                    <div class="space-y-2">
-                        <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-full border border-softBorder bg-white text-sm font-bold text-[#9a97bb]">3</div>
-                        <p class="text-[12px] text-[#9a97bb]">Preferences</p>
+                    <div class="flex min-w-0 flex-1 items-start">
+                        <div class="w-full space-y-2">
+                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#cfc8f6] bg-white text-sm font-bold text-[#9a97bb]">3</div>
+                            <p class="text-[12px] text-[#9a97bb]">Preferences</p>
+                        </div>
+                        <span class="mt-5 h-px flex-1 bg-[#e5e0fb]"></span>
                     </div>
-                    <div class="space-y-2">
-                        <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-full border border-softBorder bg-white text-sm font-bold text-[#9a97bb]">4</div>
+                    <div class="min-w-0 flex-1 space-y-2">
+                        <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#cfc8f6] bg-white text-sm font-bold text-[#9a97bb]">4</div>
                         <p class="text-[12px] text-[#9a97bb]">You're In!</p>
                     </div>
                 </div>
 
                 <form action="{{ route('register.store') }}" method="POST" class="mt-7 space-y-4">
                     @csrf
-                    <input type="hidden" name="role" value="User">
 
                     <label class="block">
                         <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
-                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Full Name" class="w-full border-0 p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Full Name" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
                         </div>
                     </label>
 
@@ -140,7 +148,22 @@
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8m-16 9h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2z"/>
                             </svg>
-                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email Address" class="w-full border-0 p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email Address" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                        </div>
+                    </label>
+
+                    <label class="block">
+                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4 text-[#5f6488]">
+                            <svg class="h-5 w-5 shrink-0 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 00-3-3.87"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75"/>
+                            </svg>
+                            <select name="role" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none" required>
+                                <option value="User" @selected(old('role', 'User') === 'User')>Register as User</option>
+                                <option value="FieldOwner" @selected(old('role') === 'FieldOwner')>Register as Field Owner</option>
+                            </select>
                         </div>
                     </label>
 
@@ -174,9 +197,9 @@
                         </div>
 
                         <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-                            <div class="rounded-2xl border-2 border-indigo bg-[#fbfaff] p-4 text-center shadow-sport">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#efebff] text-[22px]">⚽</div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#31355c]">Football / Futsal</p>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">⚽</div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">Football / Futsal</p>
                             </div>
                             <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
                                 <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">🏀</div>
@@ -207,7 +230,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>
                             </svg>
-                            <input type="password" name="password" placeholder="Create Password" class="w-full border-0 p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                            <input type="password" name="password" placeholder="Create Password" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -221,7 +244,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>
                             </svg>
-                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full border-0 p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                            <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -230,7 +253,7 @@
                     </label>
 
                     <div class="rounded-2xl border border-[#e5e0fb] bg-[#f6f3ff] px-4 py-3">
-                        <p class="text-[12px] font-semibold text-indigo">Password must contain:</p>
+                        <p class="text-[12px] font-semibold text-[#6d63ea]">Password must contain:</p>
                         <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#6a6f92]">
                             <span class="flex items-center gap-1.5"><span class="text-green-600">●</span> At least 8 characters</span>
                             <span class="flex items-center gap-1.5"><span class="text-green-600">●</span> One uppercase letter</span>
@@ -239,13 +262,18 @@
                     </div>
 
                     <label class="flex items-start gap-3 pt-1 text-[14px] text-[#5f6488]">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-softBorder text-indigo focus:ring-indigo">
-                        <span>I agree to the <a href="{{ route('terms') }}" class="font-semibold text-indigo hover:text-indigoDark">Terms &amp; Conditions</a> and <a href="{{ route('privacy') }}" class="font-semibold text-indigo hover:text-indigoDark">Privacy Policy</a></span>
+                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-[#e8e3fb] text-[#6d63ea] focus:ring-[#6d63ea]">
+                        <span>I agree to the <a href="{{ route('terms') }}" class="font-semibold text-[#6d63ea] hover:text-[#5747d8]">Terms &amp; Conditions</a> and <a href="{{ route('privacy') }}" class="font-semibold text-[#6d63ea] hover:text-[#5747d8]">Privacy Policy</a></span>
                     </label>
 
-                    <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-indigoDark to-indigo px-6 py-4 text-[18px] font-bold text-white transition hover:opacity-95">
-                        Continue
+                    <button type="submit" class="flex w-full items-center justify-center gap-3 rounded-2xl bg-[linear-gradient(90deg,#5747d8_0%,#6d63ea_100%)] px-6 py-4 text-[18px] font-bold text-white shadow-[0_18px_34px_rgba(99,89,237,0.24)] transition hover:opacity-95">
+                        <span>Create Account</span>
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/>
+                        </svg>
                     </button>
+
+                    <div class="pt-1"></div>
 
                     <div class="flex items-center gap-4">
                         <div class="h-px flex-1 bg-softBorder"></div>
@@ -253,7 +281,7 @@
                         <div class="h-px flex-1 bg-softBorder"></div>
                     </div>
 
-                    <button type="button" class="flex w-full items-center justify-center gap-3 rounded-2xl border border-softBorder bg-white px-6 py-4 text-[16px] font-semibold text-[#4a4f68] shadow-sm transition hover:bg-softBg">
+                    <button type="button" class="flex w-full items-center justify-center gap-3 rounded-2xl border border-[#e8e3fb] bg-white px-6 py-4 text-[16px] font-semibold text-[#4a4f68] shadow-sm transition hover:bg-[#f8f7ff]">
                         <img src="{{ asset('landing/social/google-logo.png') }}" alt="Google" class="h-6 w-6 object-contain">
                         <span>Sign up with Google</span>
                     </button>
@@ -261,7 +289,7 @@
 
                 <p class="mt-6 text-center text-[15px] text-copy">
                     Already have an account?
-                    <a href="{{ route('login') }}" class="font-semibold text-indigo hover:text-indigoDark">Login here</a>
+                    <a href="{{ route('login') }}" class="font-semibold text-[#6d63ea] hover:text-[#5747d8]">Login here</a>
                 </p>
             </div>
         </section>

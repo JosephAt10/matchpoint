@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FavoriteFieldController;
 use App\Http\Controllers\FieldBrowserController;
 use App\Http\Controllers\FieldOwnerApprovalController;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +27,8 @@ Route::get('/fields', [FieldBrowserController::class, 'index'])->name('fields.in
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/favorites', [FavoriteFieldController::class, 'index'])->name('favorites.index');
+    Route::post('/fields/{field}/favorite', [FavoriteFieldController::class, 'toggle'])->name('fields.favorite.toggle');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -59,14 +59,10 @@ class AuthController extends Controller
         $data = $request->validate([
             'name'                  => ['required', 'string', 'max:100'],
             'email'                 => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
+            'role'                  => ['required', Rule::in(['User', 'FieldOwner'])],
             'password'              => ['required', 'confirmed', 'min:8'],
         ]);
-
-        $role = $request->input('role', 'User');
-
-        if (! in_array($role, ['User', 'FieldOwner'], true)) {
-            $role = 'User';
-        }
+        $role = $data['role'];
 
         $user = User::create([
             'name'     => $data['name'],
