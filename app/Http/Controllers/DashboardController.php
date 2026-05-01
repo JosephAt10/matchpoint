@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Field;
+use App\Models\Notification;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -19,10 +21,24 @@ class DashboardController extends Controller
                     'users'          => User::count(),
                     'pendingOwners'  => User::where('role', 'FieldOwner')->where('status', 'PendingApproval')->count(),
                     'approvedFields' => Field::where('is_approved', true)->count(),
+                    'pendingPayments' => Payment::forBookings()->pending()->whereNotNull('proof')->count(),
                 ],
                 'pendingOwners' => User::where('role', 'FieldOwner')
                     ->where('status', 'PendingApproval')
                     ->latest()
+                    ->get(),
+                'pendingPayments' => Payment::query()
+                    ->forBookings()
+                    ->pending()
+                    ->whereNotNull('proof')
+                    ->with(['booking.user', 'booking.field', 'booking.bookedSlots.timeSlot', 'payer'])
+                    ->latest()
+                    ->get(),
+                'notifications' => Notification::query()
+                    ->forUser($user->id)
+                    ->unread()
+                    ->latest()
+                    ->take(6)
                     ->get(),
             ]);
         }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
@@ -96,7 +97,11 @@ class Booking extends Model
      */
     public function downPaymentAmount(): float
     {
-        return round($this->field->price_per_slot * 0.5, 2);
+        $slotCount = $this->relationLoaded('bookedSlots')
+            ? $this->bookedSlots->count()
+            : $this->bookedSlots()->count();
+
+        return round($this->field->price_per_slot * max(1, $slotCount) * 0.5, 2);
     }
 
     // ── Relationships ─────────────────────────────────────────────────────────
@@ -119,6 +124,11 @@ class Booking extends Model
     public function bookedSlot(): HasOne
     {
         return $this->hasOne(BookedSlot::class);
+    }
+
+    public function bookedSlots(): HasMany
+    {
+        return $this->hasMany(BookedSlot::class);
     }
 
     public function payment(): HasOne

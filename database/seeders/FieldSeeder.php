@@ -23,7 +23,7 @@ class FieldSeeder extends Seeder
                 'type'       => 'Indoor',
                 'sport_type' => 'Futsal',
                 'price'      => 150000,
-                'slots'      => $this->standardSlots(),
+                'slots'      => $this->operatingHourSlots('00:00'),
             ],
             [
                 'owner'      => $james,
@@ -32,7 +32,7 @@ class FieldSeeder extends Seeder
                 'type'       => 'Outdoor',
                 'sport_type' => 'Badminton',
                 'price'      => 80000,
-                'slots'      => $this->weekendSlots(),
+                'slots'      => $this->operatingHourSlots('00:00'),
             ],
             [
                 'owner'      => $james,
@@ -41,7 +41,7 @@ class FieldSeeder extends Seeder
                 'type'       => 'Outdoor',
                 'sport_type' => 'Football',
                 'price'      => 250000,
-                'slots'      => $this->standardSlots(),
+                'slots'      => $this->operatingHourSlots('20:00'),
             ],
             [
                 'owner'      => $mutias,
@@ -50,7 +50,7 @@ class FieldSeeder extends Seeder
                 'type'       => 'Outdoor',
                 'sport_type' => 'Basketball',
                 'price'      => 200000,
-                'slots'      => $this->standardSlots(),
+                'slots'      => $this->operatingHourSlots('00:00'),
             ],
             [
                 'owner'      => $mutias,
@@ -59,7 +59,7 @@ class FieldSeeder extends Seeder
                 'type'       => 'Indoor',
                 'sport_type' => 'Tennis',
                 'price'      => 120000,
-                'slots'      => $this->eveningSlots(),
+                'slots'      => $this->operatingHourSlots('00:00'),
             ],
             [
                 'owner'      => $budi,
@@ -68,7 +68,7 @@ class FieldSeeder extends Seeder
                 'type'       => 'Indoor',
                 'sport_type' => 'Volleyball',
                 'price'      => 180000,
-                'slots'      => $this->volleyballSlots(),
+                'slots'      => $this->operatingHourSlots('00:00'),
             ],
         ];
 
@@ -87,95 +87,33 @@ class FieldSeeder extends Seeder
                 ]
             );
 
+            $field->timeSlots()->delete();
+
             foreach ($data['slots'] as $slot) {
-                TimeSlot::updateOrCreate(
-                    [
-                        'field_id'    => $field->id,
-                        'day_of_week' => $slot['day'],
-                        'start_time'  => $slot['start'],
-                    ],
-                    [
-                        'end_time'          => $slot['end'],
-                        'is_available_base' => true,
-                    ]
-                );
+                TimeSlot::create([
+                    'field_id'           => $field->id,
+                    'day_of_week'        => $slot['day'],
+                    'start_time'         => $slot['start'],
+                    'end_time'           => $slot['end'],
+                    'is_available_base'  => true,
+                ]);
             }
 
             $this->command->info("Field seeded: {$field->name} with " . count($data['slots']) . ' slots');
         }
     }
 
-    private function standardSlots(): array
-    {
-        $slots = [];
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        $times = [
-            ['08:00', '10:00'],
-            ['10:00', '12:00'],
-            ['14:00', '16:00'],
-            ['16:00', '18:00'],
-        ];
-
-        foreach ($days as $day) {
-            foreach ($times as [$start, $end]) {
-                $slots[] = ['day' => $day, 'start' => $start, 'end' => $end];
-            }
-        }
-
-        return $slots;
-    }
-
-    private function weekendSlots(): array
-    {
-        $slots = [];
-        $days = ['Saturday', 'Sunday'];
-        $times = [
-            ['07:00', '09:00'],
-            ['09:00', '11:00'],
-            ['13:00', '15:00'],
-            ['15:00', '17:00'],
-            ['17:00', '19:00'],
-        ];
-
-        foreach ($days as $day) {
-            foreach ($times as [$start, $end]) {
-                $slots[] = ['day' => $day, 'start' => $start, 'end' => $end];
-            }
-        }
-
-        return $slots;
-    }
-
-    private function eveningSlots(): array
+    private function operatingHourSlots(string $closingTime): array
     {
         $slots = [];
         $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        $times = [
-            ['18:00', '20:00'],
-            ['20:00', '22:00'],
-        ];
+        $closingHour = $closingTime === '00:00' ? 24 : (int) substr($closingTime, 0, 2);
 
         foreach ($days as $day) {
-            foreach ($times as [$start, $end]) {
-                $slots[] = ['day' => $day, 'start' => $start, 'end' => $end];
-            }
-        }
+            for ($hour = 8; $hour < $closingHour; $hour++) {
+                $start = sprintf('%02d:00', $hour);
+                $end = $hour + 1 === 24 ? '00:00' : sprintf('%02d:00', $hour + 1);
 
-        return $slots;
-    }
-
-    private function volleyballSlots(): array
-    {
-        $slots = [];
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        $times = [
-            ['09:00', '11:00'],
-            ['11:00', '13:00'],
-            ['15:00', '17:00'],
-        ];
-
-        foreach ($days as $day) {
-            foreach ($times as [$start, $end]) {
                 $slots[] = ['day' => $day, 'start' => $start, 'end' => $end];
             }
         }
@@ -183,4 +121,3 @@ class FieldSeeder extends Seeder
         return $slots;
     }
 }
-
