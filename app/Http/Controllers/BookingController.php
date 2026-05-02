@@ -15,11 +15,34 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
+    public function confirm(Request $request, Field $field): View
+    {
+        abort_unless(
+            $field->is_approved && $field->owner()->where('status', 'Active')->exists(),
+            404,
+        );
+
+        [$bookingDate, $slotIds] = $this->validatedBookingSelection($request);
+        $slots = $this->resolveSlots($field, $bookingDate, $slotIds);
+
+        return view('bookings.confirm', [
+            'field' => $field->load('owner'),
+            'bookingDate' => $bookingDate,
+            'slotIds' => $slotIds->all(),
+            'slotRange' => $this->slotRangeFromTimeSlots($slots),
+            'slotCount' => $slots->count(),
+            'totalPrice' => (float) $field->price_per_slot * $slots->count(),
+            'downPaymentAmount' => round((float) $field->price_per_slot * $slots->count() * 0.5, 2),
+        ]);
+    }
+
     public function store(Request $request, Field $field): RedirectResponse
     {
         abort_unless(
@@ -27,72 +50,16 @@ class BookingController extends Controller
             404,
         );
 
+        [$bookingDate, $slotIds] = $this->validatedBookingSelection($request);
         $validated = $request->validate([
-            'date' => ['required', 'date', 'after_or_equal:tomorrow'],
-            'slot_ids' => ['required', 'array', 'min:1'],
-            'slot_ids.*' => ['integer', 'distinct', 'exists:time_slots,id'],
-        ], [
-            'date.after_or_equal' => 'Please choose a booking date from tomorrow onward.',
+            'proof' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],
         ]);
 
-        $bookingDate = Carbon::parse($validated['date'])->startOfDay();
-        $selectedDay = $bookingDate->format('l');
-        $slotIds = collect($validated['slot_ids'])->map(fn ($id) => (int) $id)->sort()->values();
+        $path = $validated['proof']->store('payment-proofs', 'public');
 
         try {
-            $booking = DB::transaction(function () use ($field, $bookingDate, $selectedDay, $slotIds, $request): Booking {
-                $slots = TimeSlot::query()
-                    ->where('field_id', $field->id)
-                    ->where('day_of_week', $selectedDay)
-                    ->whereIn('id', $slotIds)
-                    ->orderBy('start_time')
-                    ->lockForUpdate()
-                    ->get();
-
-                if ($slots->count() !== $slotIds->count()) {
-                    throw ValidationException::withMessages([
-                        'slot_ids' => 'One or more selected slots are not valid for this field and date.',
-                    ]);
-                }
-
-                if ($slots->contains(fn (TimeSlot $slot) => ! $slot->is_available_base)) {
-                    throw ValidationException::withMessages([
-                        'slot_ids' => 'One or more selected slots are not currently offered by this field.',
-                    ]);
-                }
-
-                $orderedDaySlots = TimeSlot::query()
-                    ->where('field_id', $field->id)
-                    ->where('day_of_week', $selectedDay)
-                    ->orderBy('start_time')
-                    ->pluck('id')
-                    ->values();
-
-                $selectedPositions = $slots
-                    ->map(fn (TimeSlot $slot) => $orderedDaySlots->search($slot->id))
-                    ->sort()
-                    ->values();
-
-                $isContinuous = $selectedPositions->every(
-                    fn ($position, $index) => $index === 0 || $position === $selectedPositions[$index - 1] + 1
-                );
-
-                if (! $isContinuous) {
-                    throw ValidationException::withMessages([
-                        'slot_ids' => 'Please select continuous time slots for one booking.',
-                    ]);
-                }
-
-                $alreadyBooked = BookedSlot::query()
-                    ->whereDate('date', $bookingDate)
-                    ->whereIn('timeslot_id', $slots->pluck('id'))
-                    ->exists();
-
-                if ($alreadyBooked) {
-                    throw ValidationException::withMessages([
-                        'slot_ids' => 'One or more selected slots were just booked. Please choose another time.',
-                    ]);
-                }
+            $booking = DB::transaction(function () use ($field, $bookingDate, $slotIds, $request, $path): Booking {
+                $slots = $this->resolveSlots($field, $bookingDate, $slotIds, true);
 
                 $booking = Booking::create([
                     'user_id' => $request->user()->id,
@@ -117,16 +84,39 @@ class BookingController extends Controller
                     'date' => $bookingDate->toDateString(),
                 ]);
 
+                $payment = Payment::create([
+                    'booking_id' => $booking->id,
+                    'type' => 'BookingDP',
+                    'payer_id' => $request->user()->id,
+                    'amount' => $booking->downPaymentAmount(),
+                    'proof' => $path,
+                    'status' => 'Pending',
+                    'rejection_reason' => null,
+                ]);
+
+                AuditLog::record('payment.proof_uploaded', $booking, [
+                    'proof' => $path,
+                    'amount' => $booking->downPaymentAmount(),
+                ]);
+
+                $this->notifyBookingPaymentUploaded($request->user()->name, $booking, $payment);
+
                 return $booking;
             });
-        } catch (QueryException $exception) {
+        } catch (ValidationException|QueryException $exception) {
+            Storage::disk('public')->delete($path);
+
+            if ($exception instanceof ValidationException) {
+                throw $exception;
+            }
+
             throw ValidationException::withMessages([
                 'slot_ids' => 'One or more selected slots were just booked. Please choose another time.',
             ]);
         }
 
         return redirect()->route('bookings.show', $booking)
-            ->with('status', 'Booking created. Please upload your down payment proof before the deadline.');
+            ->with('status', 'Booking created and payment proof uploaded. Please wait for verification.');
     }
 
     public function show(Booking $booking): View
@@ -147,11 +137,21 @@ class BookingController extends Controller
 
         abort_unless($booking->isPending(), 403);
 
+        if ($booking->payment?->proof && ! $booking->payment->isRejected()) {
+            return redirect()->route('bookings.show', $booking)
+                ->with('status', 'Payment proof has already been uploaded and is waiting for review.');
+        }
+
         $validated = $request->validate([
             'proof' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],
         ]);
 
         $booking->load(['field', 'bookedSlots']);
+
+        if ($booking->payment?->proof) {
+            Storage::disk('public')->delete($booking->payment->proof);
+        }
+
         $path = $validated['proof']->store('payment-proofs', 'public');
 
         $payment = Payment::updateOrCreate(
@@ -173,6 +173,14 @@ class BookingController extends Controller
             'amount' => $booking->downPaymentAmount(),
         ]);
 
+        $this->notifyBookingPaymentUploaded($request->user()->name, $booking, $payment);
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('status', 'Payment proof uploaded. Please wait for verification.');
+    }
+
+    private function notifyBookingPaymentUploaded(string $payerName, Booking $booking, Payment $payment): void
+    {
         $recipients = User::query()
             ->where('role', 'Admin')
             ->where('status', 'Active')
@@ -183,16 +191,13 @@ class BookingController extends Controller
         foreach ($recipients as $recipient) {
             Notification::create([
                 'user_id' => $recipient->id,
-                'message' => "{$request->user()->name} uploaded booking payment proof for {$booking->field->name}.",
+                'message' => "{$payerName} uploaded booking payment proof for {$booking->field->name}.",
                 'type' => 'Payment',
                 'status' => 'Unread',
                 'notifiable_type' => Payment::class,
                 'notifiable_id' => $payment->id,
             ]);
         }
-
-        return redirect()->route('bookings.show', $booking)
-            ->with('status', 'Payment proof uploaded. Please wait for verification.');
     }
 
     private function authorizeBookingOwner(Booking $booking): void
@@ -200,14 +205,98 @@ class BookingController extends Controller
         abort_unless($booking->user_id === auth()->id(), 403);
     }
 
-    private function slotRange(Booking $booking): string
+    private function validatedBookingSelection(Request $request): array
     {
-        $slots = $booking->bookedSlots
-            ->pluck('timeSlot')
-            ->filter()
-            ->sortBy('start_time')
+        $validated = $request->validate([
+            'date' => ['required', 'date', 'after_or_equal:tomorrow'],
+            'slot_ids' => ['required', 'array', 'min:1'],
+            'slot_ids.*' => ['integer', 'distinct', 'exists:time_slots,id'],
+        ], [
+            'date.after_or_equal' => 'Please choose a booking date from tomorrow onward.',
+        ]);
+
+        $bookingDate = Carbon::parse($validated['date'])->startOfDay();
+        $slotIds = collect($validated['slot_ids'])->map(fn ($id) => (int) $id)->sort()->values();
+
+        return [$bookingDate, $slotIds];
+    }
+
+    private function resolveSlots(Field $field, Carbon $bookingDate, Collection $slotIds, bool $lockForUpdate = false): Collection
+    {
+        $selectedDay = $bookingDate->format('l');
+        $query = TimeSlot::query()
+            ->where('field_id', $field->id)
+            ->where('day_of_week', $selectedDay)
+            ->whereIn('id', $slotIds)
+            ->orderBy('start_time');
+
+        if ($lockForUpdate) {
+            $query->lockForUpdate();
+        }
+
+        $slots = $query->get();
+
+        if ($slots->count() !== $slotIds->count()) {
+            throw ValidationException::withMessages([
+                'slot_ids' => 'One or more selected slots are not valid for this field and date.',
+            ]);
+        }
+
+        if ($slots->contains(fn (TimeSlot $slot) => ! $slot->is_available_base)) {
+            throw ValidationException::withMessages([
+                'slot_ids' => 'One or more selected slots are not currently offered by this field.',
+            ]);
+        }
+
+        $orderedDaySlots = TimeSlot::query()
+            ->where('field_id', $field->id)
+            ->where('day_of_week', $selectedDay)
+            ->orderBy('start_time')
+            ->pluck('id')
             ->values();
 
+        $selectedPositions = $slots
+            ->map(fn (TimeSlot $slot) => $orderedDaySlots->search($slot->id))
+            ->sort()
+            ->values();
+
+        $isContinuous = $selectedPositions->every(
+            fn ($position, $index) => $index === 0 || $position === $selectedPositions[$index - 1] + 1
+        );
+
+        if (! $isContinuous) {
+            throw ValidationException::withMessages([
+                'slot_ids' => 'Please select continuous time slots for one booking.',
+            ]);
+        }
+
+        $alreadyBooked = BookedSlot::query()
+            ->whereDate('date', $bookingDate)
+            ->whereIn('timeslot_id', $slots->pluck('id'))
+            ->exists();
+
+        if ($alreadyBooked) {
+            throw ValidationException::withMessages([
+                'slot_ids' => 'One or more selected slots were just booked. Please choose another time.',
+            ]);
+        }
+
+        return $slots;
+    }
+
+    private function slotRange(Booking $booking): string
+    {
+        return $this->slotRangeFromTimeSlots(
+            $booking->bookedSlots
+                ->pluck('timeSlot')
+                ->filter()
+                ->sortBy('start_time')
+                ->values()
+        );
+    }
+
+    private function slotRangeFromTimeSlots(Collection $slots): string
+    {
         if ($slots->isEmpty()) {
             return 'No slots';
         }

@@ -300,8 +300,7 @@
                     </div>
 
                     @auth
-                        <form id="booking-form" method="POST" action="{{ route('bookings.store', $field) }}" class="mt-4">
-                            @csrf
+                        <form id="booking-form" method="GET" action="{{ route('bookings.confirm', $field) }}" class="mt-4">
                             <input type="hidden" name="date" value="{{ $selectedDate->toDateString() }}">
                             <div id="selected-slot-inputs"></div>
                             <button id="book-now-button" type="submit" {{ $selectedSlot ? '' : 'disabled' }} class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#5a38d6] px-6 py-4 text-[17px] font-bold text-white shadow-[0_14px_28px_rgba(84,66,217,0.26)] transition hover:bg-[#4c2fbd] disabled:cursor-not-allowed disabled:opacity-50">
@@ -316,12 +315,16 @@
                             <svg class="h-4 w-4 text-[#5a38d6]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             </svg>
-                            You won't be charged yet
+                            Review your booking and upload proof next
                         </p>
                     @else
-                        <a href="{{ route('login') }}" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[#5a38d6] px-6 py-4 text-[17px] font-bold text-white shadow-[0_14px_28px_rgba(84,66,217,0.26)] transition hover:bg-[#4c2fbd]">
-                            Book Now
-                        </a>
+                        <form id="booking-form-guest" method="GET" action="{{ route('bookings.confirm', $field) }}" class="mt-4">
+                            <input type="hidden" name="date" value="{{ $selectedDate->toDateString() }}">
+                            <div id="selected-slot-inputs-guest"></div>
+                            <button id="book-now-button-guest" type="submit" {{ $selectedSlot ? '' : 'disabled' }} class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#5a38d6] px-6 py-4 text-[17px] font-bold text-white shadow-[0_14px_28px_rgba(84,66,217,0.26)] transition hover:bg-[#4c2fbd] disabled:cursor-not-allowed disabled:opacity-50">
+                                Book Now
+                            </button>
+                        </form>
                         <p class="mt-4 text-center text-[13px] font-medium text-copy">Sign in to continue booking.</p>
                     @endauth
                 </div>
@@ -367,6 +370,8 @@
         const selectedPriceLabel = document.getElementById('selected-price-label');
         const bookNowButton = document.getElementById('book-now-button');
         const selectedSlotInputs = document.getElementById('selected-slot-inputs');
+        const bookNowButtonGuest = document.getElementById('book-now-button-guest');
+        const selectedSlotInputsGuest = document.getElementById('selected-slot-inputs-guest');
         const slotPrice = @json($slotPrice);
         const datePickerTrigger = document.getElementById('date-picker-trigger');
         const bookingDateInput = document.getElementById('booking-date-input');
@@ -421,8 +426,14 @@
                 if (bookNowButton instanceof HTMLButtonElement) {
                     bookNowButton.disabled = true;
                 }
+                if (bookNowButtonGuest instanceof HTMLButtonElement) {
+                    bookNowButtonGuest.disabled = true;
+                }
                 if (selectedSlotInputs) {
                     selectedSlotInputs.innerHTML = '';
+                }
+                if (selectedSlotInputsGuest) {
+                    selectedSlotInputsGuest.innerHTML = '';
                 }
                 return;
             }
@@ -443,10 +454,18 @@
             if (bookNowButton instanceof HTMLButtonElement) {
                 bookNowButton.disabled = false;
             }
+            if (bookNowButtonGuest instanceof HTMLButtonElement) {
+                bookNowButtonGuest.disabled = false;
+            }
+            const slotInputsHtml = slots
+                .map((slotButton) => `<input type="hidden" name="slot_ids[]" value="${slotButton.dataset.slotId}">`)
+                .join('');
+
             if (selectedSlotInputs) {
-                selectedSlotInputs.innerHTML = slots
-                    .map((slotButton) => `<input type="hidden" name="slot_ids[]" value="${slotButton.dataset.slotId}">`)
-                    .join('');
+                selectedSlotInputs.innerHTML = slotInputsHtml;
+            }
+            if (selectedSlotInputsGuest) {
+                selectedSlotInputsGuest.innerHTML = slotInputsHtml;
             }
         };
 

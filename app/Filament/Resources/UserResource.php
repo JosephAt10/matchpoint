@@ -31,6 +31,11 @@ class UserResource extends Resource
         return $schema;
     }
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -106,6 +111,10 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
+        if (! static::canViewAny()) {
+            return null;
+        }
+
         $pendingCount = User::query()
             ->where('role', 'FieldOwner')
             ->where('status', 'PendingApproval')

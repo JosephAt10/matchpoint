@@ -46,6 +46,10 @@ class AuthController extends Controller
             return redirect()->intended(url('/admin'));
         }
 
+        if ($request->user()->isFieldOwner()) {
+            return redirect()->intended(url('/owner'));
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
