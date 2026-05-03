@@ -21,7 +21,9 @@ class EnsureUserIsActive
         $request->session()->regenerateToken();
 
         return redirect()->route('login')->withErrors([
-            'email' => 'Your account is not active yet. Please contact the admin if you think this is a mistake.',
+            'email' => $user->isRejected()
+                ? 'Your field owner account request was rejected. Please contact the admin if you think this is a mistake.'
+                : 'Your account is not active yet. Please contact the admin if you think this is a mistake.',
         ]);
     }
 }

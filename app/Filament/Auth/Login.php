@@ -12,6 +12,6 @@ class Login extends \Filament\Auth\Pages\Login
             return;
         }
 
-        redirect()->route('login');
+        $this->redirect(route('login'), navigate: false);
     }
 }

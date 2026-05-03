@@ -211,7 +211,7 @@ class BookingResource extends Resource
             return null;
         }
 
-        $reviewer = auth()->user()?->isFieldOwner() ? 'your' : 'admin';
+        $reviewer = auth()->user()?->isFieldOwner() ? 'your' : 'field owner';
 
         return "{$pendingCount} booking proof" . ($pendingCount === '1' ? '' : 's') . " waiting for {$reviewer} review.";
     }
@@ -301,14 +301,6 @@ class BookingResource extends Resource
     {
         $user = auth()->user();
 
-        if (! $user) {
-            return false;
-        }
-
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        return $user->isFieldOwner() && $booking->field?->owner_id === $user->id;
+        return $user?->isFieldOwner() && $booking->field?->owner_id === $user->id;
     }
 }

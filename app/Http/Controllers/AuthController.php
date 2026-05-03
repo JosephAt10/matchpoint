@@ -33,12 +33,16 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         if (! $request->user()->isActive()) {
+            $user = $request->user();
+
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return to_route('login')->withErrors([
-                'email' => 'Your account is not active yet. Please wait for admin approval.',
+                'email' => $user->isRejected()
+                    ? 'Your field owner account request was rejected. Please contact the admin if you need more information.'
+                    : 'Your account is not active yet. Please wait for admin approval.',
             ]);
         }
 

@@ -21,6 +21,7 @@ class Field extends Model
         'price_per_slot',
         'is_approved',
         'description',
+        'image_path',
     ];
 
     protected function casts(): array

@@ -20,7 +20,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     request()->session()->invalidate();
                     request()->session()->regenerateToken();
 
-                    $this->redirect(route('login'), navigate: true);
+                    $this->redirect(route('login'), navigate: false);
                 }),
         ];
     }

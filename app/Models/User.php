@@ -44,6 +44,7 @@ class User extends Authenticatable implements FilamentUser
     public function isUser(): bool         { return $this->role === 'User'; }
     public function isActive(): bool       { return $this->status === 'Active'; }
     public function isPendingApproval(): bool { return $this->status === 'PendingApproval'; }
+    public function isRejected(): bool     { return $this->status === 'Rejected'; }
     public function isDeactivated(): bool  { return $this->status === 'Deactivated'; }
 
     public function canAccessPanel(Panel $panel): bool

@@ -122,10 +122,18 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>
                             </svg>
                             <input id="password" type="password" name="password" placeholder="Password" class="w-full border-0 p-0 text-[19px] text-[#363b55] outline-none placeholder:text-[#9d98ba] md:text-[16px]" required>
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
+                            <button type="button" id="toggle-password" class="text-[#9994b9] transition hover:text-[#6d63ea]" aria-label="Show password" aria-pressed="false">
+                                <svg id="password-eye-open" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg id="password-eye-closed" class="hidden h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.58 10.58A2 2 0 0012 14a2 2 0 001.42-.58"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.88 5.09A9.77 9.77 0 0112 5c7 0 11 7 11 7a21.76 21.76 0 01-5.17 5.94"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.1 6.1A21.8 21.8 0 001 12s4 7 11 7a10.7 10.7 0 005.04-1.24"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
@@ -160,5 +168,23 @@
             </div>
         </section>
     </main>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePasswordButton = document.getElementById('toggle-password');
+        const eyeOpenIcon = document.getElementById('password-eye-open');
+        const eyeClosedIcon = document.getElementById('password-eye-closed');
+
+        if (passwordInput && togglePasswordButton && eyeOpenIcon && eyeClosedIcon) {
+            togglePasswordButton.addEventListener('click', () => {
+                const isHidden = passwordInput.type === 'password';
+
+                passwordInput.type = isHidden ? 'text' : 'password';
+                togglePasswordButton.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                togglePasswordButton.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+                eyeOpenIcon.classList.toggle('hidden', isHidden);
+                eyeClosedIcon.classList.toggle('hidden', ! isHidden);
+            });
+        }
+    </script>
 </body>
 </html>

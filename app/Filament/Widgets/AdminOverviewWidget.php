@@ -71,7 +71,7 @@ class AdminOverviewWidget extends BaseWidget
                     'tableFilters[status][value]' => 'PendingApproval',
                 ])),
             Stat::make('Pending Booking Proofs', (string) $pendingBookings)
-                ->description($pendingBookings > 0 ? 'Admins and field owners have been notified' : 'No booking proofs are waiting for review')
+                ->description($pendingBookings > 0 ? 'Monitor proofs waiting for field owner review' : 'No booking proofs are waiting for field owner review')
                 ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
                 ->color($pendingBookings > 0 ? 'warning' : 'success')
                 ->url(BookingResource::getUrl('index', [
@@ -83,13 +83,13 @@ class AdminOverviewWidget extends BaseWidget
 
     protected function getHeading(): ?string
     {
-        return auth()->user()?->isFieldOwner() ? 'Field Owner Review Queue' : 'Admin Review Queue';
+        return auth()->user()?->isFieldOwner() ? 'Field Owner Review Queue' : 'Admin Booking Overview';
     }
 
     protected function getDescription(): ?string
     {
         return auth()->user()?->isFieldOwner()
             ? 'Review booking proofs for your own fields from here.'
-            : 'New booking proofs notify admins and field owners in-app. Use these shortcuts to review the pending items quickly.';
+            : 'View booking activity across the platform while field owners handle proof review for their own fields.';
     }
 }

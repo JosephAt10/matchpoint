@@ -57,7 +57,7 @@ class UserResource extends Resource
                     ->colors([
                         'success' => 'Active',
                         'warning' => 'PendingApproval',
-                        'danger' => 'Deactivated',
+                        'danger' => ['Rejected', 'Deactivated'],
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d M Y, H:i')
@@ -74,6 +74,7 @@ class UserResource extends Resource
                     ->options([
                         'Active' => 'Active',
                         'PendingApproval' => 'Pending Approval',
+                        'Rejected' => 'Rejected',
                         'Deactivated' => 'Deactivated',
                     ]),
             ])
@@ -86,6 +87,15 @@ class UserResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (User $record): void {
                         $record->update(['status' => 'Active']);
+                    }),
+                Action::make('reject')
+                    ->label('Reject')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->visible(fn (User $record): bool => $record->role === 'FieldOwner' && $record->status === 'PendingApproval')
+                    ->requiresConfirmation()
+                    ->action(function (User $record): void {
+                        $record->update(['status' => 'Rejected']);
                     }),
                 Action::make('deactivate')
                     ->label('Deactivate')
@@ -100,7 +110,7 @@ class UserResource extends Resource
                     ->label('Reactivate')
                     ->icon('heroicon-o-arrow-path')
                     ->color('info')
-                    ->visible(fn (User $record): bool => $record->status === 'Deactivated')
+                    ->visible(fn (User $record): bool => in_array($record->status, ['Rejected', 'Deactivated'], true))
                     ->requiresConfirmation()
                     ->action(function (User $record): void {
                         $record->update(['status' => 'Active']);
