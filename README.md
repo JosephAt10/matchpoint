@@ -132,10 +132,10 @@ Visit `http://localhost:8000`
 | Role | Email | Password |
 |---|---|---|
 | Admin | admin@matchpoint.test | Admin@123456 |
-| Field Owner | budi@matchpoint.test | Owner@123456 |
-| Field Owner | siti@matchpoint.test | Owner@123456 |
-| User | joseph@matchpoint.test | User@123456 |
-| User | ahmad@matchpoint.test | User@123456 |
+| Field Owner | mutias@matchpoint.test | Owner@123456 |
+| Field Owner | james@matchpoint.test | Owner@123456 |
+| User | gabby@matchpoint.test | User@123456 |
+| User | budi@matchpoint.test | User@123456 |
 
 ---
 
@@ -245,8 +245,8 @@ This project is currently in active development as part of PBL II.
 | Phase | Description | Status |
 |---|---|---|
 | Phase 1 | Foundation — migrations, models, seeders, auth | 🟡 In progress |
-| Phase 2 | Core booking — search, book field, payments, scheduler | ⬜ Not started |
-| Phase 3 | Match & admin — public matches, Filament admin panel | ⬜ Not started |
+| Phase 2 | Core booking — search, book field, payments, scheduler | 🟡 In progress |
+| Phase 3 | Match & admin — public matches, Filament admin panel | 🟡 In progress |
 | Phase 4 | Polish — notifications, audit logs, testing, UI | ⬜ Not started |
 
 ---
