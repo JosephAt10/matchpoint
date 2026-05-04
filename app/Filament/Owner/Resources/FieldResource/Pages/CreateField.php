@@ -13,6 +13,7 @@ class CreateField extends CreateRecord
     {
         $data['owner_id'] = auth()->id();
         $data['is_approved'] = false;
+        $data['rejected_at'] = null;
 
         return $data;
     }

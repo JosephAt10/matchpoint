@@ -118,14 +118,6 @@
             ],
         ];
 
-        $fieldCards = [
-            ['name' => 'Football Stadium', 'image' => asset('landing/football-stadium.jpg')],
-            ['name' => 'Basketball Court', 'image' => asset('landing/basketball-court.jpg')],
-            ['name' => 'Tennis Court', 'image' => asset('landing/tennis-court.png')],
-            ['name' => 'Badminton Court', 'image' => asset('landing/badminton-court.png')],
-            ['name' => 'Futsal Court', 'image' => asset('landing/futsal-court.png')],
-            ['name' => 'Volleyball Court', 'image' => asset('landing/volleyball-court.png')],
-        ];
     @endphp
 
     <header class="bg-white">
@@ -382,12 +374,12 @@
             </div>
 
             <div class="mt-5 grid gap-x-5 gap-y-7 md:grid-cols-2 xl:grid-cols-3">
-                @foreach ($fieldCards as $field)
+                @foreach ($fields as $field)
                     <article>
                         <div class="overflow-hidden bg-white shadow-soft">
-                            <img src="{{ $field['image'] }}" alt="{{ $field['name'] }}" class="h-[210px] w-full object-cover md:h-[240px]">
+                            <img src="{{ $field->image_url ?? asset('landing/football-stadium.jpg') }}" alt="{{ $field->name }}" class="h-[210px] w-full object-cover md:h-[240px]">
                         </div>
-                        <p class="mt-3 text-center font-heading text-[18px] font-bold text-[#273452]">{{ $field['name'] }}</p>
+                        <p class="mt-3 text-center font-heading text-[18px] font-bold text-[#273452]">{{ $field->name }}</p>
                         <div class="mt-3 h-px w-full bg-[#bfc6ee]"></div>
                     </article>
                 @endforeach

@@ -9,6 +9,14 @@ class EditField extends EditRecord
 {
     protected static string $resource = FieldResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['is_approved'] = false;
+        $data['rejected_at'] = null;
+
+        return $data;
+    }
+
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

@@ -183,7 +183,7 @@
                 </a>
             </div>
 
-            <div id="field-grid" class="grid gap-5 lg:grid-cols-3">
+            <div id="field-grid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 @include('fields.partials.cards', ['fields' => $fields, 'favoriteIds' => $favoriteIds])
             </div>
 

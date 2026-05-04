@@ -1,13 +1,4 @@
 @php
-    $sportImages = [
-        'Futsal' => asset('landing/futsal-court.png'),
-        'Badminton' => asset('landing/badminton-court.png'),
-        'Football' => asset('landing/football-stadium.jpg'),
-        'Basketball' => asset('landing/basketball-court.jpg'),
-        'Tennis' => asset('landing/tennis-court.png'),
-        'Volleyball' => asset('landing/volleyball-court.png'),
-    ];
-
     $sportIcons = [
         'Futsal' => '⚽',
         'Badminton' => '🏸',
@@ -26,7 +17,7 @@
 
 @forelse ($fields as $field)
     @php
-        $image = $sportImages[$field->sport_type] ?? $defaultImage;
+        $image = $field->image_url ?? $defaultImage;
         $sportIcon = $sportIcons[$field->sport_type] ?? '🏟️';
         $ownerFirstName = str($field->owner->name)->before(' ');
         $isFavorited = $favoriteIds->contains($field->id);

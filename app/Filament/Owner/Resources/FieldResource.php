@@ -110,7 +110,8 @@ class FieldResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image_path')
                     ->label('Image')
-                    ->disk('public')
+                    ->getStateUsing(fn (Field $record): ?string => $record->image_url ? url($record->image_url) : null)
+                    ->checkFileExistence(false)
                     ->square(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -123,12 +124,12 @@ class FieldResource extends Resource
                     ->color(fn (string $state): string => $state === 'Outdoor' ? 'success' : 'info'),
                 Tables\Columns\TextColumn::make('location')
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('is_approved')
+                Tables\Columns\BadgeColumn::make('approval_status')
                     ->label('Approval')
-                    ->formatStateUsing(fn (bool $state): string => $state ? 'Approved' : 'Pending')
                     ->colors([
-                        'success' => true,
-                        'warning' => false,
+                        'success' => 'Approved',
+                        'warning' => 'Pending',
+                        'danger' => 'Rejected',
                     ]),
                 Tables\Columns\TextColumn::make('time_slots_count')
                     ->label('Time Slots'),

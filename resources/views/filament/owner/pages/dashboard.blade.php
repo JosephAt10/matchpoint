@@ -156,8 +156,8 @@
                                             <p class="owner-field-card__meta">{{ $field['location'] }}</p>
                                         </div>
 
-                                        <span class="owner-field-card__approval owner-field-card__approval--{{ $field['approved'] ? 'approved' : 'pending' }}">
-                                            {{ $field['approved'] ? 'Approved' : 'Pending' }}
+                                        <span class="owner-field-card__approval owner-field-card__approval--{{ $field['approved'] ? 'approved' : ($field['approval_status'] === 'Rejected' ? 'pending' : 'pending') }}">
+                                            {{ $field['approval_status'] }}
                                         </span>
                                     </div>
 

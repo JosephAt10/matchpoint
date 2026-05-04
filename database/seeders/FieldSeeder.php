@@ -84,6 +84,7 @@ class FieldSeeder extends Seeder
                     'sport_type'     => $data['sport_type'],
                     'price_per_slot' => $data['price'],
                     'is_approved'    => true,
+                    'rejected_at'    => null,
                 ]
             );
 

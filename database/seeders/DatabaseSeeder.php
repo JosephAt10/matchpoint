@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             FieldOwnerSeeder::class,
             UserSeeder::class,
             FieldSeeder::class,
+            FieldImageSeeder::class,
         ]);
     }
 }

@@ -31,7 +31,11 @@ class FieldBrowserController extends Controller
             $query->byType($request->string('type')->toString());
         }
 
-        $fields = $query->latest()->paginate(6)->withQueryString();
+        $fields = $query
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->paginate(6)
+            ->withQueryString();
         $favoriteIds = $request->user()
             ? $request->user()->favoriteFields()->pluck('fields.id')
             : collect();

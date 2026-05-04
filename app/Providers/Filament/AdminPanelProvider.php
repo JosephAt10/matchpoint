@@ -7,6 +7,7 @@ use App\Filament\Pages\Dashboard;
 use App\Filament\Resources\AppNotificationResource;
 use App\Filament\Resources\AuditLogResource;
 use App\Filament\Resources\BookingResource;
+use App\Filament\Resources\FieldResource;
 use App\Filament\Resources\UserResource;
 use App\Filament\Widgets\AdminOverviewWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -37,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->resources([
                 UserResource::class,
+                FieldResource::class,
                 BookingResource::class,
                 AppNotificationResource::class,
                 AuditLogResource::class,

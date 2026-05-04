@@ -6,6 +6,7 @@ use App\Filament\Owner\Resources\TimeSlotResource\Pages;
 use App\Models\Field;
 use App\Models\TimeSlot;
 use Filament\Actions\Action;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -18,6 +19,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class TimeSlotResource extends Resource
 {
+    protected const DAYS = [
+        'Monday' => 'Monday',
+        'Tuesday' => 'Tuesday',
+        'Wednesday' => 'Wednesday',
+        'Thursday' => 'Thursday',
+        'Friday' => 'Friday',
+        'Saturday' => 'Saturday',
+        'Sunday' => 'Sunday',
+    ];
+
     protected static ?string $model = TimeSlot::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clock';
@@ -44,24 +55,38 @@ class TimeSlotResource extends Resource
                     ->searchable()
                     ->required()
                     ->native(false),
+                CheckboxList::make('days_of_week')
+                    ->label('Days')
+                    ->options(static::DAYS)
+                    ->columns(4)
+                    ->visibleOn('create')
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->helperText('Select every day that should receive the generated one-hour slots.'),
                 Select::make('day_of_week')
-                    ->options([
-                        'Monday' => 'Monday',
-                        'Tuesday' => 'Tuesday',
-                        'Wednesday' => 'Wednesday',
-                        'Thursday' => 'Thursday',
-                        'Friday' => 'Friday',
-                        'Saturday' => 'Saturday',
-                        'Sunday' => 'Sunday',
-                    ])
-                    ->required()
+                    ->options(static::DAYS)
+                    ->visibleOn('edit')
+                    ->required(fn (string $operation): bool => $operation === 'edit')
                     ->native(false),
+                TextInput::make('opening_time')
+                    ->label('Opening Time')
+                    ->type('time')
+                    ->visibleOn('create')
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->helperText('Example: 08:00'),
+                TextInput::make('closing_time')
+                    ->label('Closing Time')
+                    ->type('time')
+                    ->visibleOn('create')
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->helperText('Example: 00:00 for midnight'),
                 TextInput::make('start_time')
                     ->type('time')
-                    ->required(),
+                    ->visibleOn('edit')
+                    ->required(fn (string $operation): bool => $operation === 'edit'),
                 TextInput::make('end_time')
                     ->type('time')
-                    ->required(),
+                    ->visibleOn('edit')
+                    ->required(fn (string $operation): bool => $operation === 'edit'),
                 Toggle::make('is_available_base')
                     ->label('Available by default')
                     ->default(true),

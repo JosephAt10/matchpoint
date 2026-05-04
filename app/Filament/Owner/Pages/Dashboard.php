@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Facades\Storage;
 
 class Dashboard extends Page
 {
@@ -140,10 +139,11 @@ class Dashboard extends Page
                     'type' => $field->type,
                     'price' => 'Rp ' . number_format((float) $field->price_per_slot, 0, ',', '.') . ' / slot',
                     'approved' => $field->is_approved,
+                    'approval_status' => $field->approval_status,
                     'time_slots' => $totalSlots,
                     'weekly_booked_slots' => $weeklyBookedSlots,
                     'occupancy_rate' => $occupancyRate,
-                    'image_url' => $field->image_path ? Storage::disk('public')->url($field->image_path) : null,
+                    'image_url' => $field->image_url,
                     'surface_style' => $this->getFieldSurfaceStyle($field),
                     'accent_style' => $this->getFieldAccentStyle($field),
                     'bookings_url' => BookingResource::getUrl('index'),
@@ -162,8 +162,8 @@ class Dashboard extends Page
                     'tableFilters[payment_status][value]' => 'Pending',
                 ]),
             ] : null,
-            $fields->where('is_approved', false)->count() > 0 ? [
-                'title' => $fields->where('is_approved', false)->count() . ' field pending admin approval',
+            $fields->filter(fn (Field $field): bool => $field->isPendingApproval())->count() > 0 ? [
+                'title' => $fields->filter(fn (Field $field): bool => $field->isPendingApproval())->count() . ' field pending admin approval',
                 'subtitle' => 'Waiting to be visible to players.',
                 'tone' => 'blue',
                 'icon' => 'info',

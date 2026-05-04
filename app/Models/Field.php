@@ -20,6 +20,7 @@ class Field extends Model
         'sport_type',
         'price_per_slot',
         'is_approved',
+        'rejected_at',
         'description',
         'image_path',
     ];
@@ -30,6 +31,7 @@ class Field extends Model
             'type'           => 'string',
             'price_per_slot' => 'decimal:2',
             'is_approved'    => 'boolean',
+            'rejected_at'    => 'datetime',
         ];
     }
 
@@ -66,6 +68,38 @@ class Field extends Model
     public function isIndoor(): bool
     {
         return $this->type === 'Indoor';
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (blank($this->image_path)) {
+            return null;
+        }
+
+        return '/storage/' . ltrim($this->image_path, '/');
+    }
+
+    public function getApprovalStatusAttribute(): string
+    {
+        if ($this->is_approved) {
+            return 'Approved';
+        }
+
+        if ($this->rejected_at) {
+            return 'Rejected';
+        }
+
+        return 'Pending';
+    }
+
+    public function isRejected(): bool
+    {
+        return filled($this->rejected_at) && ! $this->is_approved;
+    }
+
+    public function isPendingApproval(): bool
+    {
+        return ! $this->is_approved && ! $this->isRejected();
     }
 
     // ── Relationships ─────────────────────────────────────────────────────────

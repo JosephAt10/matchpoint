@@ -5,15 +5,7 @@
     $selectedSlotLabel = $selectedSlot['label'] ?? 'No available slots';
     $slotPrice = (float) $field->price_per_slot;
     $minBookingDate = now()->addDay()->toDateString();
-    $imageMap = [
-        'Futsal' => asset('landing/futsal-court.png'),
-        'Badminton' => asset('landing/badminton-court.png'),
-        'Football' => asset('landing/football-stadium.jpg'),
-        'Basketball' => asset('landing/basketball-court.jpg'),
-        'Tennis' => asset('landing/tennis-court.png'),
-        'Volleyball' => asset('landing/volleyball-court.png'),
-    ];
-    $image = $imageMap[$field->sport_type] ?? asset('landing/football-stadium.jpg');
+    $image = $field->image_url ?? asset('landing/football-stadium.jpg');
     $displayDate = $selectedDate->format('M j, Y');
     $slotGroups = collect($allTimeSlots ?? [])->groupBy('day_of_week');
     $availableDays = $slotGroups->keys()->join(', ');
