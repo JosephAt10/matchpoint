@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -202,7 +203,7 @@ class BookingController extends Controller
 
     private function authorizeBookingOwner(Booking $booking): void
     {
-        abort_unless($booking->user_id === auth()->id(), 403);
+        abort_unless($booking->user_id === Auth::id(), 403);
     }
 
     private function validatedBookingSelection(Request $request): array

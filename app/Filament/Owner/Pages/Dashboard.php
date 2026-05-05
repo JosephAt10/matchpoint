@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends Page
 {
@@ -41,7 +42,7 @@ class Dashboard extends Page
 
     protected function getViewData(): array
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $today = Carbon::today();
         $startOfWeek = $today->copy()->startOfWeek(Carbon::MONDAY);
         $endOfWeek = $today->copy()->endOfWeek(Carbon::SUNDAY);
