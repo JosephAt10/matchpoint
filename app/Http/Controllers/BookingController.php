@@ -112,12 +112,12 @@ class BookingController extends Controller
             }
 
             throw ValidationException::withMessages([
-                'slot_ids' => 'One or more selected slots were just booked. Please choose another time.',
+                'slot_ids' => __('One or more selected slots were just booked. Please choose another time.'),
             ]);
         }
 
         return redirect()->route('bookings.show', $booking)
-            ->with('status', 'Booking created and payment proof uploaded. Please wait for verification.');
+            ->with('status', __('Booking created and payment proof uploaded. Please wait for verification.'));
     }
 
     public function show(Booking $booking): View
@@ -140,7 +140,7 @@ class BookingController extends Controller
 
         if ($booking->payment?->proof && ! $booking->payment->isRejected()) {
             return redirect()->route('bookings.show', $booking)
-                ->with('status', 'Payment proof has already been uploaded and is waiting for review.');
+                ->with('status', __('Payment proof has already been uploaded and is waiting for review.'));
         }
 
         $validated = $request->validate([
@@ -177,7 +177,7 @@ class BookingController extends Controller
         $this->notifyBookingPaymentUploaded($request->user()->name, $booking, $payment);
 
         return redirect()->route('bookings.show', $booking)
-            ->with('status', 'Payment proof uploaded. Please wait for verification.');
+            ->with('status', __('Payment proof uploaded. Please wait for verification.'));
     }
 
     private function notifyBookingPaymentUploaded(string $payerName, Booking $booking, Payment $payment): void
@@ -192,7 +192,7 @@ class BookingController extends Controller
         foreach ($recipients as $recipient) {
             Notification::create([
                 'user_id' => $recipient->id,
-                'message' => "{$payerName} uploaded booking payment proof for {$booking->field->name}.",
+                'message' => __(':payer uploaded booking payment proof for :field.', ['payer' => $payerName, 'field' => $booking->field->name]),
                 'type' => 'Payment',
                 'status' => 'Unread',
                 'notifiable_type' => Payment::class,
@@ -213,7 +213,7 @@ class BookingController extends Controller
             'slot_ids' => ['required', 'array', 'min:1'],
             'slot_ids.*' => ['integer', 'distinct', 'exists:time_slots,id'],
         ], [
-            'date.after_or_equal' => 'Please choose a booking date from tomorrow onward.',
+            'date.after_or_equal' => __('Please choose a booking date from tomorrow onward.'),
         ]);
 
         $bookingDate = Carbon::parse($validated['date'])->startOfDay();
@@ -239,13 +239,13 @@ class BookingController extends Controller
 
         if ($slots->count() !== $slotIds->count()) {
             throw ValidationException::withMessages([
-                'slot_ids' => 'One or more selected slots are not valid for this field and date.',
+                'slot_ids' => __('One or more selected slots are not valid for this field and date.'),
             ]);
         }
 
         if ($slots->contains(fn (TimeSlot $slot) => ! $slot->is_available_base)) {
             throw ValidationException::withMessages([
-                'slot_ids' => 'One or more selected slots are not currently offered by this field.',
+                'slot_ids' => __('One or more selected slots are not currently offered by this field.'),
             ]);
         }
 
@@ -267,7 +267,7 @@ class BookingController extends Controller
 
         if (! $isContinuous) {
             throw ValidationException::withMessages([
-                'slot_ids' => 'Please select continuous time slots for one booking.',
+                'slot_ids' => __('Please select continuous time slots for one booking.'),
             ]);
         }
 
@@ -278,7 +278,7 @@ class BookingController extends Controller
 
         if ($alreadyBooked) {
             throw ValidationException::withMessages([
-                'slot_ids' => 'One or more selected slots were just booked. Please choose another time.',
+                'slot_ids' => __('One or more selected slots were just booked. Please choose another time.'),
             ]);
         }
 
@@ -299,9 +299,10 @@ class BookingController extends Controller
     private function slotRangeFromTimeSlots(Collection $slots): string
     {
         if ($slots->isEmpty()) {
-            return 'No slots';
+            return __('No available slots');
         }
 
         return substr($slots->first()->start_time, 0, 5) . ' - ' . substr($slots->last()->end_time, 0, 5);
     }
 }
+

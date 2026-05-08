@@ -8,10 +8,6 @@
     $iconSvg = function (string $name): \Illuminate\Support\HtmlString {
         $icons = [
             'bell' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M15 17H5l1.2-1.6A4 4 0 007 13V10a5 5 0 1110 0v3c0 .9.3 1.8.8 2.6L19 17h-4"/><path d="M10 18a2 2 0 004 0"/></svg>',
-            'home' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/></svg>',
-            'calendar' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
-            'heart' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12.1 20.3l-.1.1-.11-.1C7.14 16.24 4 13.39 4 9.84 4 7.03 6.24 5 9.05 5c1.6 0 3.13.75 4.05 1.94A5.17 5.17 0 0117.15 5C19.96 5 22.2 7.03 22.2 9.84c0 3.55-3.14 6.4-8.99 10.46z"/></svg>',
-            'wallet' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7.5A2.5 2.5 0 016.5 5h10A2.5 2.5 0 0119 7.5V9H6.5A2.5 2.5 0 004 11.5v5A2.5 2.5 0 006.5 19H18a2 2 0 002-2v-5.5A2.5 2.5 0 0017.5 9H6.5A2.5 2.5 0 014 6.5z"/><path d="M16 14h4"/></svg>',
             'user' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M16 8a4 4 0 11-8 0 4 4 0 018 0z"/><path d="M5 20a7 7 0 0114 0"/></svg>',
             'chevron-down' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M7 10l5 5 5-5"/></svg>',
             'clock' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.5l3 2"/></svg>',
@@ -21,11 +17,11 @@
     };
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications - MatchPoint</title>
+    <title>{{ __('Notifications') }} - MatchPoint</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
@@ -42,10 +38,11 @@
 <body class="min-h-screen bg-page text-ink">
     <header class="border-b border-line bg-white">
         <div class="flex items-center justify-between px-8 py-5 lg:px-12">
-            <a href="{{ route('home') }}" class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">MATCHPOINT</a>
+            <a href="{{ route('home') }}" class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">{{ __('MATCHPOINT') }}</a>
             <nav class="flex items-center gap-6 text-[16px] font-medium text-[#52617f]">
-                <a href="{{ route('fields.index') }}" class="transition hover:text-indigoSoft">Browse Fields</a>
-                <a href="{{ route('dashboard') }}" class="transition hover:text-indigoSoft">Dashboard</a>
+                <a href="{{ route('fields.index') }}" class="transition hover:text-indigoSoft">{{ __('Browse Fields') }}</a>
+                <a href="{{ route('dashboard') }}" class="transition hover:text-indigoSoft">{{ __('Dashboard') }}</a>
+                @include('partials.locale-switcher')
                 <a href="{{ route('notifications.index') }}" class="relative text-indigoSoft">
                     {!! $iconSvg('bell') !!}
                 </a>
@@ -60,9 +57,9 @@
 
     <main class="px-8 py-8 lg:px-12">
         <section class="rounded-[28px] border border-line bg-white p-6 shadow-panel">
-            <p class="text-[14px] font-semibold uppercase tracking-[0.24em] text-[#4f46e5]">Notifications</p>
-            <h1 class="mt-3 font-heading text-[42px] font-bold text-ink">Recent updates for your account</h1>
-            <p class="mt-3 max-w-[720px] text-[18px] leading-8 text-copy">Payment reviews, booking reminders, and account updates are shown here from your database notifications.</p>
+            <p class="text-[14px] font-semibold uppercase tracking-[0.24em] text-[#4f46e5]">{{ __('Notifications') }}</p>
+            <h1 class="mt-3 font-heading text-[42px] font-bold text-ink">{{ __('Recent updates for your account') }}</h1>
+            <p class="mt-3 max-w-[720px] text-[18px] leading-8 text-copy">{{ __('Payment reviews, booking reminders, and account updates are shown here from your database notifications.') }}</p>
         </section>
 
         <section class="mt-6 space-y-4">
@@ -73,8 +70,8 @@
                     </span>
                     <div class="min-w-0 flex-1">
                         <div class="flex flex-wrap items-center gap-3">
-                            <h2 class="font-heading text-[24px] font-bold text-ink">{{ $notification['type'] }}</h2>
-                            <span class="rounded-full bg-[#f4f6fb] px-3 py-1 text-[13px] font-semibold text-[#60708f]">{{ $notification['status'] }}</span>
+                            <h2 class="font-heading text-[24px] font-bold text-ink">{{ __($notification['type']) }}</h2>
+                            <span class="rounded-full bg-[#f4f6fb] px-3 py-1 text-[13px] font-semibold text-[#60708f]">{{ __($notification['status']) }}</span>
                         </div>
                         <p class="mt-3 text-[17px] leading-8 text-[#43506c]">{{ $notification['message'] }}</p>
                     </div>
@@ -84,7 +81,7 @@
                     </div>
                 </article>
             @empty
-                <div class="rounded-[28px] border border-dashed border-line bg-white px-6 py-10 text-center text-[18px] text-copy shadow-panel">No notifications yet.</div>
+                <div class="rounded-[28px] border border-dashed border-line bg-white px-6 py-10 text-center text-[18px] text-copy shadow-panel">{{ __('No notifications yet.') }}</div>
             @endforelse
         </section>
     </main>

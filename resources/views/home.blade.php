@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatchPoint — Field & Public Match Booking</title>
+    <title>{{ __('MatchPoint') }} — {{ __('Field & Public Match Booking') }}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,10 +72,10 @@
 <body class="min-h-screen text-[#1f2740]">
     @php
         $heroMatch = [
-            'title' => 'Friendly Match',
-            'date' => 'Saturday, April 18',
+            'title' => __('Friendly Match'),
+            'date' => __('Saturday, April 18'),
             'time' => '3:30 WIB',
-            'location' => 'Kanjuruhan Stadium Malang',
+            'location' => __('Kanjuruhan Stadium Malang'),
             'slots' => '5/10',
             'home' => 'Gumbal FC',
             'away' => 'Ssunesia FC',
@@ -83,36 +83,36 @@
 
         $matchCards = [
             [
-                'sport' => 'Football',
+                'sport' => __('Football'),
                 'home' => 'Gumbal FC',
                 'away' => 'Ssunesia FC',
-                'date' => 'Saturday, April 18',
+                'date' => __('Saturday, April 18'),
                 'time' => '7:30 WIB',
-                'location' => 'Kanjuruhan Stadium Malang',
-                'button' => 'Join Match',
+                'location' => __('Kanjuruhan Stadium Malang'),
+                'button' => __('Join Match'),
                 'homeLogo' => asset('landing/football-team-2.png'),
                 'awayLogo' => asset('landing/football-team-1.png'),
                 'centerIcon' => asset('landing/friendly-matche.png'),
             ],
             [
-                'sport' => 'Basketball',
+                'sport' => __('Basketball'),
                 'home' => 'Jieng',
                 'away' => 'Duor',
-                'date' => 'Sunday, April 19',
+                'date' => __('Sunday, April 19'),
                 'time' => '2:30 WIB',
-                'location' => 'Malang Arena Basket Hall',
-                'button' => 'Join Match',
+                'location' => __('Malang Arena Basket Hall'),
+                'button' => __('Join Match'),
                 'homeLogo' => asset('landing/basketball-team-1.png'),
                 'awayLogo' => asset('landing/basketball-team-2.png'),
             ],
             [
-                'sport' => 'Volleyball',
+                'sport' => __('Volleyball'),
                 'home' => 'Shirkat',
                 'away' => 'Jebel Lemon',
-                'date' => 'Saturday, April 18',
+                'date' => __('Saturday, April 18'),
                 'time' => '7:30 WIB',
-                'location' => 'Merdeka Volleyball Court',
-                'button' => 'Join Match',
+                'location' => __('Merdeka Volleyball Court'),
+                'button' => __('Join Match'),
                 'homeLogo' => asset('landing/volleyball-team-1.png'),
                 'awayLogo' => asset('landing/volleyball-team-2.png'),
             ],
@@ -122,7 +122,7 @@
 
     <header class="bg-white">
         <div class="border-b border-black/25">
-            <div class="mx-auto flex max-w-[1560px] items-center justify-between px-6 py-4">
+            <div class="flex w-full items-center justify-between px-5 py-4 md:px-10 xl:px-16 2xl:px-24">
                 <div class="flex items-center gap-10 text-[#22283c]">
                     <button id="hamburger" type="button" class="flex items-center text-navy">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -134,7 +134,7 @@
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
-                        <a href="{{ route('login') }}" class="hover:text-indigo">Login</a>
+                        <a href="{{ route('login') }}" class="hover:text-indigo">{{ __('Login') }}</a>
                     </div>
                 </div>
 
@@ -145,34 +145,35 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 12h2a1 1 0 011 1v3a1 1 0 01-1 1h-2a1 1 0 01-1-1v-4a1 1 0 011-1z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h2"/>
                     </svg>
-                    <a href="{{ route('contact') }}" class="hover:text-indigo">Contact</a>
+                    <a href="{{ route('contact') }}" class="hover:text-indigo">{{ __('Contact') }}</a>
+                    @include('partials.locale-switcher')
                 </div>
             </div>
         </div>
 
-        <nav class="mx-auto hidden max-w-[1560px] items-center justify-center gap-16 px-6 py-3 text-[17px] font-medium text-[#2a3046] md:flex">
-            <a href="{{ route('home') }}" class="hover:text-indigo">Home</a>
-            <a href="{{ route('fields.index') }}" class="hover:text-indigo">Fields</a>
-            <a href="#available-matches" class="hover:text-indigo">Matches</a>
-            <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="hover:text-indigo">My Bookings</a>
-            <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}" class="hover:text-indigo">Profile</a>
+        <nav class="hidden w-full items-center justify-center gap-16 px-5 py-3 text-[17px] font-medium text-[#2a3046] md:flex md:px-10 xl:px-16 2xl:px-24">
+            <a href="{{ route('home') }}" class="hover:text-indigo">{{ __('Home') }}</a>
+            <a href="{{ route('fields.index') }}" class="hover:text-indigo">{{ __('Fields') }}</a>
+            <a href="#available-matches" class="hover:text-indigo">{{ __('Matches') }}</a>
+            <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="hover:text-indigo">{{ __('My Bookings') }}</a>
+            <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}" class="hover:text-indigo">{{ __('Profile') }}</a>
         </nav>
 
-        <nav id="mobile-menu" class="mx-auto hidden max-w-[1560px] flex-col gap-3 border-t border-black/15 px-6 py-4 text-sm font-medium text-[#2a3046]">
-            <a href="{{ route('home') }}">Home</a>
-            <a href="{{ route('fields.index') }}">Fields</a>
-            <a href="#available-matches">Matches</a>
-            <a href="{{ auth()->check() ? route('dashboard') : route('login') }}">My Bookings</a>
-            <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}">Profile</a>
+        <nav id="mobile-menu" class="hidden w-full flex-col gap-3 border-t border-black/15 px-5 py-4 text-sm font-medium text-[#2a3046] md:px-10 xl:px-16 2xl:px-24">
+            <a href="{{ route('home') }}">{{ __('Home') }}</a>
+            <a href="{{ route('fields.index') }}">{{ __('Fields') }}</a>
+            <a href="#available-matches">{{ __('Matches') }}</a>
+            <a href="{{ auth()->check() ? route('dashboard') : route('login') }}">{{ __('My Bookings') }}</a>
+            <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}">{{ __('Profile') }}</a>
         </nav>
     </header>
 
-    <main class="mx-auto max-w-[1560px] px-6 pb-14 pt-8">
+    <main class="w-full px-5 pb-14 pt-8 md:px-10 xl:px-16 2xl:px-24">
         <section class="grid gap-10 md:grid-cols-[1.95fr_0.95fr] md:items-start">
             <div class="relative overflow-hidden rounded-[2rem] shadow-soft">
                 <img
                     src="{{ asset('landing/football-stadium.jpg') }}"
-                    alt="Football stadium"
+                    alt="{{ __('Football stadium') }}"
                     class="h-[300px] w-full scale-[1.05] object-cover blur-[1.2px] md:h-[470px]"
                 >
                 <div class="absolute inset-0 bg-gradient-to-r from-[#0f1739]/66 via-[#162853]/30 to-transparent"></div>
@@ -189,7 +190,7 @@
 
                         <div class="flex flex-col items-center">
                             <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white/70 bg-[#cfd6ff]/85 shadow-xl backdrop-blur md:h-32 md:w-32">
-                                <img src="{{ asset('landing/friendly-matche.png') }}" alt="Friendly match" class="h-full w-full object-cover">
+                                <img src="{{ asset('landing/friendly-matche.png') }}" alt="{{ __('Friendly Match') }}" class="h-full w-full object-cover">
                             </div>
                             <span class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 font-heading text-[16px] font-semibold tracking-[0.2em] text-[#10214a] shadow-lg md:text-[18px]">
                                 VS
@@ -210,13 +211,13 @@
 
             <div class="rounded-[2rem] bg-white p-6 shadow-soft">
                 <div class="rounded-[1.15rem] bg-navy px-5 py-7 text-white shadow-card">
-                    <h2 class="font-heading text-[20px] font-bold">{{ $heroMatch['title'] }}</h2>
+                    <h2 class="font-heading text-[20px] font-bold">{{ __($heroMatch['title']) }}</h2>
                     <div class="mt-5 space-y-3 text-[15px] text-white/90">
                         <div class="mini-icon flex items-center gap-2">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
-                            <span>{{ $heroMatch['date'] }} &nbsp; {{ $heroMatch['time'] }}</span>
+                            <span>{{ __($heroMatch['date']) }} &nbsp; {{ $heroMatch['time'] }}</span>
                         </div>
                         <div class="mini-icon flex items-center gap-2">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -229,12 +230,12 @@
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/>
                             </svg>
-                            <span>Slots Available: {{ $heroMatch['slots'] }}</span>
+                            <span>{{ __('Slots Available: :slots', ['slots' => $heroMatch['slots']]) }}</span>
                         </div>
                     </div>
 
                     <a href="#available-matches" class="primary-btn mt-7 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
-                        Join Match
+                        {{ __('Join Match') }}
                     </a>
                 </div>
             </div>
@@ -243,11 +244,11 @@
         <section class="mt-12 rounded-[2rem] bg-white px-10 py-10 shadow-soft">
             <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 class="font-heading text-[28px] font-bold text-[#23304f] md:text-[31px]">Book a Field, Join a Match!</h1>
-                    <p class="mt-2 text-[17px] text-textsoft">Sign up to find and join matches in public fields with ease</p>
+                    <h1 class="font-heading text-[28px] font-bold text-[#23304f] md:text-[31px]">{{ __('Book a Field, Join a Match!') }}</h1>
+                    <p class="mt-2 text-[17px] text-textsoft">{{ __('Sign up to find and join matches in public fields with ease') }}</p>
                 </div>
                 <a href="{{ route('register') }}" class="primary-btn inline-flex min-w-[190px] justify-center rounded-[0.55rem] px-8 py-3 text-[17px] font-bold text-white">
-                    Get Started
+                    {{ __('Get Started') }}
                 </a>
             </div>
         </section>
@@ -258,10 +259,10 @@
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
-                    <h2 class="font-heading text-[18px] font-bold text-[#283552]">Book a Field</h2>
+                    <h2 class="font-heading text-[18px] font-bold text-[#283552]">{{ __('Book a Field') }}</h2>
                 </div>
-                <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">Find and reserve available fields</p>
-                <a href="{{ route('fields.index') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">Book Now</a>
+                <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">{{ __('Find and reserve available fields') }}</p>
+                <a href="{{ route('fields.index') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Book Now') }}</a>
             </article>
 
             <article class="rounded-[1.55rem] bg-white px-7 py-6 shadow-soft">
@@ -270,10 +271,10 @@
                         <circle cx="12" cy="12" r="9"></circle>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h8M12 8v8"></path>
                     </svg>
-                    <h2 class="font-heading text-[18px] font-bold text-[#283552]">Join a Match</h2>
+                    <h2 class="font-heading text-[18px] font-bold text-[#283552]">{{ __('Join a Match') }}</h2>
                 </div>
-                <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">Join public matches near you</p>
-                <a href="#available-matches" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">Explore Matches</a>
+                <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">{{ __('Join public matches near you') }}</p>
+                <a href="#available-matches" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Explore Matches') }}</a>
             </article>
 
             <article class="rounded-[1.55rem] bg-white px-7 py-6 shadow-soft">
@@ -281,16 +282,16 @@
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/>
                     </svg>
-                    <h2 class="font-heading text-[18px] font-bold text-[#283552]">Create a Match</h2>
+                    <h2 class="font-heading text-[18px] font-bold text-[#283552]">{{ __('Create a Match') }}</h2>
                 </div>
-                <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">Start your own match and invite others</p>
-                <a href="{{ route('login') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">Create Match</a>
+                <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">{{ __('Start your own match and invite others') }}</p>
+                <a href="{{ route('login') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Create Match') }}</a>
             </article>
         </section>
 
         <section id="available-matches" class="section-card mt-12 rounded-[2.2rem] bg-lavender px-7 py-7 md:px-8 md:py-8">
             <div class="inline-flex rounded-[0.7rem] bg-navy px-6 py-2.5">
-                <h2 class="font-heading text-[21px] font-bold text-white md:text-[23px]">Available Match</h2>
+                <h2 class="font-heading text-[21px] font-bold text-white md:text-[23px]">{{ __('Available Match') }}</h2>
             </div>
 
             <div class="mt-5 grid gap-5 md:grid-cols-3">
@@ -316,7 +317,7 @@
                                 @elseif ($match['sport'] === 'Volleyball')
                                     <span class="text-xl leading-none text-indigo">🏐</span>
                                 @elseif (!empty($match['centerIcon']))
-                                    <img src="{{ $match['centerIcon'] }}" alt="Friendly match" class="h-full w-full object-cover">
+                                    <img src="{{ $match['centerIcon'] }}" alt="{{ __('Friendly Match') }}" class="h-full w-full object-cover">
                                 @elseif ($match['sport'] === 'Basketball')
                                     <span class="text-xl text-indigo">🏀</span>
                                 @else
@@ -339,13 +340,13 @@
                         </div>
 
                         <div class="rounded-t-[1.35rem] bg-white px-4 py-4">
-                            <h3 class="font-heading text-[20px] font-bold text-[#263452]">{{ $match['sport'] }} Friendly Match</h3>
+                            <h3 class="font-heading text-[20px] font-bold text-[#263452]">{{ __($match['sport']) }} {{ __('Friendly Match') }}</h3>
                             <div class="mt-3 space-y-2 text-[14px] text-[#3f4863]">
                                 <div class="flex items-center gap-2">
                                     <svg class="h-4 w-4 text-[#222f53]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
-                                    <span>{{ $match['date'] }} &nbsp; {{ $match['time'] }}</span>
+                                    <span>{{ __($match['date']) }} &nbsp; {{ $match['time'] }}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <svg class="h-4 w-4 text-[#222f53]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -357,7 +358,7 @@
                             </div>
 
                             <a href="{{ route('login') }}" class="primary-btn mt-5 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
-                                {{ $match['button'] }}
+                                {{ __($match['button']) }}
                             </a>
                         </div>
                     </article>
@@ -367,7 +368,7 @@
 
         <section id="available-fields" class="mt-12">
             <div class="inline-flex items-center gap-4 rounded-[0.7rem] bg-navy px-6 py-2.5">
-                <h2 class="font-heading text-[21px] font-bold text-white md:text-[23px]">Available Fields</h2>
+                <h2 class="font-heading text-[21px] font-bold text-white md:text-[23px]">{{ __('Available Fields') }}</h2>
                 <svg class="h-7 w-7 text-white" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
@@ -387,29 +388,29 @@
 
             <div class="mt-4 flex justify-center">
                 <a href="{{ route('fields.index') }}" class="primary-btn inline-flex min-w-[240px] justify-center rounded-[0.1rem] px-8 py-3 text-[17px] font-bold text-white">
-                    Explore
+                    {{ __('Explore') }}
                 </a>
             </div>
         </section>
     </main>
 
     <footer class="mt-12 bg-navy text-white">
-        <div class="mx-auto max-w-[1560px] px-6 py-10 md:px-10 md:py-12">
+        <div class="w-full px-5 py-10 md:px-10 md:py-12 xl:px-16 2xl:px-24">
             <div class="grid gap-10 lg:grid-cols-[1.25fr_0.85fr_0.95fr]">
                 <div class="lg:pr-10 lg:border-r lg:border-white/15">
                     <div class="mb-5 flex items-center gap-4">
-                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="MatchPoint logo" class="h-14 w-14 object-contain">
-                        <span class="font-heading text-[36px] font-bold leading-none md:text-[28px]">MatchPoint</span>
+                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-14 w-14 object-contain">
+                        <span class="font-heading text-[36px] font-bold leading-none md:text-[28px]">{{ __('MatchPoint') }}</span>
                     </div>
 
                     <p class="max-w-[340px] text-[18px] leading-9 text-white/85 md:text-[15px] md:leading-8">
-                        Book sports fields, manage your bookings, and join exciting matches happening near you.
+                        {{ __('Book sports fields, manage your bookings, and join exciting matches happening near you.') }}
                     </p>
 
                     <div class="mt-7 space-y-4 text-[18px] text-white/80 md:text-[15px]">
                         <div class="flex items-center gap-3">
                             <span class="text-indigo">📍</span>
-                            <span>Malang, Indonesia</span>
+                            <span>{{ __('Malang, Indonesia') }}</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="text-indigo">✉</span>
@@ -422,7 +423,7 @@
                     </div>
 
                     <div class="mt-8">
-                        <h4 class="font-heading text-[20px] font-semibold md:text-[16px]">Follow Us</h4>
+                        <h4 class="font-heading text-[20px] font-semibold md:text-[16px]">{{ __('Follow Us') }}</h4>
                         <div class="mt-4 flex gap-3">
                             @foreach ([
                                 asset('landing/social/instagram-logo.png'),
@@ -431,7 +432,7 @@
                                 asset('landing/social/youtube-logo.png'),
                             ] as $social)
                                 <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full">
-                                    <img src="{{ $social }}" alt="Social media" class="h-full w-full object-cover">
+                                    <img src="{{ $social }}" alt="{{ __('Social media') }}" class="h-full w-full object-cover">
                                 </div>
                             @endforeach
                         </div>
@@ -439,48 +440,48 @@
                 </div>
 
                 <div class="lg:px-10 lg:border-r lg:border-white/15">
-                    <h3 class="font-heading text-[26px] font-bold md:text-[18px]">Quick Links</h3>
+                    <h3 class="font-heading text-[26px] font-bold md:text-[18px]">{{ __('Quick Links') }}</h3>
                     <div class="mt-2 h-[3px] w-10 rounded-full bg-indigo"></div>
                     <div class="mt-6 space-y-5 text-[19px] text-white/90 md:text-[16px]">
                         <a href="{{ route('home') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Home</span>
+                            <span class="text-indigo">›</span><span>{{ __('Home') }}</span>
                         </a>
                         <a href="{{ route('fields.index') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Fields</span>
+                            <span class="text-indigo">›</span><span>{{ __('Fields') }}</span>
                         </a>
                         <a href="#available-matches" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Matches</span>
+                            <span class="text-indigo">›</span><span>{{ __('Matches') }}</span>
                         </a>
                         <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>My Bookings</span>
+                            <span class="text-indigo">›</span><span>{{ __('My Bookings') }}</span>
                         </a>
                         <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Profile</span>
+                            <span class="text-indigo">›</span><span>{{ __('Profile') }}</span>
                         </a>
                         <a href="{{ route('login') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Create Match</span>
+                            <span class="text-indigo">›</span><span>{{ __('Create Match') }}</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="lg:pl-10">
-                    <h3 class="font-heading text-[26px] font-bold md:text-[18px]">Support</h3>
+                    <h3 class="font-heading text-[26px] font-bold md:text-[18px]">{{ __('Support') }}</h3>
                     <div class="mt-2 h-[3px] w-10 rounded-full bg-indigo"></div>
                     <div class="mt-6 space-y-5 text-[19px] text-white/90 md:text-[16px]">
                         <a href="{{ route('contact') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Contact Us</span>
+                            <span class="text-indigo">›</span><span>{{ __('Contact Us') }}</span>
                         </a>
                         <a href="{{ route('help') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Help / FAQ</span>
+                            <span class="text-indigo">›</span><span>{{ __('Help / FAQ') }}</span>
                         </a>
                         <a href="{{ route('help') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>How It Works</span>
+                            <span class="text-indigo">›</span><span>{{ __('How It Works') }}</span>
                         </a>
                         <a href="{{ route('terms') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Terms &amp; Conditions</span>
+                            <span class="text-indigo">›</span><span>{{ __('Terms & Conditions') }}</span>
                         </a>
                         <a href="{{ route('privacy') }}" class="flex items-center gap-3 hover:text-indigo">
-                            <span class="text-indigo">›</span><span>Privacy Policy</span>
+                            <span class="text-indigo">›</span><span>{{ __('Privacy Policy') }}</span>
                         </a>
                     </div>
                 </div>
@@ -488,25 +489,25 @@
         </div>
 
         <div class="border-t border-white/10 bg-[#25244b]">
-            <div class="mx-auto grid max-w-[1560px] gap-6 px-6 py-7 text-white/88 md:grid-cols-[1fr_auto_1fr] md:items-center md:px-10">
+            <div class="grid w-full gap-6 px-5 py-7 text-white/88 md:grid-cols-[1fr_auto_1fr] md:items-center md:px-10 xl:px-16 2xl:px-24">
                 <div class="md:pr-8 md:border-r md:border-white/15">
                     <div class="flex items-start gap-3">
                         <div class="text-indigo">🛡</div>
                         <div>
-                            <p class="font-heading text-[18px] font-semibold text-white">Secure &amp; Trusted</p>
+                            <p class="font-heading text-[18px] font-semibold text-white">{{ __('Secure & Trusted') }}</p>
                             <p class="mt-1 max-w-[260px] text-[14px] leading-6 text-white/70">
-                                Your data is protected with industry-standard security.
+                                {{ __('Your data is protected with industry-standard security.') }}
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="text-center text-[18px] md:px-8 md:text-[16px]">
-                    © 2026 MatchPoint. All rights reserved.
+                    {{ __('© 2026 MatchPoint. All rights reserved.') }}
                 </div>
 
                 <div class="md:pl-8 md:border-l md:border-white/15">
-                    <p class="font-heading text-[18px] font-semibold text-white">We Accept</p>
+                    <p class="font-heading text-[18px] font-semibold text-white">{{ __('We Accept') }}</p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @foreach ([
                             asset('landing/payments/visa-logo.png'),
@@ -517,7 +518,7 @@
                             asset('landing/payments/dana-logo.png'),
                         ] as $payment)
                             <div class="flex h-[42px] items-center justify-center rounded-md bg-white px-2 py-1 shadow-sm">
-                                <img src="{{ $payment }}" alt="Payment method" class="max-h-full w-auto object-contain">
+                                <img src="{{ $payment }}" alt="{{ __('Payment method') }}" class="max-h-full w-auto object-contain">
                             </div>
                         @endforeach
                     </div>

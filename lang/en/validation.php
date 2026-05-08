@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'accepted' => 'The :attribute field must be accepted.',
+    'array' => 'The :attribute field must be an array.',
+    'boolean' => 'The :attribute field must be true or false.',
+    'confirmed' => 'The :attribute field confirmation does not match.',
+    'date' => 'The :attribute field must be a valid date.',
+    'distinct' => 'The :attribute field has a duplicate value.',
+    'email' => 'The :attribute field must be a valid email address.',
+    'exists' => 'The selected :attribute is invalid.',
+    'file' => 'The :attribute field must be a file.',
+    'image' => 'The :attribute field must be an image.',
+    'in' => 'The selected :attribute is invalid.',
+    'integer' => 'The :attribute field must be an integer.',
+    'max' => [
+        'numeric' => 'The :attribute field must not be greater than :max.',
+        'file' => 'The :attribute field must not be greater than :max kilobytes.',
+        'string' => 'The :attribute field must not be greater than :max characters.',
+        'array' => 'The :attribute field must not have more than :max items.',
+    ],
+    'mimes' => 'The :attribute field must be a file of type: :values.',
+    'min' => [
+        'numeric' => 'The :attribute field must be at least :min.',
+        'file' => 'The :attribute field must be at least :min kilobytes.',
+        'string' => 'The :attribute field must be at least :min characters.',
+        'array' => 'The :attribute field must have at least :min items.',
+    ],
+    'numeric' => 'The :attribute field must be a number.',
+    'required' => 'The :attribute field is required.',
+    'string' => 'The :attribute field must be a string.',
+    'unique' => 'The :attribute field has already been taken.',
+    'uploaded' => 'The :attribute field failed to upload.',
+
+    'attributes' => [
+        'name' => 'full name',
+        'email' => 'email address',
+        'password' => 'password',
+        'password_confirmation' => 'confirm password',
+        'role' => 'account role',
+        'date' => 'date',
+        'proof' => 'payment proof',
+        'slot_ids' => 'time slot',
+    ],
+];

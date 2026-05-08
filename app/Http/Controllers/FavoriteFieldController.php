@@ -32,10 +32,10 @@ class FavoriteFieldController extends Controller
 
         if ($isFavorited) {
             $user->favoriteFields()->detach($field->id);
-            $status = "{$field->name} removed from favorites.";
+            $status = __(':field removed from favorites.', ['field' => $field->name]);
         } else {
             $user->favoriteFields()->syncWithoutDetaching([$field->id]);
-            $status = "{$field->name} added to favorites.";
+            $status = __(':field added to favorites.', ['field' => $field->name]);
         }
 
         $redirectTo = $request->string('redirect_to')->toString();

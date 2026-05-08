@@ -30,11 +30,11 @@
     ];
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - MatchPoint</title>
+    <title>{{ __('User Dashboard') }} - MatchPoint</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
@@ -74,11 +74,12 @@
 <body class="min-h-screen bg-page text-ink">
     <header class="border-b border-line bg-white">
         <div class="flex items-center justify-between px-8 py-5 lg:px-12">
-            <a href="{{ route('home') }}" class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">MATCHPOINT</a>
+            <a href="{{ route('home') }}" class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">{{ __('MATCHPOINT') }}</a>
 
             <nav class="flex items-center gap-6 text-[16px] font-medium text-[#52617f]">
-                <a href="{{ $dashboard['links']['browse_fields'] }}" class="transition hover:text-indigoSoft">Browse Fields</a>
-                <a href="{{ $dashboard['links']['dashboard'] }}" class="border-b-2 border-indigoSoft pb-6 pt-6 text-indigoSoft">Dashboard</a>
+                <a href="{{ $dashboard['links']['browse_fields'] }}" class="transition hover:text-indigoSoft">{{ __('Browse Fields') }}</a>
+                <a href="{{ $dashboard['links']['dashboard'] }}" class="border-b-2 border-indigoSoft pb-6 pt-6 text-indigoSoft">{{ __('Dashboard') }}</a>
+                @include('partials.locale-switcher')
                 <a href="{{ $dashboard['links']['notifications_anchor'] }}" class="relative text-[#5b6785] transition hover:text-indigoSoft">
                     {!! $iconSvg('bell') !!}
                     @if ($dashboard['unread_notifications'] > 0)
@@ -99,24 +100,24 @@
             <nav class="space-y-2">
                 <a href="{{ $dashboard['links']['dashboard'] }}" class="flex items-center gap-4 rounded-2xl bg-[#f2f1ff] px-5 py-4 font-medium text-indigoSoft">
                     <span class="h-6 w-6">{!! $iconSvg('home') !!}</span>
-                    <span>Dashboard</span>
+                    <span>{{ __('Dashboard') }}</span>
                 </a>
                 <a href="{{ $dashboard['links']['bookings_anchor'] }}" class="flex items-center gap-4 rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
                     <span class="h-6 w-6">{!! $iconSvg('calendar') !!}</span>
-                    <span>My Bookings</span>
+                    <span>{{ __('My Bookings') }}</span>
                 </a>
                 <a href="{{ $dashboard['links']['favorites'] }}" class="flex items-center gap-4 rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
                     <span class="h-6 w-6">{!! $iconSvg('heart') !!}</span>
-                    <span>Favorites</span>
+                    <span>{{ __('Favorites') }}</span>
                 </a>
                 <a href="{{ $dashboard['links']['payments_anchor'] }}" class="flex items-center gap-4 rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
                     <span class="h-6 w-6">{!! $iconSvg('wallet') !!}</span>
-                    <span>Payments</span>
+                    <span>{{ __('Payments') }}</span>
                 </a>
                 <a href="{{ $dashboard['links']['notifications_anchor'] }}" class="flex items-center justify-between rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
                     <span class="flex items-center gap-4">
                         <span class="h-6 w-6">{!! $iconSvg('bell') !!}</span>
-                        <span>Notifications</span>
+                        <span>{{ __('Notifications') }}</span>
                     </span>
                     @if ($dashboard['unread_notifications'] > 0)
                         <span class="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-indigoSoft px-2 text-[12px] font-semibold text-white">{{ $dashboard['unread_notifications'] }}</span>
@@ -124,7 +125,7 @@
                 </a>
                 <a href="{{ $dashboard['links']['profile'] }}" class="flex items-center gap-4 rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
                     <span class="h-6 w-6">{!! $iconSvg('user') !!}</span>
-                    <span>Profile</span>
+                    <span>{{ __('Profile') }}</span>
                 </a>
             </nav>
 
@@ -132,16 +133,16 @@
                 <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f0edff] text-indigoSoft">
                     {!! $iconSvg('gift') !!}
                 </div>
-                <h3 class="mt-5 font-heading text-[24px] font-bold text-ink">Invite your friends</h3>
-                <p class="mt-3 text-[16px] leading-7 text-copy">Get RM10 credit when your friend makes a booking!</p>
-                <button type="button" class="mt-6 w-full rounded-2xl bg-[linear-gradient(90deg,#5046e5_0%,#695df5_100%)] px-5 py-3 text-[16px] font-semibold text-white shadow-[0_16px_28px_rgba(79,70,229,0.24)]">Invite Now</button>
+                <h3 class="mt-5 font-heading text-[24px] font-bold text-ink">{{ __('Invite your friends') }}</h3>
+                <p class="mt-3 text-[16px] leading-7 text-copy">{{ __('Get RM10 credit when your friend makes a booking!') }}</p>
+                <button type="button" class="mt-6 w-full rounded-2xl bg-[linear-gradient(90deg,#5046e5_0%,#695df5_100%)] px-5 py-3 text-[16px] font-semibold text-white shadow-[0_16px_28px_rgba(79,70,229,0.24)]">{{ __('Invite Now') }}</button>
             </div>
         </aside>
 
         <main class="px-8 py-8 lg:px-10 xl:px-12">
             <section>
-                <h1 class="font-heading text-[48px] font-bold leading-tight text-ink">Welcome back, {{ $user['first_name'] }}! <span class="text-[40px]">👋</span></h1>
-                <p class="mt-3 text-[24px] text-copy">Here's what's happening with your bookings.</p>
+                <h1 class="font-heading text-[48px] font-bold leading-tight text-ink">{{ __('Welcome back, :name!', ['name' => $user['first_name']]) }} <span class="text-[40px]">👋</span></h1>
+                <p class="mt-3 text-[24px] text-copy">{{ __('Here\'s what\'s happening with your bookings.') }}</p>
             </section>
 
             <section class="mt-8 grid gap-5 xl:grid-cols-4">
@@ -158,8 +159,8 @@
                                 </div>
                                 <div>
                                     <p class="text-[42px] font-bold text-ink">{{ $stat['value'] }}</p>
-                                    <p class="font-heading text-[24px] font-semibold text-ink">{{ $stat['label'] }}</p>
-                                    <p class="mt-1 text-[18px] text-copy">{{ $stat['hint'] }}</p>
+                                    <p class="font-heading text-[24px] font-semibold text-ink">{{ __($stat['label']) }}</p>
+                                    <p class="mt-1 text-[18px] text-copy">{{ __($stat['hint']) }}</p>
                                 </div>
                             </div>
                             <span class="mt-2 text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>
@@ -172,9 +173,9 @@
                 <div class="space-y-6">
                     <article id="upcoming-bookings" class="rounded-[30px] border border-line bg-white p-6 shadow-panel">
                         <div class="flex items-center justify-between gap-4 border-b border-line pb-5">
-                            <h2 class="font-heading text-[32px] font-bold text-ink">Upcoming Bookings</h2>
+                            <h2 class="font-heading text-[32px] font-bold text-ink">{{ __('Upcoming Bookings') }}</h2>
                             <a href="{{ $dashboard['links']['bookings_anchor'] }}" class="inline-flex items-center gap-2 text-[18px] font-semibold text-indigoSoft">
-                                View All Bookings
+                                {{ __('View All Bookings') }}
                                 <span class="h-5 w-5">{!! $iconSvg('chevron-right') !!}</span>
                             </a>
                         </div>
@@ -204,14 +205,14 @@
 
                                     <div class="flex flex-col items-start gap-4 lg:items-end">
                                         <span class="rounded-full px-4 py-2 text-[15px] font-semibold {{ $statusClasses[$booking['status_tone']] ?? $statusClasses['indigo'] }}">
-                                            {{ $booking['status_label'] }}
+                                            {{ __($booking['status_label']) }}
                                         </span>
-                                        <a href="{{ $booking['view_url'] }}" class="inline-flex min-w-[140px] items-center justify-center rounded-2xl border border-[#a89dff] px-5 py-3 text-[16px] font-semibold text-indigoSoft transition hover:bg-[#f7f5ff]">View Booking</a>
+                                        <a href="{{ $booking['view_url'] }}" class="inline-flex min-w-[140px] items-center justify-center rounded-2xl border border-[#a89dff] px-5 py-3 text-[16px] font-semibold text-indigoSoft transition hover:bg-[#f7f5ff]">{{ __('View Booking') }}</a>
                                     </div>
                                 </article>
                             @empty
                                 <div class="py-10 text-center text-[18px] text-copy">
-                                    No upcoming bookings yet. Browse a field and make your first booking.
+                                    {{ __('No upcoming bookings yet. Browse a field and make your first booking.') }}
                                 </div>
                             @endforelse
                         </div>
@@ -220,29 +221,29 @@
 
                 <div class="space-y-6">
                     <article class="rounded-[30px] border border-line bg-white p-6 shadow-panel">
-                        <h2 class="font-heading text-[30px] font-bold text-ink">Quick Actions</h2>
+                        <h2 class="font-heading text-[30px] font-bold text-ink">{{ __('Quick Actions') }}</h2>
                         <div class="mt-5 space-y-3">
                             <a href="{{ $dashboard['links']['browse_fields'] }}" class="flex items-center gap-4 rounded-[22px] border border-line p-4 transition hover:bg-[#fafbff]">
                                 <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f0edff] text-indigoSoft">{!! $iconSvg('search') !!}</span>
                                 <span class="min-w-0 flex-1">
-                                    <span class="block font-heading text-[22px] font-semibold text-ink">Browse Fields</span>
-                                    <span class="mt-1 block text-[16px] text-copy">Find and book your next venue</span>
+                                    <span class="block font-heading text-[22px] font-semibold text-ink">{{ __('Browse Fields') }}</span>
+                                    <span class="mt-1 block text-[16px] text-copy">{{ __('Find and book your next venue') }}</span>
                                 </span>
                                 <span class="text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>
                             </a>
                             <a href="{{ $dashboard['links']['favorites'] }}" class="flex items-center gap-4 rounded-[22px] border border-line p-4 transition hover:bg-[#fafbff]">
                                 <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ffeaf2] text-[#ec4899]">{!! $iconSvg('heart') !!}</span>
                                 <span class="min-w-0 flex-1">
-                                    <span class="block font-heading text-[22px] font-semibold text-ink">My Favorites</span>
-                                    <span class="mt-1 block text-[16px] text-copy">View your saved venues</span>
+                                    <span class="block font-heading text-[22px] font-semibold text-ink">{{ __('My Favorites') }}</span>
+                                    <span class="mt-1 block text-[16px] text-copy">{{ __('View your saved venues') }}</span>
                                 </span>
                                 <span class="text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>
                             </a>
                             <a href="{{ $dashboard['links']['bookings_anchor'] }}" class="flex items-center gap-4 rounded-[22px] border border-line p-4 transition hover:bg-[#fafbff]">
                                 <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eef5ff] text-[#2563eb]">{!! $iconSvg('calendar') !!}</span>
                                 <span class="min-w-0 flex-1">
-                                    <span class="block font-heading text-[22px] font-semibold text-ink">Booking History</span>
-                                    <span class="mt-1 block text-[16px] text-copy">View all your past bookings</span>
+                                    <span class="block font-heading text-[22px] font-semibold text-ink">{{ __('Booking History') }}</span>
+                                    <span class="mt-1 block text-[16px] text-copy">{{ __('View all your past bookings') }}</span>
                                 </span>
                                 <span class="text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>
                             </a>
@@ -251,8 +252,8 @@
 
                     <article class="rounded-[30px] border border-line bg-white p-6 shadow-panel">
                         <div class="flex items-center justify-between gap-4">
-                            <h2 class="font-heading text-[30px] font-bold text-ink">Your Favorites</h2>
-                            <a href="{{ $dashboard['links']['favorites'] }}" class="text-[17px] font-semibold text-indigoSoft">View All</a>
+                            <h2 class="font-heading text-[30px] font-bold text-ink">{{ __('Your Favorites') }}</h2>
+                            <a href="{{ $dashboard['links']['favorites'] }}" class="text-[17px] font-semibold text-indigoSoft">{{ __('View All') }}</a>
                         </div>
 
                         <div class="mt-5 space-y-4">
@@ -262,12 +263,12 @@
                                     <div class="p-4">
                                         <h3 class="font-heading text-[22px] font-bold text-ink">{{ $favorite['name'] }}</h3>
                                         <p class="mt-1 text-[16px] text-copy">{{ $favorite['location'] }}</p>
-                                        <p class="mt-3 text-[18px] font-semibold text-indigoSoft">{{ $favorite['price'] }} <span class="text-copy">/ slot</span></p>
+                                        <p class="mt-3 text-[18px] font-semibold text-indigoSoft">{{ $favorite['price'] }} <span class="text-copy">/ {{ __('slot') }}</span></p>
                                     </div>
                                 </a>
                             @empty
                                 <div class="rounded-[24px] border border-dashed border-line px-5 py-8 text-center text-[17px] text-copy">
-                                    No favorite venues saved yet.
+                                    {{ __('No favorite venues saved yet.') }}
                                 </div>
                             @endforelse
                         </div>
@@ -275,8 +276,8 @@
 
                     <article id="recent-notifications" class="rounded-[30px] border border-line bg-white p-6 shadow-panel">
                         <div class="flex items-center justify-between gap-4">
-                            <h2 class="font-heading text-[30px] font-bold text-ink">Recent Notifications</h2>
-                            <a href="{{ $dashboard['links']['notifications_anchor'] }}" class="text-[17px] font-semibold text-indigoSoft">View All</a>
+                            <h2 class="font-heading text-[30px] font-bold text-ink">{{ __('Recent Notifications') }}</h2>
+                            <a href="{{ $dashboard['links']['notifications_anchor'] }}" class="text-[17px] font-semibold text-indigoSoft">{{ __('View All') }}</a>
                         </div>
 
                         <div class="mt-5 space-y-4">
@@ -295,7 +296,7 @@
                                 </article>
                             @empty
                                 <div class="rounded-[24px] border border-dashed border-line px-5 py-8 text-center text-[17px] text-copy">
-                                    No recent notifications.
+                                    {{ __('No recent notifications.') }}
                                 </div>
                             @endforelse
                         </div>

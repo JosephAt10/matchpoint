@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             return back()
-                ->withErrors(['email' => 'The provided credentials do not match our records.'])
+                ->withErrors(['email' => __('The provided credentials do not match our records.')])
                 ->onlyInput('email');
         }
 
@@ -41,8 +41,8 @@ class AuthController extends Controller
 
             return to_route('login')->withErrors([
                 'email' => $user->isRejected()
-                    ? 'Your field owner account request was rejected. Please contact the admin if you need more information.'
-                    : 'Your account is not active yet. Please wait for admin approval.',
+                    ? __('Your field owner account request was rejected. Please contact the admin if you need more information.')
+                    : __('Your account is not active yet. Please wait for admin approval.'),
             ]);
         }
 
@@ -84,10 +84,10 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return to_route('dashboard')->with('status', 'Welcome to MatchPoint. Your account is ready to use.');
+            return to_route('dashboard')->with('status', __('Welcome to MatchPoint. Your account is ready to use.'));
         }
 
-        return to_route('login')->with('status', 'Field Owner account created. Please wait for admin approval before logging in.');
+        return to_route('login')->with('status', __('Field Owner account created. Please wait for admin approval before logging in.'));
     }
 
     public function logout(Request $request): RedirectResponse
@@ -97,6 +97,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return to_route('home')->with('status', 'You have been logged out.');
+        return to_route('home')->with('status', __('You have been logged out.'));
     }
 }

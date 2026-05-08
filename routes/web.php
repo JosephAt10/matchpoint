@@ -8,7 +8,16 @@ use App\Http\Controllers\FieldBrowserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserActivityController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/locale/{locale}', function (Request $request, string $locale) {
+    abort_unless(in_array($locale, config('app.supported_locales', ['en', 'id']), true), 404);
+
+    $request->session()->put('locale', $locale);
+
+    return redirect()->back();
+})->name('locale.switch');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -41,5 +50,4 @@ Route::middleware(['auth', 'active'])->group(function (): void {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
 });

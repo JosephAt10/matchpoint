@@ -72,7 +72,7 @@ class DashboardController extends Controller
                     'field_name' => $booking->field?->name,
                     'location' => $booking->field?->location,
                     'image_url' => $booking->field?->image_url,
-                    'date_label' => $booking->date?->format('j M Y'),
+                    'date_label' => $booking->date?->translatedFormat('j M Y'),
                     'time_label' => $slotRange,
                     'status_label' => $this->bookingStatusLabel($booking),
                     'status_tone' => $this->bookingStatusTone($booking),

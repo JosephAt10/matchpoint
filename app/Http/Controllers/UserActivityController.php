@@ -40,12 +40,12 @@ class UserActivityController extends Controller
                         'Rejected' => 'rose',
                         default => 'amber',
                     },
-                    'date_label' => $booking?->date?->format('j M Y'),
+                    'date_label' => $booking?->date?->translatedFormat('j M Y'),
                     'time_label' => $timeRange,
                     'proof_url' => $payment->proof ? url('/storage/' . ltrim($payment->proof, '/')) : null,
                     'booking_url' => $booking ? route('bookings.show', $booking) : null,
                     'rejection_reason' => $payment->rejection_reason,
-                    'submitted_at' => $payment->created_at?->format('j M Y, H:i'),
+                    'submitted_at' => $payment->created_at?->translatedFormat('j M Y, H:i'),
                 ];
             });
 
@@ -73,7 +73,7 @@ class UserActivityController extends Controller
                 'type' => $notification->type,
                 'status' => $notification->status,
                 'time_label' => $notification->created_at?->diffForHumans(),
-                'created_label' => $notification->created_at?->format('j M Y, H:i'),
+                'created_label' => $notification->created_at?->translatedFormat('j M Y, H:i'),
                 'tone' => match ($notification->type) {
                     'Payment' => 'amber',
                     'Booking' => 'emerald',

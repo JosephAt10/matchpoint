@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'accepted' => 'Kolom :attribute harus disetujui.',
+    'array' => 'Kolom :attribute harus berupa array.',
+    'boolean' => 'Kolom :attribute harus bernilai benar atau salah.',
+    'confirmed' => 'Konfirmasi :attribute tidak cocok.',
+    'date' => 'Kolom :attribute harus berupa tanggal yang valid.',
+    'distinct' => 'Kolom :attribute memiliki nilai duplikat.',
+    'email' => 'Kolom :attribute harus berupa alamat email yang valid.',
+    'exists' => ':attribute yang dipilih tidak valid.',
+    'file' => 'Kolom :attribute harus berupa file.',
+    'image' => 'Kolom :attribute harus berupa gambar.',
+    'in' => ':attribute yang dipilih tidak valid.',
+    'integer' => 'Kolom :attribute harus berupa bilangan bulat.',
+    'max' => [
+        'numeric' => 'Kolom :attribute tidak boleh lebih besar dari :max.',
+        'file' => 'Kolom :attribute tidak boleh lebih besar dari :max kilobyte.',
+        'string' => 'Kolom :attribute tidak boleh lebih dari :max karakter.',
+        'array' => 'Kolom :attribute tidak boleh memiliki lebih dari :max item.',
+    ],
+    'mimes' => 'Kolom :attribute harus berupa file dengan tipe: :values.',
+    'min' => [
+        'numeric' => 'Kolom :attribute minimal :min.',
+        'file' => 'Kolom :attribute minimal :min kilobyte.',
+        'string' => 'Kolom :attribute minimal :min karakter.',
+        'array' => 'Kolom :attribute minimal memiliki :min item.',
+    ],
+    'numeric' => 'Kolom :attribute harus berupa angka.',
+    'required' => 'Kolom :attribute wajib diisi.',
+    'string' => 'Kolom :attribute harus berupa teks.',
+    'unique' => 'Kolom :attribute sudah digunakan.',
+    'uploaded' => 'Kolom :attribute gagal diunggah.',
+
+    'attributes' => [
+        'name' => 'nama lengkap',
+        'email' => 'alamat email',
+        'password' => 'kata sandi',
+        'password_confirmation' => 'konfirmasi kata sandi',
+        'role' => 'peran akun',
+        'date' => 'tanggal',
+        'proof' => 'bukti pembayaran',
+        'slot_ids' => 'slot waktu',
+    ],
+];
