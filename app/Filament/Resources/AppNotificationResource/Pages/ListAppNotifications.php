@@ -18,14 +18,14 @@ class ListAppNotifications extends ListRecords
     {
         return [
             Actions\Action::make('unreadOnly')
-                ->label('Unread Only')
+                ->label(__('Unread Only'))
                 ->icon('heroicon-o-bell-alert')
                 ->color('warning')
                 ->url(AppNotificationResource::getUrl('index', [
                     'tableFilters[status][value]' => 'Unread',
                 ])),
             Actions\Action::make('markAllAsRead')
-                ->label('Mark All Read')
+                ->label(__('Mark All Read'))
                 ->icon('heroicon-o-check-badge')
                 ->color('success')
                 ->visible(fn (): bool => Notification::query()->forUser(auth()->id())->unread()->exists())

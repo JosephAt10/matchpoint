@@ -18,11 +18,11 @@ class AppNotificationResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bell';
 
-    protected static ?string $navigationLabel = 'Notifications';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'Notification';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'Notifications';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?int $navigationSort = 5;
 
@@ -40,11 +40,13 @@ class AppNotificationResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\BadgeColumn::make('status')
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->colors([
                         'warning' => 'Unread',
                         'success' => 'Read',
                     ]),
                 Tables\Columns\BadgeColumn::make('type')
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->colors([
                         'primary' => 'Booking',
                         'warning' => 'Payment',
@@ -55,27 +57,27 @@ class AppNotificationResource extends Resource
                     ->wrap()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Received')
+                    ->label(__('Received'))
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
                     ->options([
-                        'Unread' => 'Unread',
-                        'Read' => 'Read',
+                        'Unread' => __('Unread'),
+                        'Read' => __('Read'),
                     ]),
                 SelectFilter::make('type')
                     ->options([
-                        'Booking' => 'Booking',
-                        'Payment' => 'Payment',
-                        'Match' => 'Match',
-                        'System' => 'System',
+                        'Booking' => __('Booking'),
+                        'Payment' => __('Payment'),
+                        'Match' => __('Match'),
+                        'System' => __('System'),
                     ]),
             ])
             ->actions([
                 Action::make('markAsRead')
-                    ->label('Mark as Read')
+                    ->label(__('Mark as Read'))
                     ->icon('heroicon-o-check')
                     ->color('success')
                     ->visible(fn (Notification $record): bool => $record->isUnread())
@@ -84,6 +86,21 @@ class AppNotificationResource extends Resource
                     }),
             ])
             ->bulkActions([]);
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Notifications');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Notification');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Notifications');
     }
 
     public static function getNavigationBadge(): ?string

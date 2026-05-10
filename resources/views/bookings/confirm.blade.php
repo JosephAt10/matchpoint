@@ -83,7 +83,6 @@
 
                     <label class="block">
                         <span class="text-[14px] font-bold text-ink">{{ __('Upload payment proof') }}</span>
-                        <p class="mt-1 text-[13px] text-copy">{{ __('Transfer 50% of the booking total, then upload your payment proof.') }}</p>
                         <input id="payment-proof-input" type="file" name="proof" accept="image/png,image/jpeg" required class="sr-only" data-file-name-target="payment-proof-file-name">
                         <span class="mt-3 flex min-h-[52px] items-center gap-4 rounded-lg border border-[#dfdaf4] bg-white p-2 text-[14px]">
                             <span class="inline-flex shrink-0 cursor-pointer rounded-lg bg-[#5a38d6] px-4 py-3 font-bold text-white">{{ __('Choose file') }}</span>

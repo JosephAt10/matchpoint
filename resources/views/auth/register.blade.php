@@ -199,12 +199,42 @@
                         </div>
 
                         <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã¢Å¡Â½</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Football / Futsal') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸Ââ‚¬</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Basketball') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸Å½Â¾</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Tennis') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸ÂÂ¸</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Badminton') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸ÂÂ</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Volleyball') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Other') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 7.5 12 10l3.5-2.5M8 16l4-3 4 3M10 10l-1.5 4M14 10l1.5 4"/></svg>
+                                </div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Football / Futsal') }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path stroke-linecap="round" d="M12 4.5v15M4.5 12h15M6.5 7.5c2 1.5 3.5 2.3 5.5 2.3s3.5-.8 5.5-2.3M6.5 16.5c2-1.5 3.5-2.3 5.5-2.3s3.5.8 5.5 2.3"/></svg>
+                                </div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Basketball') }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="9" transform="rotate(35 12 12)"/><path stroke-linecap="round" d="M8.5 17.5 15.5 6.5"/></svg>
+                                </div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Tennis') }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5c3 0 5 2 5 5 0 4-4 7-7 9l-1-1c2-3 5-7 9-7 3 0 5 2 5 5 0 2-1 4-3 5"/><path stroke-linecap="round" d="m13 11 6 6"/></svg>
+                                </div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Badminton') }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path stroke-linecap="round" d="M12 4.5c2.5 2.2 3.8 4.7 3.8 7.5S14.5 17.8 12 19.5M12 4.5C9.5 6.2 8.2 8.7 8.2 12S9.5 17.8 12 19.5M4.8 9.5C7 10.8 9.5 11.5 12 11.5s5-.7 7.2-2M4.8 14.5c2.2-1.3 4.7-2 7.2-2s5 .7 7.2 2"/></svg>
+                                </div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Volleyball') }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
+                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
+                                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18" cy="12" r="1.8"/></svg>
+                                </div>
+                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Other') }}</p>
+                            </div>
                         </div>
                     </div>
 
@@ -239,9 +269,9 @@
                     <div class="rounded-2xl border border-[#e5e0fb] bg-[#f6f3ff] px-4 py-3">
                         <p class="text-[12px] font-semibold text-[#6d63ea]">{{ __('Password must contain:') }}</p>
                         <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#6a6f92]">
-                            <span class="flex items-center gap-1.5"><span class="text-green-600">Ã¢â€”Â</span> {{ __('At least 8 characters') }}</span>
-                            <span class="flex items-center gap-1.5"><span class="text-green-600">Ã¢â€”Â</span> {{ __('One uppercase letter') }}</span>
-                            <span class="flex items-center gap-1.5"><span class="text-green-600">Ã¢â€”Â</span> {{ __('One number or symbol') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-green-500"></span> {{ __('At least 8 characters') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-green-500"></span> {{ __('One uppercase letter') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-green-500"></span> {{ __('One number or symbol') }}</span>
                         </div>
                     </div>
 

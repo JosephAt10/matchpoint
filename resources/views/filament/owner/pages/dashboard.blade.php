@@ -176,7 +176,7 @@
 
                                     <div class="grid gap-4 md:grid-cols-2">
                                         <div>
-                                            <p class="owner-field-card__metric-label">Occupancy Rate</p>
+                                            <p class="owner-field-card__metric-label">{{ __('Occupancy Rate') }}</p>
                                             <p class="owner-field-card__metric-value">{{ $field['occupancy_rate'] }}%</p>
                                             <div class="owner-progress">
                                                 <span class="owner-progress__bar" style="width: {{ $field['occupancy_rate'] }}%; background: {{ $field['accent_style'] }}"></span>
@@ -184,7 +184,7 @@
                                         </div>
 
                                         <div>
-                                            <p class="owner-field-card__metric-label">Slots Booked</p>
+                                            <p class="owner-field-card__metric-label">{{ __('Slots Booked') }}</p>
                                             <p class="owner-field-card__metric-value">{{ $field['weekly_booked_slots'] }} / {{ $field['time_slots'] * 7 }}</p>
                                             <div class="owner-progress">
                                                 <span class="owner-progress__bar" style="width: {{ min(100, round(($field['weekly_booked_slots'] / max(1, $field['time_slots'] * 7)) * 100)) }}%; background: {{ $field['accent_style'] }}"></span>
@@ -195,8 +195,8 @@
                             </div>
 
                             <div class="owner-field-card__footer">
-                                <a href="{{ $field['bookings_url'] }}" class="owner-field-card__cta">View Bookings</a>
-                                <a href="{{ $field['edit_url'] }}" class="owner-field-card__menu" aria-label="Edit {{ $field['name'] }}">
+                                <a href="{{ $field['bookings_url'] }}" class="owner-field-card__cta">{{ __('View Bookings') }}</a>
+                                <a href="{{ $field['edit_url'] }}" class="owner-field-card__menu" aria-label="{{ __('Edit') }} {{ $field['name'] }}">
                                     {!! $iconSvg('dots') !!}
                                 </a>
                             </div>

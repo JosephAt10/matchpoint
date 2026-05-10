@@ -18,11 +18,11 @@ class AuditLogResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationLabel = 'Audit Logs';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'Audit Log';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'Audit Logs';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?int $navigationSort = 4;
 
@@ -50,28 +50,28 @@ class AuditLogResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Time')
+                    ->label(__('Time'))
                     ->dateTime('d M Y, H:i:s')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('actor.name')
-                    ->label('Actor')
-                    ->placeholder('System')
+                    ->label(__('Actor'))
+                    ->placeholder(__('System'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('action')
                     ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('entity_type')
-                    ->label('Entity')
+                    ->label(__('Entity'))
                     ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('entity_id')
-                    ->label('Entity ID')
+                    ->label(__('Entity ID'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('metadata_summary')
-                    ->label('Details')
+                    ->label(__('Details'))
                     ->state(function (AuditLog $record): string {
                         if (blank($record->metadata)) {
-                            return '-';
+                            return __('-');
                         }
 
                         return collect($record->metadata)
@@ -99,6 +99,21 @@ class AuditLogResource extends Resource
             ])
             ->actions([])
             ->bulkActions([]);
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Audit Logs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Audit Log');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Audit Logs');
     }
 
     public static function getPages(): array

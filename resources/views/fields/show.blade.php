@@ -15,6 +15,17 @@
         ? substr($firstSlot->start_time, 0, 5) . ' - ' . substr($lastSlot->end_time, 0, 5)
         : __('No slots configured');
     $description = $field->description ?: __('This venue is prepared for upcoming MVP booking flow. Explore the schedule preview below, choose a slot, and continue into the booking step when you are ready.');
+
+    $sportIconSvg = function (string $sport): string {
+        return match ($sport) {
+            'Futsal', 'Football' => '<svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 7.5 12 10l3.5-2.5M8 16l4-3 4 3M10 10l-1.5 4M14 10l1.5 4"/></svg>',
+            'Basketball' => '<svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path stroke-linecap="round" d="M12 4.5v15M4.5 12h15M6.5 7.5c2 1.5 3.5 2.3 5.5 2.3s3.5-.8 5.5-2.3M6.5 16.5c2-1.5 3.5-2.3 5.5-2.3s3.5.8 5.5 2.3"/></svg>',
+            'Tennis' => '<svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="9" transform="rotate(35 12 12)"/><path stroke-linecap="round" d="M8.5 17.5 15.5 6.5"/></svg>',
+            'Badminton' => '<svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5c3 0 5 2 5 5 0 4-4 7-7 9l-1-1c2-3 5-7 9-7 3 0 5 2 5 5 0 2-1 4-3 5"/><path stroke-linecap="round" d="m13 11 6 6"/></svg>',
+            'Volleyball' => '<svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path stroke-linecap="round" d="M12 4.5c2.5 2.2 3.8 4.7 3.8 7.5S14.5 17.8 12 19.5M12 4.5C9.5 6.2 8.2 8.7 8.2 12S9.5 17.8 12 19.5M4.8 9.5C7 10.8 9.5 11.5 12 11.5s5-.7 7.2-2M4.8 14.5c2.2-1.3 4.7-2 7.2-2s5 .7 7.2 2"/></svg>',
+            default => '<svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path stroke-linecap="round" d="M12 8v4l3 2"/></svg>',
+        };
+    };
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -80,9 +91,7 @@
                     <div class="p-6 md:p-8">
                         <div class="flex flex-col gap-5 border-b border-[#eceaf5] pb-7 md:flex-row md:items-center md:justify-between">
                             <div class="flex items-center gap-5">
-                                <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#f3efff] text-[32px]">
-                                    @if ($field->sport_type === 'Futsal')âš½@elseif ($field->sport_type === 'Basketball')ðŸ€@elseif ($field->sport_type === 'Tennis')ðŸŽ¾@elseðŸŸ@endif
-                                </div>
+                                <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#f3efff] text-[#6d52ea]">{!! $sportIconSvg($field->sport_type) !!}</div>
                                 <div>
                                     <p class="text-[12px] font-bold uppercase tracking-[0.08em] text-ink">{{ __($field->sport_type) }}</p>
                                     <h1 class="mt-1 font-heading text-[28px] font-bold leading-tight text-ink md:text-[34px]">{{ $field->name }}</h1>
@@ -92,7 +101,7 @@
                             <div class="flex items-center gap-4 md:justify-end">
                                 <div class="text-left md:text-right">
                                     <p class="font-heading text-[24px] font-bold text-[#5a38d6]">Rp {{ number_format((float) $field->price_per_slot, 0, ',', '.') }}<span class="text-[12px] font-semibold text-ink"> /{{ __('hour') }}</span></p>
-                                    <p class="mt-2 text-[13px] font-medium text-copy"><span class="text-[#f4a51c]">â˜…</span> 4.8 {{ __('(120 reviews)') }}</p>
+                                    <p class="mt-2 text-[13px] font-medium text-copy"><span class="text-[#f4a51c]">★</span> 4.8 {{ __('(120 reviews)') }}</p>
                                 </div>
                                 @auth
                                     <form action="{{ route('fields.favorite.toggle', $field) }}" method="POST">@csrf<button type="submit" class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f6f2ff] text-[#7a5df3] transition hover:bg-[#ece5ff]" aria-label="{{ __('Favorites') }}"><svg class="h-6 w-6 {{ $isFavorite ? 'fill-current' : '' }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></button></form>
@@ -169,9 +178,9 @@
 
         <section class="mt-6 rounded-xl border border-[#ebe7fb] bg-white p-6 shadow-[0_18px_44px_rgba(86,75,165,0.08)] md:p-8">
             <div class="grid gap-6 lg:grid-cols-[190px_1fr_1fr_1fr_150px] lg:items-start">
-                <div><h2 class="font-heading text-[17px] font-bold text-ink">{{ __('What people say') }}</h2><p class="mt-5 font-heading text-[30px] font-bold text-[#4931c8]"><span class="text-[#4931c8]">â˜…</span> 4.8</p><p class="mt-2 text-[14px] font-semibold text-[#7a5df3]">{{ __('(120 reviews)') }}</p></div>
+                <div><h2 class="font-heading text-[17px] font-bold text-ink">{{ __('What people say') }}</h2><p class="mt-5 font-heading text-[30px] font-bold text-[#4931c8]"><span class="text-[#4931c8]">★</span> 4.8</p><p class="mt-2 text-[14px] font-semibold text-[#7a5df3]">{{ __('(120 reviews)') }}</p></div>
                 @foreach ([['name' => 'Andi Pratama', 'time' => __('2 days ago'), 'text' => __('The field is clean, comfortable, and great for futsal.')], ['name' => 'Rizky Maulana', 'time' => __('1 week ago'), 'text' => __('Booking was easy, the service was friendly, highly recommended.')], ['name' => 'Siti Aisyah', 'time' => __('2 weeks ago'), 'text' => __('Complete facilities and the price matches the quality.')]] as $review)
-                    <article class="border-[#eceaf5] lg:border-l lg:pl-8"><div class="flex items-center gap-3"><div class="h-10 w-10 rounded-full bg-[linear-gradient(135deg,#d8fff0,#d8d3ff)]"></div><div><h3 class="font-heading text-[15px] font-bold text-ink">{{ $review['name'] }}</h3><p class="text-[13px] text-copy"><span class="text-[#f4a51c]">â˜…â˜…â˜…â˜…â˜…</span> <span class="ml-2">{{ $review['time'] }}</span></p></div></div><p class="mt-4 text-[14px] leading-6 text-[#4f5579]">{{ $review['text'] }}</p></article>
+                    <article class="border-[#eceaf5] lg:border-l lg:pl-8"><div class="flex items-center gap-3"><div class="h-10 w-10 rounded-full bg-[linear-gradient(135deg,#d8fff0,#d8d3ff)]"></div><div><h3 class="font-heading text-[15px] font-bold text-ink">{{ $review['name'] }}</h3><p class="text-[13px] text-copy"><span class="text-[#f4a51c]">★★★★★</span> <span class="ml-2">{{ $review['time'] }}</span></p></div></div><p class="mt-4 text-[14px] leading-6 text-[#4f5579]">{{ $review['text'] }}</p></article>
                 @endforeach
                 <div class="lg:text-right"><a href="#" class="inline-flex rounded-xl bg-[#f3efff] px-5 py-3 text-[14px] font-bold text-[#5a38d6] transition hover:bg-[#ece5ff]">{{ __('View all reviews') }}</a></div>
             </div>

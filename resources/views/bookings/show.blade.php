@@ -6,9 +6,7 @@
     <title>{{ __('Booking Payment') }} - MatchPoint</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-    @endif
+                <div class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ __('Proof uploaded. Status: :status.', ['status' => __($booking->payment->status)]) }}</div>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -62,7 +60,6 @@
 
             <aside class="rounded-xl border border-[#ebe7fb] bg-white p-6 shadow-[0_18px_44px_rgba(86,75,165,0.10)]">
                 <h2 class="font-heading text-[20px] font-bold text-ink">{{ __('Down Payment') }}</h2>
-                <p class="mt-2 text-[14px] leading-6 text-copy">{{ __('Transfer 50% of the booking total, then upload your payment proof.') }}</p>
 
                 <div class="mt-5 rounded-xl bg-[#f6f2ff] p-4">
                     <p class="text-[13px] font-medium text-copy">{{ __('Amount to Pay') }}</p>

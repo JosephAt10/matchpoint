@@ -34,10 +34,12 @@ class AuthController extends Controller
 
         if (! $request->user()->isActive()) {
             $user = $request->user();
+            $locale = $request->session()->get('locale', config('app.locale'));
 
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+            $request->session()->put('locale', $locale);
 
             return to_route('login')->withErrors([
                 'email' => $user->isRejected()
@@ -92,10 +94,13 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        $locale = $request->session()->get('locale', config('app.locale'));
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        $request->session()->put('locale', $locale);
 
         return to_route('home')->with('status', __('You have been logged out.'));
     }
