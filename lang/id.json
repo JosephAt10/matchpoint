@@ -49,7 +49,7 @@
     "Privacy Policy": "Kebijakan Privasi",
     "Secure & Trusted": "Aman & Tepercaya",
     "Your data is protected with industry-standard security.": "Data Anda dilindungi dengan keamanan standar industri.",
-    "© 2026 MatchPoint. All rights reserved.": "© 2026 MatchPoint. Seluruh hak cipta dilindungi.",
+    "Â© 2026 MatchPoint. All rights reserved.": "Â© 2026 MatchPoint. Seluruh hak cipta dilindungi.",
     "We Accept": "Kami Menerima",
     "Payment method": "Metode pembayaran",
     "English": "Inggris",
@@ -251,5 +251,107 @@
     "Your Favorites": "Favorit Anda",
     "Your payment activity": "Aktivitas pembayaran Anda",
     "Choose file": "Pilih file",
-    "No file selected": "Belum ada file dipilih"
+    "No file selected": "Belum ada file dipilih",
+    "2 days ago": "2 hari lalu",
+    "1 week ago": "1 minggu lalu",
+    "2 weeks ago": "2 minggu lalu",
+    "The field is clean, comfortable, and great for futsal.": "Lapangannya bersih, nyaman, dan sangat cocok untuk futsal.",
+    "Booking was easy, the service was friendly, highly recommended.": "Pemesanan mudah, pelayanannya ramah, sangat direkomendasikan.",
+    "Complete facilities and the price matches the quality.": "Fasilitasnya lengkap dan harganya sepadan dengan kualitasnya.",
+    "Needs review": "Perlu ditinjau",
+    "Upcoming": "Akan datang",
+    "Finished": "Selesai",
+    "Archived": "Diarsipkan",
+    "Review and confirm or reject new uploads.": "Tinjau lalu konfirmasi atau tolak unggahan baru.",
+    "Waiting to be visible to players.": "Menunggu agar terlihat oleh pemain.",
+    "Keep an eye on today's field activity.": "Pantau aktivitas lapangan hari ini.",
+    "Catch up on the latest platform updates.": "Lihat pembaruan platform terbaru.",
+    "Closed": "Tutup",
+    "Total Fields": "Total Lapangan",
+    "All your venues": "Semua venue Anda",
+    "Approved Fields": "Lapangan Disetujui",
+    "Active and visible": "Aktif dan terlihat",
+    "Pending Booking Proofs": "Bukti Booking Tertunda",
+    "Waiting for your review": "Menunggu tinjauan Anda",
+    "Today's Bookings": "Booking Hari Ini",
+    "Scheduled for today": "Dijadwalkan hari ini",
+    "Configured Time Slots": "Slot Waktu Terkonfigurasi",
+    "Total time slots": "Total slot waktu",
+    "1 booking proof needs your review": "1 bukti booking perlu ditinjau",
+    ":count booking proofs need your review": ":count bukti booking perlu ditinjau",
+    ":count field pending admin approval": ":count lapangan menunggu persetujuan admin",
+    "1 booking scheduled today": "1 booking dijadwalkan hari ini",
+    ":count bookings scheduled today": ":count booking dijadwalkan hari ini",
+    "1 unread notification": "1 notifikasi belum dibaca",
+    ":count unread notifications": ":count notifikasi belum dibaca",
+    "Add New Field": "Tambah Lapangan Baru",
+    "Create a new field or venue": "Buat lapangan atau venue baru",
+    "Add Time Slot": "Tambah Slot Waktu",
+    "Configure field availability": "Atur ketersediaan lapangan",
+    "Manage bookings on your fields": "Kelola booking di lapangan Anda",
+    "Welcome back! Here's what's happening with your fields today.": "Selamat datang kembali! Ini yang sedang terjadi dengan lapangan Anda hari ini.",
+    "Booking Overview": "Ringkasan Booking",
+    "Bookings This Week": "Booking Minggu Ini",
+    "This Week": "Minggu Ini",
+    "My Fields": "Lapangan Saya",
+    "Overview of your venues and their status.": "Ringkasan venue Anda dan statusnya.",
+    "No fields yet": "Belum ada lapangan",
+    "Add your first field to start configuring availability and receiving bookings.": "Tambahkan lapangan pertama Anda untuk mulai mengatur ketersediaan dan menerima booking.",
+    "Create your first field": "Buat lapangan pertama Anda",
+    "Alerts": "Peringatan",
+    "No urgent alerts right now.": "Tidak ada peringatan mendesak saat ini.",
+    "Today's Schedule (All Fields)": "Jadwal Hari Ini (Semua Lapangan)",
+    "No configured schedule yet. Add time slots to start taking bookings.": "Belum ada jadwal yang dikonfigurasi. Tambahkan slot waktu untuk mulai menerima booking.",
+    ":count more slots available": ":count slot lagi tersedia"
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

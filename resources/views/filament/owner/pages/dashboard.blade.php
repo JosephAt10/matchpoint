@@ -49,8 +49,8 @@
 <div class="owner-dashboard space-y-6">
     <section class="owner-dashboard__hero flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
-            <h1 class="owner-dashboard__title">Dashboard</h1>
-            <p class="owner-dashboard__subtitle">Welcome back! Here's what's happening with your fields today.</p>
+            <h1 class="owner-dashboard__title">{{ __('Dashboard') }}</h1>
+            <p class="owner-dashboard__subtitle">{{ __('Welcome back! Here''s what''s happening with your fields today.') }}</p>
         </div>
 
         <div class="owner-dashboard__date-chip">
@@ -80,7 +80,7 @@
             <article class="owner-panel-card owner-panel-card--chart">
                 <div class="owner-panel-card__header">
                     <div>
-                        <h2 class="owner-panel-card__title">Booking Overview</h2>
+                        <h2 class="owner-panel-card__title">{{ __('Booking Overview') }}</h2>
                     </div>
                 </div>
 
@@ -101,9 +101,9 @@
 
                 <div class="owner-chart-card">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="owner-chart-card__title">Bookings This Week</h3>
+                        <h3 class="owner-chart-card__title">{{ __('Bookings This Week') }}</h3>
                         <span class="owner-chart-card__tag">
-                            <span>This Week</span>
+                            <span>{{ __('This Week') }}</span>
                             <span class="owner-chart-card__tag-icon">{!! $iconSvg('chevron-down') !!}</span>
                         </span>
                     </div>
@@ -134,8 +134,8 @@
             <article class="owner-panel-card">
                 <div class="owner-panel-card__header">
                     <div>
-                        <h2 class="owner-panel-card__title">My Fields</h2>
-                        <p class="owner-panel-card__copy">Overview of your venues and their status.</p>
+                        <h2 class="owner-panel-card__title">{{ __('My Fields') }}</h2>
+                        <p class="owner-panel-card__copy">{{ __('Overview of your venues and their status.') }}</p>
                     </div>
                 </div>
 
@@ -203,9 +203,9 @@
                         </article>
                     @empty
                         <div class="owner-empty-state xl:col-span-2">
-                            <h3>No fields yet</h3>
-                            <p>Add your first field to start configuring availability and receiving bookings.</p>
-                            <a href="{{ \App\Filament\Owner\Resources\FieldResource::getUrl('create') }}">Create your first field</a>
+                            <h3>{{ __('No fields yet') }}</h3>
+                            <p>{{ __('Add your first field to start configuring availability and receiving bookings.') }}</p>
+                            <a href="{{ \App\Filament\Owner\Resources\FieldResource::getUrl('create') }}">{{ __('Create your first field') }}</a>
                         </div>
                     @endforelse
                 </div>
@@ -216,7 +216,7 @@
             <article class="owner-panel-card">
                 <div class="owner-panel-card__header">
                     <div>
-                        <h2 class="owner-panel-card__title">Quick Actions</h2>
+                        <h2 class="owner-panel-card__title">{{ __('Quick Actions') }}</h2>
                     </div>
                 </div>
 
@@ -238,7 +238,7 @@
             <article class="owner-panel-card">
                 <div class="owner-panel-card__header">
                     <div>
-                        <h2 class="owner-panel-card__title">Alerts</h2>
+                        <h2 class="owner-panel-card__title">{{ __('Alerts') }}</h2>
                     </div>
                 </div>
 
@@ -256,7 +256,7 @@
                         </a>
                     @empty
                         <div class="owner-inline-empty">
-                            No urgent alerts right now.
+                            {{ __('No urgent alerts right now.') }}
                         </div>
                     @endforelse
                 </div>
@@ -265,10 +265,10 @@
             <article class="owner-panel-card">
                 <div class="owner-panel-card__header">
                     <div>
-                        <h2 class="owner-panel-card__title">Today's Schedule (All Fields)</h2>
+                        <h2 class="owner-panel-card__title">{{ __("Today's Schedule (All Fields)") }}</h2>
                     </div>
 
-                    <a href="{{ $dashboard['schedule_url'] }}" class="owner-panel-card__link">View All</a>
+                    <a href="{{ $dashboard['schedule_url'] }}" class="owner-panel-card__link">{{ __('View All') }}</a>
                 </div>
 
                 <div class="space-y-2">
@@ -288,13 +288,13 @@
                         </div>
                     @empty
                         <div class="owner-inline-empty">
-                            No configured schedule yet. Add time slots to start taking bookings.
+                            {{ __('No configured schedule yet. Add time slots to start taking bookings.') }}
                         </div>
                     @endforelse
 
                     @if ($dashboard['today_schedule_overflow'] > 0)
                         <a href="{{ $dashboard['schedule_url'] }}" class="owner-schedule-row owner-schedule-row--more">
-                            <span class="owner-schedule-row__more-copy">{{ $dashboard['today_schedule_overflow'] }} more slots available</span>
+                            <span class="owner-schedule-row__more-copy">{{ __(':count more slots available', ['count' => $dashboard['today_schedule_overflow']]) }}</span>
                             <span class="owner-alert-card__arrow">{!! $iconSvg('chevron-right') !!}</span>
                         </a>
                     @endif
@@ -303,3 +303,21 @@
         </div>
     </section>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $favoritesUrl = auth()->check() ? route('favorites.index') : route('login');
     $isFavorite = isset($favoriteIds) && $favoriteIds->contains($field->id);
     $selectedSlot = $previewSlots->firstWhere('available', true);
@@ -21,7 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $field->name }} - MatchPoint</title>
+    <title>{{ $field->name }} - {{ __('MatchPoint') }}</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
@@ -81,7 +81,7 @@
                         <div class="flex flex-col gap-5 border-b border-[#eceaf5] pb-7 md:flex-row md:items-center md:justify-between">
                             <div class="flex items-center gap-5">
                                 <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#f3efff] text-[32px]">
-                                    @if ($field->sport_type === 'Futsal')⚽@elseif ($field->sport_type === 'Basketball')🏀@elseif ($field->sport_type === 'Tennis')🎾@else🏟@endif
+                                    @if ($field->sport_type === 'Futsal')âš½@elseif ($field->sport_type === 'Basketball')ðŸ€@elseif ($field->sport_type === 'Tennis')ðŸŽ¾@elseðŸŸ@endif
                                 </div>
                                 <div>
                                     <p class="text-[12px] font-bold uppercase tracking-[0.08em] text-ink">{{ __($field->sport_type) }}</p>
@@ -92,7 +92,7 @@
                             <div class="flex items-center gap-4 md:justify-end">
                                 <div class="text-left md:text-right">
                                     <p class="font-heading text-[24px] font-bold text-[#5a38d6]">Rp {{ number_format((float) $field->price_per_slot, 0, ',', '.') }}<span class="text-[12px] font-semibold text-ink"> /{{ __('hour') }}</span></p>
-                                    <p class="mt-2 text-[13px] font-medium text-copy"><span class="text-[#f4a51c]">★</span> 4.8 {{ __('(120 reviews)') }}</p>
+                                    <p class="mt-2 text-[13px] font-medium text-copy"><span class="text-[#f4a51c]">â˜…</span> 4.8 {{ __('(120 reviews)') }}</p>
                                 </div>
                                 @auth
                                     <form action="{{ route('fields.favorite.toggle', $field) }}" method="POST">@csrf<button type="submit" class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f6f2ff] text-[#7a5df3] transition hover:bg-[#ece5ff]" aria-label="{{ __('Favorites') }}"><svg class="h-6 w-6 {{ $isFavorite ? 'fill-current' : '' }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></button></form>
@@ -169,9 +169,9 @@
 
         <section class="mt-6 rounded-xl border border-[#ebe7fb] bg-white p-6 shadow-[0_18px_44px_rgba(86,75,165,0.08)] md:p-8">
             <div class="grid gap-6 lg:grid-cols-[190px_1fr_1fr_1fr_150px] lg:items-start">
-                <div><h2 class="font-heading text-[17px] font-bold text-ink">{{ __('What people say') }}</h2><p class="mt-5 font-heading text-[30px] font-bold text-[#4931c8]"><span class="text-[#4931c8]">★</span> 4.8</p><p class="mt-2 text-[14px] font-semibold text-[#7a5df3]">{{ __('(120 reviews)') }}</p></div>
-                @foreach ([['name' => 'Andi Pratama', 'time' => '2 days ago', 'text' => 'The field is clean, comfortable, and great for futsal.'], ['name' => 'Rizky Maulana', 'time' => '1 week ago', 'text' => 'Booking was easy, the service was friendly, highly recommended.'], ['name' => 'Siti Aisyah', 'time' => '2 weeks ago', 'text' => 'Complete facilities and the price matches the quality.']] as $review)
-                    <article class="border-[#eceaf5] lg:border-l lg:pl-8"><div class="flex items-center gap-3"><div class="h-10 w-10 rounded-full bg-[linear-gradient(135deg,#d8fff0,#d8d3ff)]"></div><div><h3 class="font-heading text-[15px] font-bold text-ink">{{ $review['name'] }}</h3><p class="text-[13px] text-copy"><span class="text-[#f4a51c]">★★★★★</span> <span class="ml-2">{{ $review['time'] }}</span></p></div></div><p class="mt-4 text-[14px] leading-6 text-[#4f5579]">{{ $review['text'] }}</p></article>
+                <div><h2 class="font-heading text-[17px] font-bold text-ink">{{ __('What people say') }}</h2><p class="mt-5 font-heading text-[30px] font-bold text-[#4931c8]"><span class="text-[#4931c8]">â˜…</span> 4.8</p><p class="mt-2 text-[14px] font-semibold text-[#7a5df3]">{{ __('(120 reviews)') }}</p></div>
+                @foreach ([['name' => 'Andi Pratama', 'time' => __('2 days ago'), 'text' => __('The field is clean, comfortable, and great for futsal.')], ['name' => 'Rizky Maulana', 'time' => __('1 week ago'), 'text' => __('Booking was easy, the service was friendly, highly recommended.')], ['name' => 'Siti Aisyah', 'time' => __('2 weeks ago'), 'text' => __('Complete facilities and the price matches the quality.')]] as $review)
+                    <article class="border-[#eceaf5] lg:border-l lg:pl-8"><div class="flex items-center gap-3"><div class="h-10 w-10 rounded-full bg-[linear-gradient(135deg,#d8fff0,#d8d3ff)]"></div><div><h3 class="font-heading text-[15px] font-bold text-ink">{{ $review['name'] }}</h3><p class="text-[13px] text-copy"><span class="text-[#f4a51c]">â˜…â˜…â˜…â˜…â˜…</span> <span class="ml-2">{{ $review['time'] }}</span></p></div></div><p class="mt-4 text-[14px] leading-6 text-[#4f5579]">{{ $review['text'] }}</p></article>
                 @endforeach
                 <div class="lg:text-right"><a href="#" class="inline-flex rounded-xl bg-[#f3efff] px-5 py-3 text-[14px] font-bold text-[#5a38d6] transition hover:bg-[#ece5ff]">{{ __('View all reviews') }}</a></div>
             </div>
@@ -203,7 +203,8 @@
             bookingDateInput.addEventListener('change', () => { bookingDateInput.form?.submit(); });
         }
 
-        const formatRupiah = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount).replace(/\s/g, ' ');
+        const currencyLocale = @json(app()->getLocale() === 'id' ? 'id-ID' : 'en-US');
+        const formatRupiah = (amount) => new Intl.NumberFormat(currencyLocale, { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount).replace(/\s/g, ' ');
         const selectedSlots = () => selectedIndexes.map((index) => slotButtons.find((button) => Number(button.dataset.slotIndex) === index)).filter(Boolean);
 
         const updateBookingSummary = () => {
@@ -263,3 +264,6 @@
     </script>
 </body>
 </html>
+
+
+

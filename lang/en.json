@@ -49,7 +49,7 @@
     "Privacy Policy": "Privacy Policy",
     "Secure & Trusted": "Secure & Trusted",
     "Your data is protected with industry-standard security.": "Your data is protected with industry-standard security.",
-    "© 2026 MatchPoint. All rights reserved.": "© 2026 MatchPoint. All rights reserved.",
+    "Â© 2026 MatchPoint. All rights reserved.": "Â© 2026 MatchPoint. All rights reserved.",
     "We Accept": "We Accept",
     "Payment method": "Payment method",
     "English": "English",
@@ -251,5 +251,107 @@
     "Your Favorites": "Your Favorites",
     "Your payment activity": "Your payment activity",
     "Choose file": "Choose file",
-    "No file selected": "No file selected"
+    "No file selected": "No file selected",
+    "2 days ago": "2 days ago",
+    "1 week ago": "1 week ago",
+    "2 weeks ago": "2 weeks ago",
+    "The field is clean, comfortable, and great for futsal.": "The field is clean, comfortable, and great for futsal.",
+    "Booking was easy, the service was friendly, highly recommended.": "Booking was easy, the service was friendly, highly recommended.",
+    "Complete facilities and the price matches the quality.": "Complete facilities and the price matches the quality.",
+    "Needs review": "Needs review",
+    "Upcoming": "Upcoming",
+    "Finished": "Finished",
+    "Archived": "Archived",
+    "Review and confirm or reject new uploads.": "Review and confirm or reject new uploads.",
+    "Waiting to be visible to players.": "Waiting to be visible to players.",
+    "Keep an eye on today's field activity.": "Keep an eye on today's field activity.",
+    "Catch up on the latest platform updates.": "Catch up on the latest platform updates.",
+    "Closed": "Closed",
+    "Total Fields": "Total Fields",
+    "All your venues": "All your venues",
+    "Approved Fields": "Approved Fields",
+    "Active and visible": "Active and visible",
+    "Pending Booking Proofs": "Pending Booking Proofs",
+    "Waiting for your review": "Waiting for your review",
+    "Today's Bookings": "Today's Bookings",
+    "Scheduled for today": "Scheduled for today",
+    "Configured Time Slots": "Configured Time Slots",
+    "Total time slots": "Total time slots",
+    "1 booking proof needs your review": "1 booking proof needs your review",
+    ":count booking proofs need your review": ":count booking proofs need your review",
+    ":count field pending admin approval": ":count field pending admin approval",
+    "1 booking scheduled today": "1 booking scheduled today",
+    ":count bookings scheduled today": ":count bookings scheduled today",
+    "1 unread notification": "1 unread notification",
+    ":count unread notifications": ":count unread notifications",
+    "Add New Field": "Add New Field",
+    "Create a new field or venue": "Create a new field or venue",
+    "Add Time Slot": "Add Time Slot",
+    "Configure field availability": "Configure field availability",
+    "Manage bookings on your fields": "Manage bookings on your fields",
+    "Welcome back! Here's what's happening with your fields today.": "Welcome back! Here's what's happening with your fields today.",
+    "Booking Overview": "Booking Overview",
+    "Bookings This Week": "Bookings This Week",
+    "This Week": "This Week",
+    "My Fields": "My Fields",
+    "Overview of your venues and their status.": "Overview of your venues and their status.",
+    "No fields yet": "No fields yet",
+    "Add your first field to start configuring availability and receiving bookings.": "Add your first field to start configuring availability and receiving bookings.",
+    "Create your first field": "Create your first field",
+    "Alerts": "Alerts",
+    "No urgent alerts right now.": "No urgent alerts right now.",
+    "Today's Schedule (All Fields)": "Today's Schedule (All Fields)",
+    "No configured schedule yet. Add time slots to start taking bookings.": "No configured schedule yet. Add time slots to start taking bookings.",
+    ":count more slots available": ":count more slots available"
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

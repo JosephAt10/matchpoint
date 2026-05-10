@@ -20,15 +20,25 @@ class Dashboard extends Page
 {
     protected string $view = 'filament.owner.pages.dashboard';
 
-    protected static ?string $title = 'Dashboard';
+    protected static ?string $title = null;
 
-    protected static ?string $navigationLabel = 'Dashboard';
+    protected static ?string $navigationLabel = null;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-home';
 
     protected static ?int $navigationSort = -2;
 
     protected Width|string|null $maxContentWidth = Width::Full;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Dashboard');
+    }
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('Dashboard');
+    }
 
     public function getHeading(): string | Htmlable | null
     {
@@ -79,30 +89,30 @@ class Dashboard extends Page
 
         $statusCards = [
             [
-                'label' => 'Pending',
+                'label' => __('Pending'),
                 'value' => $bookings->filter(fn (Booking $booking): bool => $booking->status === 'Pending')->count(),
-                'hint' => 'Needs review',
+                'hint' => __('Needs review'),
                 'tone' => 'emerald',
                 'icon' => 'clock',
             ],
             [
-                'label' => 'Confirmed',
+                'label' => __('Confirmed'),
                 'value' => $bookings->filter(fn (Booking $booking): bool => $booking->status === 'Confirmed')->count(),
-                'hint' => 'Upcoming',
+                'hint' => __('Upcoming'),
                 'tone' => 'blue',
                 'icon' => 'check-circle',
             ],
             [
-                'label' => 'Completed',
+                'label' => __('Completed'),
                 'value' => $bookings->filter(fn (Booking $booking): bool => $booking->status === 'Completed')->count(),
-                'hint' => 'Finished',
+                'hint' => __('Finished'),
                 'tone' => 'green',
                 'icon' => 'badge-check',
             ],
             [
-                'label' => 'Cancelled',
+                'label' => __('Cancelled'),
                 'value' => $bookings->filter(fn (Booking $booking): bool => $booking->status === 'Cancelled')->count(),
-                'hint' => 'Archived',
+                'hint' => __('Archived'),
                 'tone' => 'rose',
                 'icon' => 'x-mark',
             ],
@@ -113,7 +123,7 @@ class Dashboard extends Page
                 $day = $startOfWeek->copy()->addDays($offset);
 
                 return [
-                    'label' => $day->format('D'),
+                    'label' => $day->translatedFormat('D'),
                     'count' => $bookings->filter(fn (Booking $booking): bool => $booking->date?->isSameDay($day))->count(),
                 ];
             });
@@ -138,7 +148,7 @@ class Dashboard extends Page
                     'location' => $field->location,
                     'sport' => $field->sport_type,
                     'type' => $field->type,
-                    'price' => 'Rp ' . number_format((float) $field->price_per_slot, 0, ',', '.') . ' / slot',
+                    'price' => 'Rp ' . number_format((float) $field->price_per_slot, 0, ',', '.') . ' / ' . __('slot'),
                     'approved' => $field->is_approved,
                     'approval_status' => $field->approval_status,
                     'time_slots' => $totalSlots,
@@ -154,8 +164,10 @@ class Dashboard extends Page
 
         $alerts = collect([
             $pendingProofs > 0 ? [
-                'title' => "{$pendingProofs} booking proof" . ($pendingProofs === 1 ? '' : 's') . ' need your review',
-                'subtitle' => 'Review and confirm or reject new uploads.',
+                'title' => $pendingProofs === 1
+                    ? __('1 booking proof needs your review')
+                    : __(':count booking proofs need your review', ['count' => $pendingProofs]),
+                'subtitle' => __('Review and confirm or reject new uploads.'),
                 'tone' => 'amber',
                 'icon' => 'warning',
                 'url' => BookingResource::getUrl('index', [
@@ -164,22 +176,26 @@ class Dashboard extends Page
                 ]),
             ] : null,
             $fields->filter(fn (Field $field): bool => $field->isPendingApproval())->count() > 0 ? [
-                'title' => $fields->filter(fn (Field $field): bool => $field->isPendingApproval())->count() . ' field pending admin approval',
-                'subtitle' => 'Waiting to be visible to players.',
+                'title' => __(':count field pending admin approval', ['count' => $fields->filter(fn (Field $field): bool => $field->isPendingApproval())->count()]),
+                'subtitle' => __('Waiting to be visible to players.'),
                 'tone' => 'blue',
                 'icon' => 'info',
                 'url' => FieldResource::getUrl('index'),
             ] : null,
             $todaysBookings > 0 ? [
-                'title' => "{$todaysBookings} booking" . ($todaysBookings === 1 ? '' : 's') . ' scheduled today',
-                'subtitle' => 'Keep an eye on today\'s field activity.',
+                'title' => $todaysBookings === 1
+                    ? __('1 booking scheduled today')
+                    : __(':count bookings scheduled today', ['count' => $todaysBookings]),
+                'subtitle' => __("Keep an eye on today's field activity."),
                 'tone' => 'emerald',
                 'icon' => 'calendar',
                 'url' => BookingResource::getUrl('index'),
             ] : null,
             Notification::query()->forUser($user->id)->unread()->count() > 0 ? [
-                'title' => Notification::query()->forUser($user->id)->unread()->count() . ' unread notification' . (Notification::query()->forUser($user->id)->unread()->count() === 1 ? '' : 's'),
-                'subtitle' => 'Catch up on the latest platform updates.',
+                'title' => Notification::query()->forUser($user->id)->unread()->count() === 1
+                    ? __('1 unread notification')
+                    : __(':count unread notifications', ['count' => Notification::query()->forUser($user->id)->unread()->count()]),
+                'subtitle' => __('Catch up on the latest platform updates.'),
                 'tone' => 'violet',
                 'icon' => 'bell',
                 'url' => AppNotificationResource::getUrl('index'),
@@ -195,7 +211,7 @@ class Dashboard extends Page
                 return [
                     'field' => $slot->field?->name,
                     'range' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
-                    'status' => $isBooked ? 'Booked' : ($isAvailable ? 'Available' : 'Closed'),
+                    'status' => $isBooked ? __('Booked') : ($isAvailable ? __('Available') : __('Closed')),
                     'tone' => $isBooked ? 'rose' : ($isAvailable ? 'emerald' : 'slate'),
                 ];
             });
@@ -210,37 +226,37 @@ class Dashboard extends Page
                 'today_label' => $today->format('M d, Y'),
                 'stats' => [
                     [
-                        'label' => 'Total Fields',
+                        'label' => __('Total Fields'),
                         'value' => $fields->count(),
-                        'hint' => 'All your venues',
+                        'hint' => __('All your venues'),
                         'tone' => 'emerald',
                         'icon' => 'field',
                     ],
                     [
-                        'label' => 'Approved Fields',
+                        'label' => __('Approved Fields'),
                         'value' => $fields->where('is_approved', true)->count(),
-                        'hint' => 'Active and visible',
+                        'hint' => __('Active and visible'),
                         'tone' => 'blue',
                         'icon' => 'shield-check',
                     ],
                     [
-                        'label' => 'Pending Booking Proofs',
+                        'label' => __('Pending Booking Proofs'),
                         'value' => $pendingProofs,
-                        'hint' => 'Waiting for your review',
+                        'hint' => __('Waiting for your review'),
                         'tone' => 'amber',
                         'icon' => 'document',
                     ],
                     [
-                        'label' => "Today's Bookings",
+                        'label' => __("Today's Bookings"),
                         'value' => $todaysBookings,
-                        'hint' => 'Scheduled for today',
+                        'hint' => __('Scheduled for today'),
                         'tone' => 'violet',
                         'icon' => 'calendar',
                     ],
                     [
-                        'label' => 'Configured Time Slots',
+                        'label' => __('Configured Time Slots'),
                         'value' => $timeSlots->count(),
-                        'hint' => 'Total time slots',
+                        'hint' => __('Total time slots'),
                         'tone' => 'cyan',
                         'icon' => 'clock',
                     ],
@@ -254,22 +270,22 @@ class Dashboard extends Page
                 'schedule_url' => TimeSlotResource::getUrl('index'),
                 'quick_actions' => [
                     [
-                        'label' => 'Add New Field',
-                        'description' => 'Create a new field or venue',
+                        'label' => __('Add New Field'),
+                        'description' => __('Create a new field or venue'),
                         'url' => FieldResource::getUrl('create'),
                         'tone' => 'emerald',
                         'icon' => 'plus',
                     ],
                     [
-                        'label' => 'Add Time Slot',
-                        'description' => 'Configure field availability',
+                        'label' => __('Add Time Slot'),
+                        'description' => __('Configure field availability'),
                         'url' => TimeSlotResource::getUrl('create'),
                         'tone' => 'blue',
                         'icon' => 'clock',
                     ],
                     [
-                        'label' => 'View All Bookings',
-                        'description' => 'Manage bookings on your fields',
+                        'label' => __('View All Bookings'),
+                        'description' => __('Manage bookings on your fields'),
                         'url' => BookingResource::getUrl('index'),
                         'tone' => 'violet',
                         'icon' => 'list',
@@ -311,3 +327,41 @@ class Dashboard extends Page
             ->implode('');
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
