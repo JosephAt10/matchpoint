@@ -81,7 +81,7 @@
                     @if ($booking->payment?->isRejected())
                         <div class="mt-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">{{ __('Proof rejected. Reason: :reason', ['reason' => $booking->payment->rejection_reason ?: __('Please upload a new proof.')]) }}</div>
                     @endif
-                    <form action="{{ route('bookings.payment-proof.store', $booking) }}" method="POST" enctype="multipart/form-data" class="mt-5 space-y-4">
+                    <form action="{{ route('bookings.payment-proof.store', $booking) }}" method="POST" enctype="multipart/form-data" novalidate class="mt-5 space-y-4">
                         @csrf
                         <label class="block">
                             <span class="text-[14px] font-bold text-ink">{{ __('Upload proof') }}</span>

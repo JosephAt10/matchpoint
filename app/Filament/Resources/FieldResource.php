@@ -27,6 +27,21 @@ class FieldResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Fields');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Field');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Fields');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema;
@@ -49,90 +64,106 @@ class FieldResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('image_path')
-                    ->label('Image')
+                    ->label(__('Image'))
                     ->getStateUsing(fn (Field $record): ?string => $record->image_url ? url($record->image_url) : null)
                     ->checkFileExistence(false)
                     ->square(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('owner.name')
-                    ->label('Owner')
+                    ->label(__('Owner'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('sport_type')
-                    ->label('Sport')
+                    ->label(__('Sport'))
                     ->badge(),
                 Tables\Columns\TextColumn::make('location')
+                    ->label(__('Location'))
                     ->searchable()
                     ->toggleable(),
                 Tables\Columns\BadgeColumn::make('type')
+                    ->label(__('Field Type'))
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->colors([
                         'success' => 'Outdoor',
                         'info' => 'Indoor',
                     ]),
                 Tables\Columns\BadgeColumn::make('approval_status')
-                    ->label('Approval')
+                    ->label(__('Approval'))
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->colors([
                         'success' => 'Approved',
                         'warning' => 'Pending',
                         'danger' => 'Rejected',
                     ]),
                 Tables\Columns\TextColumn::make('price_per_slot')
-                    ->label('Price')
+                    ->label(__('Price'))
                     ->formatStateUsing(fn ($state): string => 'Rp ' . number_format((float) $state, 0, ',', '.')),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created'))
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('Updated At'))
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('is_approved')
-                    ->label('Approval')
+                    ->label(__('Approval'))
                     ->options([
-                        '0' => 'Pending',
-                        '1' => 'Approved',
+                        '0' => __('Pending'),
+                        '1' => __('Approved'),
                     ]),
                 SelectFilter::make('sport_type')
-                    ->label('Sport')
+                    ->label(__('Sport'))
                     ->options(fn (): array => Field::query()
                         ->orderBy('sport_type')
                         ->pluck('sport_type', 'sport_type')
                         ->all()),
                 SelectFilter::make('owner_status')
-                    ->label('Owner Status')
+                    ->label(__('Owner Status'))
                     ->relationship('owner', 'status')
                     ->options([
-                        'Active' => 'Active',
-                        'PendingApproval' => 'Pending Approval',
-                        'Rejected' => 'Rejected',
-                        'Deactivated' => 'Deactivated',
+                        'Active' => __('Active'),
+                        'PendingApproval' => __('Pending Approval'),
+                        'Rejected' => __('Rejected'),
+                        'Deactivated' => __('Deactivated'),
                     ]),
             ])
             ->actions([
                 Action::make('approve')
-                    ->label('Approve')
+                    ->label(__('Approve'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn (Field $record): bool => ! $record->is_approved)
                     ->requiresConfirmation()
+                    ->modalHeading(__('Approve this field?'))
+                    ->modalDescription(__('The field will become visible to users after approval.'))
+                    ->modalSubmitActionLabel(__('Approve'))
                     ->action(fn (Field $record) => $record->update(['is_approved' => true, 'rejected_at' => null])),
                 Action::make('reject')
-                    ->label('Reject')
+                    ->label(__('Reject'))
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->visible(fn (Field $record): bool => ! $record->is_approved)
                     ->requiresConfirmation()
+                    ->modalHeading(__('Reject this field?'))
+                    ->modalDescription(__('The field will remain hidden until it is reviewed again.'))
+                    ->modalSubmitActionLabel(__('Reject'))
                     ->action(fn (Field $record) => $record->update(['is_approved' => false, 'rejected_at' => now()])),
                 Action::make('markPending')
-                    ->label('Mark Pending')
+                    ->label(__('Pending'))
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
                     ->visible(fn (Field $record): bool => $record->is_approved || $record->isRejected())
                     ->requiresConfirmation()
+                    ->modalHeading(__('Mark this field as pending?'))
+                    ->modalDescription(__('The field will be hidden from users until it is approved again.'))
+                    ->modalSubmitActionLabel(__('Pending'))
                     ->action(fn (Field $record) => $record->update(['is_approved' => false, 'rejected_at' => null])),
             ])
             ->bulkActions([]);

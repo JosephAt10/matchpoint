@@ -133,7 +133,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('register.store') }}" method="POST" class="mt-7 space-y-4">
+                <form action="{{ route('register.store') }}" method="POST" novalidate class="mt-7 space-y-4">
                     @csrf
 
                     <label class="block">
@@ -199,12 +199,12 @@
                         </div>
 
                         <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">⚽</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Football / Futsal') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">🏀</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Basketball') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">🎾</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Tennis') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">🏸</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Badminton') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">🏐</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Volleyball') }}</p></div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">•••</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Other') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã¢Å¡Â½</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Football / Futsal') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸Ââ‚¬</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Basketball') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸Å½Â¾</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Tennis') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸ÂÂ¸</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Badminton') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã°Å¸ÂÂ</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Volleyball') }}</p></div>
+                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center"><div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[22px]">Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢</div><p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Other') }}</p></div>
                         </div>
                     </div>
 
@@ -239,9 +239,9 @@
                     <div class="rounded-2xl border border-[#e5e0fb] bg-[#f6f3ff] px-4 py-3">
                         <p class="text-[12px] font-semibold text-[#6d63ea]">{{ __('Password must contain:') }}</p>
                         <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#6a6f92]">
-                            <span class="flex items-center gap-1.5"><span class="text-green-600">●</span> {{ __('At least 8 characters') }}</span>
-                            <span class="flex items-center gap-1.5"><span class="text-green-600">●</span> {{ __('One uppercase letter') }}</span>
-                            <span class="flex items-center gap-1.5"><span class="text-green-600">●</span> {{ __('One number or symbol') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="text-green-600">Ã¢â€”Â</span> {{ __('At least 8 characters') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="text-green-600">Ã¢â€”Â</span> {{ __('One uppercase letter') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="text-green-600">Ã¢â€”Â</span> {{ __('One number or symbol') }}</span>
                         </div>
                     </div>
 

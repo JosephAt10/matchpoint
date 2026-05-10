@@ -302,56 +302,78 @@
     "No urgent alerts right now.": "Tidak ada peringatan mendesak saat ini.",
     "Today's Schedule (All Fields)": "Jadwal Hari Ini (Semua Lapangan)",
     "No configured schedule yet. Add time slots to start taking bookings.": "Belum ada jadwal yang dikonfigurasi. Tambahkan slot waktu untuk mulai menerima booking.",
-    ":count more slots available": ":count slot lagi tersedia"
+    ":count more slots available": ":count slot lagi tersedia",
+    "Admin": "Admin",
+    "Users": "Pengguna",
+    "User": "Pengguna",
+    "Field Owner": "Pemilik Lapangan",
+    "Pending Approval": "Menunggu Persetujuan",
+    "Deactivated": "Dinonaktifkan",
+    "Approve": "Setujui",
+    "Reject": "Tolak",
+    "Reactivate": "Aktifkan Lagi",
+    "Approval": "Persetujuan",
+    "Image": "Gambar",
+    "Sport": "Olahraga",
+    "Owner Status": "Status Pemilik",
+    "Booked By": "Dipesan Oleh",
+    "Booking Date": "Tanggal Booking",
+    "Slot": "Slot",
+    "DP Amount": "Jumlah DP",
+    "Payment Status": "Status Pembayaran",
+    "Deadline": "Batas Waktu",
+    "Uploaded By": "Diunggah Oleh",
+    "Uploaded At": "Waktu Unggah",
+    "Pending Review": "Menunggu Tinjauan",
+    "Sign out": "Keluar",
+    "Are you sure you want to log out?": "Apakah Anda yakin ingin keluar?",
+    "This will end your current session.": "Tindakan ini akan mengakhiri sesi Anda saat ini.",
+    "Approve this field owner?": "Setujui pemilik lapangan ini?",
+    "This field owner will be able to sign in and manage their fields.": "Pemilik lapangan ini akan bisa masuk dan mengelola lapangannya.",
+    "Reject this field owner?": "Tolak pemilik lapangan ini?",
+    "This field owner request will be rejected and the user will need admin help to continue.": "Permintaan pemilik lapangan ini akan ditolak dan pengguna perlu bantuan admin untuk melanjutkan.",
+    "Deactivate this account?": "Nonaktifkan akun ini?",
+    "This account will lose access until you reactivate it.": "Akun ini akan kehilangan akses sampai Anda mengaktifkannya kembali.",
+    "Reactivate this account?": "Aktifkan kembali akun ini?",
+    "This account will regain access immediately.": "Akun ini akan langsung mendapatkan akses kembali.",
+    "Approve this field?": "Setujui lapangan ini?",
+    "The field will become visible to users after approval.": "Lapangan akan terlihat oleh pengguna setelah disetujui.",
+    "Reject this field?": "Tolak lapangan ini?",
+    "The field will remain hidden until it is reviewed again.": "Lapangan akan tetap tersembunyi sampai ditinjau kembali.",
+    "Mark this field as pending?": "Tandai lapangan ini sebagai menunggu?",
+    "The field will be hidden from users until it is approved again.": "Lapangan akan disembunyikan dari pengguna sampai disetujui lagi.",
+    "Confirm this booking payment?": "Konfirmasi pembayaran booking ini?",
+    "The booking will be marked as confirmed and the user will be notified.": "Booking akan ditandai sebagai terkonfirmasi dan pengguna akan diberi tahu.",
+    "Reject this payment proof?": "Tolak bukti pembayaran ini?",
+    "The user will be asked to upload a new payment proof.": "Pengguna akan diminta mengunggah bukti pembayaran baru.",
+    "Reason for rejection": "Alasan penolakan",
+    "1 booking proof is waiting for your review.": "1 bukti booking menunggu tinjauan Anda.",
+    ":count booking proofs are waiting for review by :reviewer.": ":count bukti booking menunggu tinjauan oleh :reviewer.",
+    "your": "Anda",
+    "Your booking for :field has been confirmed.": "Booking Anda untuk :field telah dikonfirmasi.",
+    "Your payment proof for :field was rejected. Please upload a new proof.": "Bukti pembayaran Anda untuk :field ditolak. Silakan unggah bukti baru.",
+    "Field Image": "Gambar Lapangan",
+    "Sport Type": "Jenis Olahraga",
+    "Price Per Slot": "Harga per Slot",
+    "Time Slots": "Slot Waktu",
+    "Bookings": "Booking",
+    "Edit": "Ubah",
+    "Days": "Hari",
+    "Day": "Hari",
+    "Opening Time": "Jam Buka",
+    "Closing Time": "Jam Tutup",
+    "Available by default": "Tersedia secara default",
+    "Select every day that should receive the generated one-hour slots.": "Pilih setiap hari yang harus menerima slot satu jam yang dibuat otomatis.",
+    "Example: 08:00": "Contoh: 08:00",
+    "Example: 00:00 for midnight": "Contoh: 00:00 untuk tengah malam",
+    "Time Range": "Rentang Waktu",
+    "Created": "Dibuat",
+    "Select at least one day.": "Pilih setidaknya satu hari.",
+    "Opening and closing times are required.": "Jam buka dan jam tutup wajib diisi.",
+    "Closing time must be after opening time. Use 00:00 for midnight.": "Jam tutup harus setelah jam buka. Gunakan 00:00 untuk tengah malam.",
+    "The time range must produce full one-hour slots.": "Rentang waktu harus menghasilkan slot satu jam penuh.",
+    "Time slots generated successfully": "Slot waktu berhasil dibuat",
+    "Disabled": "Dinonaktifkan",
+    "Please correct the highlighted fields and try again.": "Silakan perbaiki kolom yang disorot lalu coba lagi.",
+    "Updated At": "Diperbarui"
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

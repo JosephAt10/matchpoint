@@ -2,6 +2,7 @@
 
 return [
     'accepted' => 'Kolom :attribute harus disetujui.',
+    'after_or_equal' => 'Kolom :attribute harus berupa tanggal setelah atau sama dengan :date.',
     'array' => 'Kolom :attribute harus berupa array.',
     'boolean' => 'Kolom :attribute harus bernilai benar atau salah.',
     'confirmed' => 'Konfirmasi :attribute tidak cocok.',
@@ -41,5 +42,10 @@ return [
         'date' => 'tanggal',
         'proof' => 'bukti pembayaran',
         'slot_ids' => 'slot waktu',
+        'slot_ids.*' => 'slot waktu',
+        'days_of_week' => 'hari operasional',
+        'opening_time' => 'jam buka',
+        'closing_time' => 'jam tutup',
+        'rejection_reason' => 'alasan penolakan',
     ],
 ];

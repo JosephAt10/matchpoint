@@ -30,25 +30,25 @@ class CreateTimeSlot extends CreateRecord
 
         if (blank($days)) {
             throw ValidationException::withMessages([
-                'days_of_week' => 'Select at least one day.',
+                'days_of_week' => __('Select at least one day.'),
             ]);
         }
 
         if ($openingMinutes === null || $closingMinutes === null) {
             throw ValidationException::withMessages([
-                'opening_time' => 'Opening and closing times are required.',
+                'opening_time' => __('Opening and closing times are required.'),
             ]);
         }
 
         if ($closingMinutes <= $openingMinutes) {
             throw ValidationException::withMessages([
-                'closing_time' => 'Closing time must be after opening time. Use 00:00 for midnight.',
+                'closing_time' => __('Closing time must be after opening time. Use 00:00 for midnight.'),
             ]);
         }
 
         if (($closingMinutes - $openingMinutes) < 60 || (($closingMinutes - $openingMinutes) % 60) !== 0) {
             throw ValidationException::withMessages([
-                'closing_time' => 'The time range must produce full one-hour slots.',
+                'closing_time' => __('The time range must produce full one-hour slots.'),
             ]);
         }
 
@@ -94,7 +94,7 @@ class CreateTimeSlot extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return 'Time slots generated successfully';
+        return __('Time slots generated successfully');
     }
 
     private function timeToMinutes(?string $time): ?int

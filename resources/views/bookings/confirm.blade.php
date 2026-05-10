@@ -74,7 +74,7 @@
                     <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Down Payment') }}</span><span class="font-heading text-[24px] font-bold text-[#5a38d6]">Rp {{ number_format($downPaymentAmount, 0, ',', '.') }}</span></div>
                 </div>
 
-                <form action="{{ route('bookings.store', $field) }}" method="POST" enctype="multipart/form-data" class="mt-5 space-y-4">
+                <form action="{{ route('bookings.store', $field) }}" method="POST" enctype="multipart/form-data" novalidate class="mt-5 space-y-4">
                     @csrf
                     <input type="hidden" name="date" value="{{ $bookingDate->toDateString() }}">
                     @foreach ($slotIds as $slotId)

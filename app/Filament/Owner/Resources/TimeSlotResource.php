@@ -41,12 +41,31 @@ class TimeSlotResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Time Slots');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Slot');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Time Slots');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('field_id')
-                    ->label('Field')
+                    ->label(__('Field'))
+                    ->validationAttribute(__('Field'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Field')]),
+                    ])
                     ->options(fn (): array => Field::query()
                         ->where('owner_id', auth()->id())
                         ->orderBy('name')
@@ -56,39 +75,67 @@ class TimeSlotResource extends Resource
                     ->required()
                     ->native(false),
                 CheckboxList::make('days_of_week')
-                    ->label('Days')
-                    ->options(static::DAYS)
+                    ->label(__('Days'))
+                    ->validationAttribute(__('Days'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Days')]),
+                    ])
+                    ->options(array_map(fn ($day) => __($day), static::DAYS))
                     ->columns(4)
                     ->visibleOn('create')
                     ->required(fn (string $operation): bool => $operation === 'create')
-                    ->helperText('Select every day that should receive the generated one-hour slots.'),
+                    ->helperText(__('Select every day that should receive the generated one-hour slots.')),
                 Select::make('day_of_week')
-                    ->options(static::DAYS)
+                    ->label(__('Day'))
+                    ->validationAttribute(__('Day'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Day')]),
+                    ])
+                    ->options(array_map(fn ($day) => __($day), static::DAYS))
                     ->visibleOn('edit')
                     ->required(fn (string $operation): bool => $operation === 'edit')
                     ->native(false),
                 TextInput::make('opening_time')
-                    ->label('Opening Time')
+                    ->label(__('Opening Time'))
+                    ->validationAttribute(__('Opening Time'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Opening Time')]),
+                    ])
                     ->type('time')
                     ->visibleOn('create')
                     ->required(fn (string $operation): bool => $operation === 'create')
-                    ->helperText('Example: 08:00'),
+                    ->helperText(__('Example: 08:00')),
                 TextInput::make('closing_time')
-                    ->label('Closing Time')
+                    ->label(__('Closing Time'))
+                    ->validationAttribute(__('Closing Time'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Closing Time')]),
+                    ])
                     ->type('time')
                     ->visibleOn('create')
                     ->required(fn (string $operation): bool => $operation === 'create')
-                    ->helperText('Example: 00:00 for midnight'),
+                    ->helperText(__('Example: 00:00 for midnight')),
                 TextInput::make('start_time')
+                    ->label(__('Opening Time'))
+                    ->validationAttribute(__('Opening Time'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Opening Time')]),
+                    ])
                     ->type('time')
                     ->visibleOn('edit')
                     ->required(fn (string $operation): bool => $operation === 'edit'),
                 TextInput::make('end_time')
+                    ->label(__('Closing Time'))
+                    ->validationAttribute(__('Closing Time'))
+                    ->validationMessages([
+                        'required' => __('validation.required', ['attribute' => __('Closing Time')]),
+                    ])
                     ->type('time')
                     ->visibleOn('edit')
                     ->required(fn (string $operation): bool => $operation === 'edit'),
                 Toggle::make('is_available_base')
-                    ->label('Available by default')
+                    ->label(__('Available by default'))
+                    ->validationAttribute(__('Status'))
                     ->default(true),
             ])
             ->columns(2);
@@ -132,29 +179,30 @@ class TimeSlotResource extends Resource
             ->defaultSort('day_of_week')
             ->columns([
                 Tables\Columns\TextColumn::make('field.name')
-                    ->label('Field')
+                    ->label(__('Field'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('day_of_week')
-                    ->label('Day')
+                    ->label(__('Day'))
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->badge(),
                 Tables\Columns\TextColumn::make('slot_range')
-                    ->label('Time Range')
+                    ->label(__('Time Range'))
                     ->state(fn (TimeSlot $record): string => substr($record->start_time, 0, 5) . ' - ' . substr($record->end_time, 0, 5)),
                 Tables\Columns\BadgeColumn::make('is_available_base')
-                    ->label('Status')
-                    ->formatStateUsing(fn (bool $state): string => $state ? 'Available' : 'Disabled')
+                    ->label(__('Status'))
+                    ->formatStateUsing(fn (bool $state): string => $state ? __('Available') : __('Disabled'))
                     ->colors([
                         'success' => true,
                         'gray' => false,
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('Created'))
                     ->dateTime('d M Y, H:i')
                     ->toggleable(),
             ])
             ->actions([
                 Action::make('edit')
-                    ->label('Edit')
+                    ->label(__('Edit'))
                     ->icon('heroicon-o-pencil-square')
                     ->url(fn (TimeSlot $record): string => static::getUrl('edit', ['record' => $record])),
             ])

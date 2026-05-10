@@ -17,7 +17,7 @@ class ListUsers extends ListRecords
     {
         return [
             Actions\Action::make('pendingOwners')
-                ->label('Pending Field Owners')
+                ->label(__('Pending Field Owners'))
                 ->icon('heroicon-o-user-plus')
                 ->color('warning')
                 ->url(UserResource::getUrl('index', [

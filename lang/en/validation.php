@@ -2,6 +2,7 @@
 
 return [
     'accepted' => 'The :attribute field must be accepted.',
+    'after_or_equal' => 'The :attribute field must be a date after or equal to :date.',
     'array' => 'The :attribute field must be an array.',
     'boolean' => 'The :attribute field must be true or false.',
     'confirmed' => 'The :attribute field confirmation does not match.',
@@ -41,5 +42,10 @@ return [
         'date' => 'date',
         'proof' => 'payment proof',
         'slot_ids' => 'time slot',
+        'slot_ids.*' => 'time slot',
+        'days_of_week' => 'days of week',
+        'opening_time' => 'opening time',
+        'closing_time' => 'closing time',
+        'rejection_reason' => 'rejection reason',
     ],
 ];

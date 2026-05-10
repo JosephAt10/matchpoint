@@ -17,7 +17,7 @@ class ListBookings extends ListRecords
     {
         return [
             Actions\Action::make('pendingReview')
-                ->label('Pending Review')
+                ->label(__('Pending Review'))
                 ->icon('heroicon-o-clock')
                 ->color('warning')
                 ->url(BookingResource::getUrl('index', [

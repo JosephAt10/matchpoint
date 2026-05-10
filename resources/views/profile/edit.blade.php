@@ -21,27 +21,36 @@
                 </article>
             </div>
 
-            <form action="{{ route('profile.update') }}" method="POST" class="grid gap-5 md:grid-cols-2">
+            <form action="{{ route('profile.update') }}" method="POST" novalidate class="grid gap-5 md:grid-cols-2">
+                @if ($errors->any())
+                    <div class="md:col-span-2 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+                        {{ __('Please correct the highlighted fields and try again.') }}
+                    </div>
+                @endif
                 @csrf
                 @method('PATCH')
                 <label class="block space-y-2 md:col-span-2">
                     <span class="text-sm text-stone-300">{{ __('Name') }}</span>
-                    <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full rounded-2xl border border-white/10 bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300" required>
+                    <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full rounded-2xl border {{ $errors->has('name') ? 'border-rose-300' : 'border-white/10' }} bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}" required>
+                    <x-forms.error field="name" />
                 </label>
 
                 <label class="block space-y-2 md:col-span-2">
                     <span class="text-sm text-stone-300">{{ __('Email Address') }}</span>
-                    <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full rounded-2xl border border-white/10 bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300" required>
+                    <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full rounded-2xl border {{ $errors->has('email') ? 'border-rose-300' : 'border-white/10' }} bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" required>
+                    <x-forms.error field="email" />
                 </label>
 
                 <label class="block space-y-2">
                     <span class="text-sm text-stone-300">{{ __('New password') }}</span>
-                    <input type="password" name="password" class="w-full rounded-2xl border border-white/10 bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300">
+                    <input type="password" name="password" class="w-full rounded-2xl border {{ $errors->has('password') ? 'border-rose-300' : 'border-white/10' }} bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300" aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}">
+                    <x-forms.error field="password" />
                 </label>
 
                 <label class="block space-y-2">
                     <span class="text-sm text-stone-300">{{ __('Confirm new password') }}</span>
-                    <input type="password" name="password_confirmation" class="w-full rounded-2xl border border-white/10 bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300">
+                    <input type="password" name="password_confirmation" class="w-full rounded-2xl border {{ $errors->has('password_confirmation') || $errors->has('password') ? 'border-rose-300' : 'border-white/10' }} bg-stone-950/70 px-4 py-3 outline-none transition focus:border-orange-300" aria-invalid="{{ $errors->has('password_confirmation') || $errors->has('password') ? 'true' : 'false' }}">
+                    <x-forms.error field="password_confirmation" />
                 </label>
 
                 <button type="submit" class="md:col-span-2 rounded-2xl bg-orange-400 px-5 py-3 font-medium text-stone-950 transition hover:bg-orange-300">

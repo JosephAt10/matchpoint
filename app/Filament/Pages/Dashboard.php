@@ -11,10 +11,13 @@ class Dashboard extends \Filament\Pages\Dashboard
     {
         return [
             Action::make('logout')
-                ->label('Logout')
+                ->label(__('Logout'))
                 ->icon('heroicon-o-arrow-right-start-on-rectangle')
                 ->color('gray')
                 ->requiresConfirmation()
+                ->modalHeading(__('Are you sure you want to log out?'))
+                ->modalDescription(__('This will end your current session.'))
+                ->modalSubmitActionLabel(__('Sign out'))
                 ->action(function () {
                     Auth::logout();
                     request()->session()->invalidate();

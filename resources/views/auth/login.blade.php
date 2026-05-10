@@ -103,7 +103,7 @@
                     <p class="mt-3 text-[20px] text-copy md:text-[18px]">{{ __('Sign in to continue your match journey') }}</p>
                 </div>
 
-                <form action="{{ route('login.store') }}" method="POST" class="mt-10 space-y-6">
+                <form action="{{ route('login.store') }}" method="POST" novalidate class="mt-10 space-y-6">
                     @csrf
 
                     <div>

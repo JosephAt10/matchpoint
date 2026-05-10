@@ -50,7 +50,7 @@
     <section class="owner-dashboard__hero flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
             <h1 class="owner-dashboard__title">{{ __('Dashboard') }}</h1>
-            <p class="owner-dashboard__subtitle">{{ __('Welcome back! Here''s what''s happening with your fields today.') }}</p>
+            <p class="owner-dashboard__subtitle">{{ __("Welcome back! Here's what's happening with your fields today.") }}</p>
         </div>
 
         <div class="owner-dashboard__date-chip">

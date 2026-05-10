@@ -17,7 +17,7 @@ class ListFields extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Add New Field'),
+                ->label(__('Add New Field')),
         ];
     }
 }

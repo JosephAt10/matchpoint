@@ -17,7 +17,7 @@ class ListTimeSlots extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Add Time Slot'),
+                ->label(__('Add Time Slot')),
         ];
     }
 }

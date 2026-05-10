@@ -31,6 +31,21 @@ class BookingResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Bookings');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Booking');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Bookings');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema;
@@ -76,24 +91,25 @@ class BookingResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('field.name')
-                    ->label('Field')
+                    ->label(__('Field'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('Booked By')
+                    ->label(__('Booked By'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('date')
-                    ->label('Booking Date')
+                    ->label(__('Booking Date'))
                     ->date('d M Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('slot_range')
-                    ->label('Slot')
+                    ->label(__('Slot'))
                     ->state(fn (Booking $record): string => static::slotRange($record)),
                 Tables\Columns\TextColumn::make('payment.amount')
-                    ->label('DP Amount')
+                    ->label(__('DP Amount'))
                     ->formatStateUsing(fn ($state): string => 'Rp ' . number_format((float) $state, 0, ',', '.'))
                     ->sortable(),
                 Tables\Columns\BadgeColumn::make('status')
-                    ->label('Booking Status')
+                    ->label(__('Booking Status'))
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->colors([
                         'warning' => 'Pending',
                         'success' => 'Confirmed',
@@ -101,68 +117,81 @@ class BookingResource extends Resource
                         'danger' => 'Cancelled',
                     ]),
                 Tables\Columns\BadgeColumn::make('payment.status')
-                    ->label('Payment Status')
+                    ->label(__('Payment Status'))
+                    ->formatStateUsing(fn (string $state): string => __($state))
                     ->colors([
                         'warning' => 'Pending',
                         'success' => 'Verified',
                         'danger' => 'Rejected',
                     ]),
                 Tables\Columns\TextColumn::make('payment_deadline')
-                    ->label('Deadline')
+                    ->label(__('Deadline'))
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('payment.payer.name')
-                    ->label('Uploaded By')
+                    ->label(__('Uploaded By'))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('payment.created_at')
-                    ->label('Uploaded At')
+                    ->label(__('Uploaded At'))
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Booking Status')
+                    ->label(__('Booking Status'))
                     ->options([
-                        'Pending' => 'Pending',
-                        'Confirmed' => 'Confirmed',
-                        'Completed' => 'Completed',
-                        'Cancelled' => 'Cancelled',
+                        'Pending' => __('Pending'),
+                        'Confirmed' => __('Confirmed'),
+                        'Completed' => __('Completed'),
+                        'Cancelled' => __('Cancelled'),
                     ]),
                 SelectFilter::make('payment_status')
-                    ->label('Payment Status')
+                    ->label(__('Payment Status'))
                     ->relationship('payment', 'status')
                     ->options([
-                        'Pending' => 'Pending',
-                        'Verified' => 'Verified',
-                        'Rejected' => 'Rejected',
+                        'Pending' => __('Pending'),
+                        'Verified' => __('Verified'),
+                        'Rejected' => __('Rejected'),
                     ]),
             ])
             ->actions([
                 Action::make('viewProof')
-                    ->label('View Proof')
+                    ->label(__('View Proof'))
                     ->icon('heroicon-o-photo')
                     ->color('gray')
                     ->visible(fn (Booking $record): bool => filled($record->payment?->proof))
                     ->url(fn (Booking $record): string => Storage::url($record->payment->proof), shouldOpenInNewTab: true),
                 Action::make('confirmBooking')
-                    ->label('Confirm Booking')
+                    ->label(__('Confirm Booking'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
+                    ->modalHeading(__('Confirm this booking payment?'))
+                    ->modalDescription(__('The booking will be marked as confirmed and the user will be notified.'))
+                    ->modalSubmitActionLabel(__('Confirm Booking'))
                     ->visible(fn (Booking $record): bool => $record->isPending() && $record->payment?->isPending() && static::canReviewBooking($record))
                     ->action(function (Booking $record): void {
                         static::verifyBookingPayment($record);
                     }),
                 Action::make('rejectProof')
-                    ->label('Reject Proof')
+                    ->label(__('Reject'))
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->visible(fn (Booking $record): bool => $record->isPending() && $record->payment?->isPending() && static::canReviewBooking($record))
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Reject this payment proof?'))
+                    ->modalDescription(__('The user will be asked to upload a new payment proof.'))
+                    ->modalSubmitActionLabel(__('Reject'))
                     ->schema([
                         Textarea::make('rejection_reason')
-                            ->label('Reason for rejection')
+                            ->label(__('Reason for rejection'))
+                            ->validationAttribute(__('Reason for rejection'))
+                            ->validationMessages([
+                                'required' => __('validation.required', ['attribute' => __('Reason for rejection')]),
+                                'max.string' => __('validation.max.string', ['attribute' => __('Reason for rejection'), 'max' => 500]),
+                            ])
                             ->required()
                             ->maxLength(500)
                             ->rows(4),
@@ -211,9 +240,11 @@ class BookingResource extends Resource
             return null;
         }
 
-        $reviewer = auth()->user()?->isFieldOwner() ? 'your' : 'field owner';
+        $reviewer = auth()->user()?->isFieldOwner() ? __('your') : __('Field Owner');
 
-        return "{$pendingCount} booking proof" . ($pendingCount === '1' ? '' : 's') . " waiting for {$reviewer} review.";
+        return $pendingCount === '1'
+            ? __('1 booking proof is waiting for your review.')
+            : __(':count booking proofs are waiting for review by :reviewer.', ['count' => $pendingCount, 'reviewer' => $reviewer]);
     }
 
     public static function getPages(): array
@@ -242,7 +273,7 @@ class BookingResource extends Resource
 
         Notification::create([
             'user_id' => $booking->user_id,
-            'message' => "Your booking for {$booking->field->name} has been confirmed.",
+            'message' => __('Your booking for :field has been confirmed.', ['field' => $booking->field->name]),
             'type' => 'Booking',
             'status' => 'Unread',
             'notifiable_type' => Booking::class,
@@ -269,7 +300,7 @@ class BookingResource extends Resource
 
         Notification::create([
             'user_id' => $booking->user_id,
-            'message' => "Your payment proof for {$booking->field->name} was rejected. Please upload a new proof.",
+            'message' => __('Your payment proof for :field was rejected. Please upload a new proof.', ['field' => $booking->field->name]),
             'type' => 'Payment',
             'status' => 'Unread',
             'notifiable_type' => $booking->payment::class,
@@ -291,7 +322,7 @@ class BookingResource extends Resource
             ->values();
 
         if ($slots->isEmpty()) {
-            return 'No slots';
+            return __('No available slots');
         }
 
         return substr($slots->first()->start_time, 0, 5) . ' - ' . substr($slots->last()->end_time, 0, 5);
