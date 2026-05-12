@@ -71,7 +71,17 @@
                     <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Date') }}</span><span class="font-bold text-ink">{{ $bookingDate->translatedFormat('M j, Y') }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Time') }}</span><span class="font-bold text-ink">{{ $slotRange }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Price') }}</span><span class="font-bold text-ink">Rp {{ number_format($totalPrice, 0, ',', '.') }}</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Down Payment') }}</span><span class="font-heading text-[24px] font-bold text-[#5a38d6]">Rp {{ number_format($downPaymentAmount, 0, ',', '.') }}</span></div>
+                </div>
+
+                <div class="mt-5 rounded-xl bg-[#f6f2ff] p-4">
+                    <p class="text-[13px] font-medium text-copy">{{ __('Amount to Pay') }}</p>
+                    <p class="mt-1 font-heading text-[30px] font-bold text-[#5a38d6]">Rp {{ number_format($downPaymentAmount, 0, ',', '.') }}</p>
+                </div>
+
+                <div class="mt-5 space-y-3 rounded-xl border border-[#eceaf5] p-4 text-[14px]">
+                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Bank') }}</span><span class="font-bold text-ink">BCA</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Account No.') }}</span><span class="font-bold text-ink">1234567890</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Account Name') }}</span><span class="font-bold text-ink">MatchPoint</span></div>
                 </div>
 
                 <form action="{{ route('bookings.store', $field) }}" method="POST" enctype="multipart/form-data" novalidate class="mt-5 space-y-4">

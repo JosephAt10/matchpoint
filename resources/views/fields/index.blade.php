@@ -1,5 +1,7 @@
 @php
     $favoritesUrl = auth()->check() ? route('favorites.index') : route('login');
+    $dashboardUrl = auth()->check() ? route('dashboard') : route('login');
+    $profileUrl = auth()->check() ? route('profile.edit') : route('login');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -48,26 +50,29 @@
 </head>
 <body class="min-h-screen bg-[linear-gradient(180deg,#ffffff_0%,#f7f4ff_42%,#ffffff_100%)] text-ink">
     <header class="border-b border-[#e7e1ff] bg-white/95 backdrop-blur">
-        <div class="mx-auto flex w-full max-w-[1820px] items-center justify-between px-8 py-4 lg:px-14 2xl:px-20">
+        <div class="flex w-full items-center justify-between px-8 py-4 lg:px-14 2xl:px-20">
             <a href="{{ route('home') }}" class="font-heading text-[28px] font-bold tracking-[0.16em] text-[#2f3273]">{{ __('MATCHPOINT') }}</a>
 
-            <nav class="flex items-center gap-3 text-[16px] font-medium text-[#5d6385]">
-                <a href="{{ route('fields.index') }}" class="border-b-2 border-indigoDeep px-4 py-3 text-indigoDeep">{{ __('Browse Fields') }}</a>
-                <a href="{{ $favoritesUrl }}" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Favorites') }}</a>
-                <div class="hidden md:block">@include('partials.locale-switcher')</div>
+            <div class="flex items-center gap-6 lg:gap-10">
+                <nav class="flex items-center gap-3 text-[16px] font-medium text-[#5d6385]">
+                    <a href="{{ route('fields.index') }}" class="border-b-2 border-indigoDeep px-4 py-3 text-indigoDeep">{{ __('Browse Fields') }}</a>
+                    <a href="{{ $dashboardUrl }}" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Dashboard') }}</a>
+                    <a href="{{ $favoritesUrl }}" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Favorites') }}</a>
+                    <a href="{{ $profileUrl }}" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Profile') }}</a>
+                    @auth
+                        <form action="{{ route('logout') }}" method="POST" class="inline-flex">
+                            @csrf
+                            <button type="submit" class="rounded-full bg-gradient-to-r from-[#5f55dc] to-[#6f66f7] px-6 py-3 font-semibold text-white shadow-[0_16px_30px_rgba(98,83,232,0.25)] transition hover:opacity-95">{{ __('Logout') }}</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Login') }}</a>
+                        <a href="{{ route('register') }}" class="rounded-full bg-gradient-to-r from-[#5f55dc] to-[#6f66f7] px-7 py-3 font-semibold text-white shadow-[0_16px_30px_rgba(98,83,232,0.25)] transition hover:opacity-95">{{ __('Register') }}</a>
+                    @endauth
+                </nav>
 
-                @auth
-                    <form action="{{ route('logout') }}" method="POST" class="inline-flex">
-                        @csrf
-                        <button type="submit" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Logout') }}</button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="px-4 py-3 transition hover:text-indigoDeep">{{ __('Login') }}</a>
-                    <a href="{{ route('register') }}" class="rounded-full bg-gradient-to-r from-[#5f55dc] to-[#6f66f7] px-7 py-3 font-semibold text-white shadow-[0_16px_30px_rgba(98,83,232,0.25)] transition hover:opacity-95">{{ __('Register') }}</a>
-                @endauth
-            </nav>
+                <div class="shrink-0">@include('partials.locale-switcher')</div>
+            </div>
         </div>
-        <div class="px-8 pb-4 md:hidden lg:px-14 2xl:px-20">@include('partials.locale-switcher')</div>
     </header>
 
     <main class="mx-auto w-full max-w-[1820px] px-0 py-0">

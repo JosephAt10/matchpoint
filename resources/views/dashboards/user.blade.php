@@ -73,25 +73,23 @@
 </head>
 <body class="min-h-screen bg-page text-ink">
     <header class="border-b border-line bg-white">
-        <div class="flex items-center justify-between px-8 py-5 lg:px-12">
+        <div class="flex w-full items-center justify-between px-8 py-5 lg:px-12 xl:px-16 2xl:px-20">
             <a href="{{ route('home') }}" class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">{{ __('MATCHPOINT') }}</a>
 
-            <nav class="flex items-center gap-6 text-[16px] font-medium text-[#52617f]">
-                <a href="{{ $dashboard['links']['browse_fields'] }}" class="transition hover:text-indigoSoft">{{ __('Browse Fields') }}</a>
-                <a href="{{ $dashboard['links']['dashboard'] }}" class="border-b-2 border-indigoSoft pb-6 pt-6 text-indigoSoft">{{ __('Dashboard') }}</a>
-                @include('partials.locale-switcher')
-                <a href="{{ $dashboard['links']['notifications_anchor'] }}" class="relative text-[#5b6785] transition hover:text-indigoSoft">
-                    {!! $iconSvg('bell') !!}
-                    @if ($dashboard['unread_notifications'] > 0)
-                        <span class="absolute -right-2 -top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-indigoSoft px-1.5 text-[11px] font-semibold text-white">{{ $dashboard['unread_notifications'] }}</span>
-                    @endif
-                </a>
-                <a href="{{ $dashboard['links']['profile'] }}" class="flex items-center gap-3 rounded-full bg-[#f4f6fb] px-3 py-2 text-ink">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#e6eaf5] text-[#5d6886]">{!! $iconSvg('user') !!}</span>
-                    <span class="font-semibold">{{ $user['first_name'] }}</span>
-                    <span class="text-[#7784a4]">{!! $iconSvg('chevron-down') !!}</span>
-                </a>
-            </nav>
+            <div class="flex items-center gap-6 lg:gap-10">
+                <nav class="flex items-center gap-3 text-[16px] font-medium text-[#52617f]">
+                    <a href="{{ $dashboard['links']['browse_fields'] }}" class="transition hover:text-indigoSoft px-4 py-3">{{ __('Browse Fields') }}</a>
+                    <a href="{{ $dashboard['links']['dashboard'] }}" class="border-b-2 border-indigoSoft px-4 py-3 text-indigoSoft">{{ __('Dashboard') }}</a>
+                    <a href="{{ $dashboard['links']['favorites'] }}" class="px-4 py-3 transition hover:text-indigoSoft">{{ __('Favorites') }}</a>
+                    <a href="{{ $dashboard['links']['profile'] }}" class="px-4 py-3 transition hover:text-indigoSoft">{{ __('Profile') }}</a>
+                    <form action="{{ route('logout') }}" method="POST" class="inline-flex">
+                        @csrf
+                        <button type="submit" class="rounded-full bg-[#5f55dc] px-5 py-3 font-semibold text-white transition hover:bg-[#4d43cb]">{{ __('Logout') }}</button>
+                    </form>
+                </nav>
+
+                <div class="shrink-0">@include('partials.locale-switcher')</div>
+            </div>
         </div>
     </header>
 

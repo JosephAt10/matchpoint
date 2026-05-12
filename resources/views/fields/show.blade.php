@@ -1,5 +1,7 @@
 ﻿@php
     $favoritesUrl = auth()->check() ? route('favorites.index') : route('login');
+    $dashboardUrl = auth()->check() ? route('dashboard') : route('login');
+    $profileUrl = auth()->check() ? route('profile.edit') : route('login');
     $isFavorite = isset($favoriteIds) && $favoriteIds->contains($field->id);
     $selectedSlot = $previewSlots->firstWhere('available', true);
     $selectedSlotLabel = $selectedSlot['label'] ?? __('No available slots');

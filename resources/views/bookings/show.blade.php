@@ -6,7 +6,9 @@
     <title>{{ __('Booking Payment') }} - MatchPoint</title>
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-                <div class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ __('Proof uploaded. Status: :status.', ['status' => __($booking->payment->status)]) }}</div>
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -66,31 +68,7 @@
                     <p class="mt-1 font-heading text-[30px] font-bold text-[#5a38d6]">Rp {{ number_format($booking->downPaymentAmount(), 0, ',', '.') }}</p>
                 </div>
 
-                <div class="mt-5 space-y-3 rounded-xl border border-[#eceaf5] p-4 text-[14px]">
-                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Bank') }}</span><span class="font-bold text-ink">BCA</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Account No.') }}</span><span class="font-bold text-ink">1234567890</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-copy">{{ __('Account Name') }}</span><span class="font-bold text-ink">MatchPoint</span></div>
-                </div>
-
-                @if ($booking->payment?->proof && ! $booking->payment->isRejected())
-                    <div class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ __('Proof uploaded. Status: :status.', ['status' => __($booking->payment->status)]) }}</div>
-                @else
-                    @if ($booking->payment?->isRejected())
-                        <div class="mt-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">{{ __('Proof rejected. Reason: :reason', ['reason' => $booking->payment->rejection_reason ?: __('Please upload a new proof.')]) }}</div>
-                    @endif
-                    <form action="{{ route('bookings.payment-proof.store', $booking) }}" method="POST" enctype="multipart/form-data" novalidate class="mt-5 space-y-4">
-                        @csrf
-                        <label class="block">
-                            <span class="text-[14px] font-bold text-ink">{{ __('Upload proof') }}</span>
-                            <input id="booking-proof-input" type="file" name="proof" accept="image/png,image/jpeg" required class="sr-only" data-file-name-target="booking-proof-file-name">
-                            <span class="mt-2 flex min-h-[52px] items-center gap-4 rounded-lg border border-[#dfdaf4] bg-white p-2 text-[14px]">
-                                <span class="inline-flex shrink-0 cursor-pointer rounded-lg bg-[#5a38d6] px-4 py-3 font-bold text-white">{{ __('Choose file') }}</span>
-                                <span id="booking-proof-file-name" class="min-w-0 flex-1 truncate text-ink">{{ __('No file selected') }}</span>
-                            </span>
-                        </label>
-                        <button type="submit" class="flex w-full items-center justify-center rounded-lg bg-[#5a38d6] px-6 py-4 text-[16px] font-bold text-white shadow-[0_14px_28px_rgba(84,66,217,0.26)] transition hover:bg-[#4c2fbd]">{{ __('Submit Proof') }}</button>
-                    </form>
-                @endif
+                <div class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ __('Proof uploaded. Status: :status.', ['status' => __($booking->payment?->status ?? $booking->status)]) }}</div>
             </aside>
         </section>
     </main>
