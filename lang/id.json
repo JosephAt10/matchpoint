@@ -412,5 +412,11 @@
     "Changing Room": "Ruang Ganti",
     "Shower": "Shower",
     "Toilet": "Toilet",
-    "Lighting": "Pencahayaan"
+    "Lighting": "Pencahayaan",
+    "All your bookings in one place": "Semua pemesanan Anda dalam satu tempat",
+    "Track upcoming sessions, review booking status, and open each booking for full payment and schedule details.": "Lacak sesi mendatang, tinjau status pemesanan, dan buka setiap pemesanan untuk melihat detail pembayaran dan jadwal lengkap.",
+    "No bookings found yet.": "Belum ada pemesanan.",
+    "Payment deadline: :time": "Batas pembayaran: :time",
+    "Payment: :status": "Pembayaran: :status",
+    "Time not available": "Waktu tidak tersedia"
 }

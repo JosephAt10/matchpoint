@@ -412,5 +412,11 @@
     "Changing Room": "Changing Room",
     "Shower": "Shower",
     "Toilet": "Toilet",
-    "Lighting": "Lighting"
+    "Lighting": "Lighting",
+    "All your bookings in one place": "All your bookings in one place",
+    "Track upcoming sessions, review booking status, and open each booking for full payment and schedule details.": "Track upcoming sessions, review booking status, and open each booking for full payment and schedule details.",
+    "No bookings found yet.": "No bookings found yet.",
+    "Payment deadline: :time": "Payment deadline: :time",
+    "Payment: :status": "Payment: :status",
+    "Time not available": "Time not available"
 }

@@ -41,6 +41,7 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/favorites', [FavoriteFieldController::class, 'index'])->name('favorites.index');
     Route::post('/fields/{field}/favorite', [FavoriteFieldController::class, 'toggle'])->name('fields.favorite.toggle');
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/fields/{field}/bookings/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('/fields/{field}/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');

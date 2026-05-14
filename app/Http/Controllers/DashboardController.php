@@ -146,7 +146,7 @@ class DashboardController extends Controller
                     'favorites' => route('favorites.index'),
                     'profile' => route('profile.edit'),
                     'dashboard' => route('dashboard'),
-                    'bookings_anchor' => route('dashboard') . '#upcoming-bookings',
+                    'bookings_anchor' => route('bookings.index'),
                     'notifications_anchor' => route('notifications.index'),
                     'payments_anchor' => route('payments.index'),
                 ],

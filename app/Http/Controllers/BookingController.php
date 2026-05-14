@@ -23,6 +23,56 @@ use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
+    public function index(Request $request): View
+    {
+        $user = $request->user();
+
+        $bookings = $user->bookings()
+            ->with(['field.owner', 'bookedSlots.timeSlot', 'payment'])
+            ->latest('date')
+            ->get()
+            ->map(function (Booking $booking): array {
+                $orderedSlots = $booking->bookedSlots
+                    ->pluck('timeSlot')
+                    ->filter()
+                    ->sortBy('start_time')
+                    ->values();
+
+                $slotRange = $orderedSlots->isNotEmpty()
+                    ? substr($orderedSlots->first()->start_time, 0, 5) . ' - ' . substr($orderedSlots->last()->end_time, 0, 5)
+                    : __('Time not available');
+
+                return [
+                    'id' => $booking->id,
+                    'field_name' => $booking->field?->name,
+                    'location' => $booking->field?->location,
+                    'image_url' => $booking->field?->image_url,
+                    'date_label' => $booking->date?->translatedFormat('j M Y'),
+                    'time_label' => $slotRange,
+                    'status_label' => $this->bookingStatusLabel($booking),
+                    'status_tone' => $this->bookingStatusTone($booking),
+                    'amount' => 'Rp ' . number_format((float) ($booking->field?->price_per_slot ?? 0) * max(1, $orderedSlots->count()), 0, ',', '.'),
+                    'payment_status' => $booking->payment?->status,
+                    'payment_deadline' => $booking->payment_deadline?->translatedFormat('j M Y, H:i'),
+                    'show_url' => route('bookings.show', $booking),
+                ];
+            });
+
+        return view('user.bookings', [
+            'page' => [
+                'user' => [
+                    'name' => $user->name,
+                    'first_name' => str($user->name)->before(' ')->toString(),
+                    'initials' => str($user->name)->explode(' ')->filter()->take(2)->map(fn (string $part) => strtoupper(substr($part, 0, 1)))->implode(''),
+                    'unread_notifications' => Notification::query()->forUser($user->id)->unread()->count(),
+                ],
+                'bookings' => $bookings,
+                'pending_count' => $bookings->where('status_label', 'Pending Payment')->count() + $bookings->where('status_label', 'Pending')->count(),
+                'confirmed_count' => $bookings->where('status_label', 'Confirmed')->count(),
+                'completed_count' => $bookings->where('status_label', 'Completed')->count(),
+            ],
+        ]);
+    }
     public function confirm(Request $request, Field $field): View
     {
         abort_unless(
@@ -283,6 +333,48 @@ class BookingController extends Controller
         }
 
         return $slots;
+    }
+
+    private function bookingStatusLabel(Booking $booking): string
+    {
+        if ($booking->isCompleted()) {
+            return 'Completed';
+        }
+
+        if ($booking->isConfirmed()) {
+            return 'Confirmed';
+        }
+
+        if ($booking->payment?->isRejected()) {
+            return 'Payment Rejected';
+        }
+
+        if ($booking->payment?->isPending()) {
+            return 'Pending Payment';
+        }
+
+        return $booking->status;
+    }
+
+    private function bookingStatusTone(Booking $booking): string
+    {
+        if ($booking->isCompleted()) {
+            return 'slate';
+        }
+
+        if ($booking->isConfirmed()) {
+            return 'emerald';
+        }
+
+        if ($booking->payment?->isRejected()) {
+            return 'rose';
+        }
+
+        if ($booking->payment?->isPending()) {
+            return 'amber';
+        }
+
+        return 'indigo';
     }
 
     private function slotRange(Booking $booking): string
