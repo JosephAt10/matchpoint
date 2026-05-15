@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {

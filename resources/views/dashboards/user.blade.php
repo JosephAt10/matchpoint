@@ -108,10 +108,6 @@
                     <span class="h-6 w-6">{!! $iconSvg('heart') !!}</span>
                     <span>{{ __('Favorites') }}</span>
                 </a>
-                <a href="{{ $dashboard['links']['payments_anchor'] }}" class="flex items-center gap-4 rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
-                    <span class="h-6 w-6">{!! $iconSvg('wallet') !!}</span>
-                    <span>{{ __('Payments') }}</span>
-                </a>
                 <a href="{{ $dashboard['links']['notifications_anchor'] }}" class="flex items-center justify-between rounded-2xl px-5 py-4 font-medium text-[#485775] transition hover:bg-[#f8f9fd]">
                     <span class="flex items-center gap-4">
                         <span class="h-6 w-6">{!! $iconSvg('bell') !!}</span>

@@ -30,11 +30,13 @@ class AuthController extends Controller
                 ->onlyInput('email');
         }
 
+        $locale = $request->session()->get('locale') ?: $request->cookie('locale', config('app.locale'));
         $request->session()->regenerate();
+        $request->session()->put('locale', $locale);
 
         if (! $request->user()->isActive()) {
             $user = $request->user();
-            $locale = $request->session()->get('locale', config('app.locale'));
+            $locale = $request->session()->get('locale') ?: $request->cookie('locale', config('app.locale'));
 
             Auth::logout();
             $request->session()->invalidate();
@@ -49,11 +51,11 @@ class AuthController extends Controller
         }
 
         if ($request->user()->isAdmin()) {
-            return redirect()->intended(url('/admin'));
+            return redirect()->intended(route('filament.admin.pages.dashboard', absolute: false));
         }
 
         if ($request->user()->isFieldOwner()) {
-            return redirect()->intended(url('/owner'));
+            return redirect()->intended(route('filament.owner.pages.dashboard', absolute: false));
         }
 
         return redirect()->intended(route('dashboard', absolute: false));
@@ -84,7 +86,9 @@ class AuthController extends Controller
 
         if ($user->isUser()) {
             Auth::login($user);
+            $locale = $request->session()->get('locale') ?: $request->cookie('locale', config('app.locale'));
             $request->session()->regenerate();
+            $request->session()->put('locale', $locale);
 
             return to_route('dashboard')->with('status', __('Welcome to MatchPoint. Your account is ready to use.'));
         }
@@ -94,7 +98,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
-        $locale = $request->session()->get('locale', config('app.locale'));
+        $locale = $request->session()->get('locale') ?: $request->cookie('locale', config('app.locale'));
 
         Auth::logout();
 

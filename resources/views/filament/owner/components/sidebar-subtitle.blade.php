@@ -1,3 +1,3 @@
-<p class="owner-sidebar-subtitle">
-    Field Owner Panel
+<p class=""owner-sidebar-subtitle"">
+    {{ __('Field Owner Panel') }}
 </p>

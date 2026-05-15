@@ -27,7 +27,7 @@ class UserActivityController extends Controller
 
                 $timeRange = $slots->isNotEmpty()
                     ? substr($slots->first()->start_time, 0, 5) . ' - ' . substr($slots->last()->end_time, 0, 5)
-                    : 'Time not available';
+                    : __('Time not available');
 
                 return [
                     'field_name' => $booking?->field?->name,

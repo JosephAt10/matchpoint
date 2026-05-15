@@ -65,7 +65,7 @@ class DashboardController extends Controller
 
                 $slotRange = $orderedSlots->isNotEmpty()
                     ? substr($orderedSlots->first()->start_time, 0, 5) . ' - ' . substr($orderedSlots->last()->end_time, 0, 5)
-                    : 'Time not available';
+                    : __('Time not available');
 
                 return [
                     'id' => $booking->id,
@@ -147,8 +147,7 @@ class DashboardController extends Controller
                     'profile' => route('profile.edit'),
                     'dashboard' => route('dashboard'),
                     'bookings_anchor' => route('bookings.index'),
-                    'notifications_anchor' => route('notifications.index'),
-                    'payments_anchor' => route('payments.index'),
+                    'notifications_anchor' => route('notifications.index'),
                 ],
             ],
         ]);

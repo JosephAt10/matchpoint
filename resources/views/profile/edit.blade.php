@@ -61,7 +61,7 @@
                         </span>
                         <div>
                             <p class="text-sm text-[#6e7397]">{{ __('Member since') }}</p>
-                            <p class="mt-2 text-lg font-bold text-[#1d2343]">{{ $user->created_at->format('d M Y') }}</p>
+                            <p class="mt-2 text-lg font-bold text-[#1d2343]">{{ $user->created_at->translatedFormat('d M Y') }}</p>
                         </div>
                     </div>
                 </article>
