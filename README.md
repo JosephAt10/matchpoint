@@ -141,17 +141,19 @@ Visit `http://localhost:8000`
 
 ## Database Structure
 
-The system has 10 database entities:
+The system has 11 database entities:
 
 ```
 users
 ├── fields
 │   └── time_slots
-│       └── booked_slots ──── bookings
-│                                 ├── payments (BookingDP)
-│                                 └── matches
-│                                       └── match_participants
-│                                               └── payments (MatchFee)
+│       └── booked_slots
+│           └── bookings
+│               ├── payments (BookingDP)
+│               └── matches
+│                   ├── match_participants
+│                   │   └── payments (MatchFee)
+│                   └── favorites
 ├── notifications
 └── audit_logs
 ```
@@ -244,10 +246,10 @@ This project is currently in active development as part of PBL II.
 
 | Phase | Description | Status |
 |---|---|---|
-| Phase 1 | Foundation — migrations, models, seeders, auth | 🟡 In progress |
+| Phase 1 | Foundation — migrations, models, seeders, auth | ✅ Done |
 | Phase 2 | Core booking — search, book field, payments, scheduler | 🟡 In progress |
 | Phase 3 | Match & admin — public matches, Filament admin panel | 🟡 In progress |
-| Phase 4 | Polish — notifications, audit logs, testing, UI | ⬜ Not started |
+| Phase 4 | Polish — notifications, audit logs, testing, UI | ❌ Not started |
 
 ---
 
@@ -256,7 +258,7 @@ This project is currently in active development as part of PBL II.
 **Joseph Atem Deng Aruei**
 Student ID: 244107020242
 D-4 Informatics Engineering — State Polytechnic of Malang (Polinema)
-April 2026
+March 2026
 
 ---
 
