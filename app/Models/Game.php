@@ -20,9 +20,14 @@ class Game extends Model
     protected $fillable = [
         'booking_id',
         'creator_id',
+        'title',
+        'description',
         'max_participants',
         'filled_slots',
         'participant_fee',
+        'gender',
+        'skill_level',
+        'match_type',
         'status',
     ];
 

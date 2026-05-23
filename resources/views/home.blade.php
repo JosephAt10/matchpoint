@@ -154,7 +154,7 @@
         <nav class="hidden w-full items-center justify-center gap-16 px-5 py-3 text-[17px] font-medium text-[#2a3046] md:flex md:px-10 xl:px-16 2xl:px-24">
             <a href="{{ route('home') }}" class="hover:text-indigo">{{ __('Home') }}</a>
             <a href="{{ route('fields.index') }}" class="hover:text-indigo">{{ __('Fields') }}</a>
-            <a href="#available-matches" class="hover:text-indigo">{{ __('Matches') }}</a>
+            <a href="{{ route('matches.index') }}" class="hover:text-indigo">{{ __('Matches') }}</a>
             <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="hover:text-indigo">{{ __('My Bookings') }}</a>
             <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}" class="hover:text-indigo">{{ __('Profile') }}</a>
         </nav>
@@ -162,7 +162,7 @@
         <nav id="mobile-menu" class="hidden w-full flex-col gap-3 border-t border-black/15 px-5 py-4 text-sm font-medium text-[#2a3046] md:px-10 xl:px-16 2xl:px-24">
             <a href="{{ route('home') }}">{{ __('Home') }}</a>
             <a href="{{ route('fields.index') }}">{{ __('Fields') }}</a>
-            <a href="#available-matches">{{ __('Matches') }}</a>
+            <a href="{{ route('matches.index') }}">{{ __('Matches') }}</a>
             <a href="{{ auth()->check() ? route('dashboard') : route('login') }}">{{ __('My Bookings') }}</a>
             <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}">{{ __('Profile') }}</a>
         </nav>
@@ -234,7 +234,7 @@
                         </div>
                     </div>
 
-                    <a href="#available-matches" class="primary-btn mt-7 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
+                    <a href="{{ route('matches.index') }}" class="primary-btn mt-7 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
                         {{ __('Join Match') }}
                     </a>
                 </div>
@@ -274,7 +274,7 @@
                     <h2 class="font-heading text-[18px] font-bold text-[#283552]">{{ __('Join a Match') }}</h2>
                 </div>
                 <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">{{ __('Join public matches near you') }}</p>
-                <a href="#available-matches" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Explore Matches') }}</a>
+                <a href="{{ route('matches.index') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Explore Matches') }}</a>
             </article>
 
             <article class="rounded-[1.55rem] bg-white px-7 py-6 shadow-soft">
@@ -285,7 +285,7 @@
                     <h2 class="font-heading text-[18px] font-bold text-[#283552]">{{ __('Create a Match') }}</h2>
                 </div>
                 <p class="min-h-[58px] text-[16px] leading-6 text-textsoft">{{ __('Start your own match and invite others') }}</p>
-                <a href="{{ route('login') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Create Match') }}</a>
+                <a href="{{ auth()->check() ? route('matches.create') : route('login') }}" class="primary-btn mt-6 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">{{ __('Create Match') }}</a>
             </article>
         </section>
 
@@ -449,7 +449,7 @@
                         <a href="{{ route('fields.index') }}" class="flex items-center gap-3 hover:text-indigo">
                             <span class="text-indigo">›</span><span>{{ __('Fields') }}</span>
                         </a>
-                        <a href="#available-matches" class="flex items-center gap-3 hover:text-indigo">
+                        <a href="{{ route('matches.index') }}" class="flex items-center gap-3 hover:text-indigo">
                             <span class="text-indigo">›</span><span>{{ __('Matches') }}</span>
                         </a>
                         <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="flex items-center gap-3 hover:text-indigo">

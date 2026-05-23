@@ -55,20 +55,16 @@
 <body class="min-h-screen bg-[linear-gradient(180deg,#ffffff_0%,#f8f6ff_50%,#ffffff_100%)] text-ink">
     <header class="border-b border-[#ede9ff] bg-white/95 backdrop-blur">
         <div class="flex w-full items-center justify-between px-5 py-4 md:px-10 xl:px-16 2xl:px-24">
-            <a href="{{ route('home') }}" class="font-heading text-[22px] font-bold tracking-[0.12em] text-[#352782]">{{ __('MATCHPOINT') }}</a>
-            <nav class="flex items-center gap-2 text-[14px] font-medium text-[#4f5579] md:gap-5">
-                <a href="{{ route('fields.index') }}" class="hidden px-2 py-2 transition hover:text-indigoDeep sm:inline-flex">{{ __('Browse Fields') }}</a>
-                @auth
-                    <a href="{{ route('dashboard') }}" class="hidden px-2 py-2 transition hover:text-indigoDeep sm:inline-flex">{{ __('Dashboard') }}</a>
-                    <a href="{{ route('profile.edit') }}" class="hidden px-2 py-2 transition hover:text-indigoDeep md:inline-flex">{{ __('Profile') }}</a>
-                    <div class="hidden md:block">@include('partials.locale-switcher')</div>
-                    <form action="{{ route('logout') }}" method="POST" class="inline-flex">@csrf<button type="submit" class="rounded-full bg-[#5a38d6] px-5 py-3 font-semibold text-white shadow-[0_12px_24px_rgba(84,66,217,0.24)] transition hover:bg-[#4c2fbd]">{{ __('Logout') }}</button></form>
-                @else
-                    <div class="hidden md:block">@include('partials.locale-switcher')</div>
-                    <a href="{{ route('login') }}" class="px-2 py-2 transition hover:text-indigoDeep">{{ __('Login') }}</a>
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
+                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-10 w-10 object-contain">
+                <span class="font-heading text-[22px] font-bold tracking-[0.12em] text-[#352782]">{{ __('MATCHPOINT') }}</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:block">@include('partials.locale-switcher')</div>
+                @guest
                     <a href="{{ route('register') }}" class="rounded-full bg-[#5a38d6] px-5 py-3 font-semibold text-white shadow-[0_12px_24px_rgba(84,66,217,0.24)] transition hover:bg-[#4c2fbd]">{{ __('Register') }}</a>
-                @endauth
-            </nav>
+                @endguest
+            </div>
         </div>
         <div class="px-5 pb-4 md:hidden">@include('partials.locale-switcher')</div>
     </header>

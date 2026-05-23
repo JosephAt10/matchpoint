@@ -26,7 +26,7 @@
 
 @forelse ($fields as $field)
     @php
-        $image = $sportImages[$field->sport_type] ?? $defaultImage;
+        $image = $field->image_url ?? ($sportImages[$field->sport_type] ?? $defaultImage);
         $sportIcon = $sportIcons[$field->sport_type] ?? '🏟️';
         $ownerFirstName = str($field->owner->name)->before(' ');
         $isFavorited = $favoriteIds->contains($field->id);

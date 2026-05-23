@@ -7,6 +7,7 @@ use App\Http\Controllers\FavoriteFieldController;
 use App\Http\Controllers\FieldBrowserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicMatchController;
 use App\Http\Controllers\UserActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,7 @@ Route::middleware('guest')->group(function (): void {
 
 Route::get('/fields', [FieldBrowserController::class, 'index'])->name('fields.index');
 Route::get('/fields/{field}', [FieldBrowserController::class, 'show'])->name('fields.show');
+Route::get('/matches', [PublicMatchController::class, 'index'])->name('matches.index');
 
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
@@ -48,6 +50,8 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::post('/bookings/{booking}/payment-proof', [BookingController::class, 'uploadProof'])->name('bookings.payment-proof.store');
     Route::get('/payments', [UserActivityController::class, 'payments'])->name('payments.index');
+    Route::get('/matches/create', [PublicMatchController::class, 'create'])->name('matches.create');
+    Route::post('/matches', [PublicMatchController::class, 'store'])->name('matches.store');
     Route::get('/notifications', [UserActivityController::class, 'notifications'])->name('notifications.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

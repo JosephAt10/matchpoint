@@ -1,0 +1,23 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="feather" x1="40" y1="28" x2="112" y2="126" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D9E2ED"/>
+    </linearGradient>
+    <linearGradient id="base" x1="88" y1="120" x2="54" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B6C3D2"/>
+      <stop offset="1" stop-color="#8FA0B5"/>
+    </linearGradient>
+    <filter id="shadow" x="8" y="18" width="150" height="150" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#BCC8D6" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M30 125L62 93C72 83 78 72 79 60V38L146 105H124C112 105 100 110 91 119L58 152L30 125Z" fill="url(#feather)"/>
+    <path d="M24 131L56 99" stroke="#E7EEF6" stroke-width="2.5"/>
+    <path d="M38 145L70 113" stroke="#E7EEF6" stroke-width="2.5"/>
+    <path d="M53 158L85 126" stroke="#E7EEF6" stroke-width="2.5"/>
+    <path d="M30 125L58 152L44 166L17 139L30 125Z" fill="url(#base)"/>
+    <path d="M24 132L51 159" stroke="#8FA0B5" stroke-width="2.8" stroke-linecap="round"/>
+  </g>
+</svg>

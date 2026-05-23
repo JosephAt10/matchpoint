@@ -136,8 +136,9 @@ class Booking extends Model
         return $this->hasOne(Payment::class);
     }
 
-    public function Game(): HasOne
+    public function game(): HasOne
     {
         return $this->hasOne(Game::class, 'booking_id');
     }
+
 }

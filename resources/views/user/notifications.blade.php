@@ -31,32 +31,42 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = { theme: { extend: { colors: { ink: '#131a33', copy: '#60708f', line: '#e9ebf5', indigoSoft: '#4f46e5', page: '#f7f8fc' }, boxShadow: { panel: '0 20px 44px rgba(34, 43, 84, 0.08)' }, fontFamily: { heading: ['Outfit', 'sans-serif'], body: ['DM Sans', 'sans-serif'] } } } }
+        tailwind.config = { theme: { extend: { colors: { ink: '#131a33', copy: '#60708f', line: '#edf1f7', indigoSoft: '#4f46e5', page: '#f7f8fc' }, boxShadow: { panel: '0 18px 42px rgba(34, 43, 84, 0.08)' }, fontFamily: { heading: ['Outfit', 'sans-serif'], body: ['DM Sans', 'sans-serif'] } } } }
     </script>
-    <style>*{font-family:'DM Sans',sans-serif}h1,h2,h3,h4,h5,h6,.font-heading{font-family:'Outfit',sans-serif}</style>
+    <style>*{font-family:'DM Sans',sans-serif}h1,h2,h3,h4,h5,h6,.font-heading{font-family:'Outfit',sans-serif}.surface-card{border:1px solid #edf1f7;box-shadow:0 18px 42px rgba(34,43,84,.08)}.sidebar-shell{background:radial-gradient(circle at top left,rgba(99,102,241,.24),transparent 30%),linear-gradient(180deg,#0f172a 0%,#111827 52%,#0b1120 100%)}.sidebar-nav-link{color:rgba(226,232,240,.88)}.sidebar-nav-link:hover{background:rgba(255,255,255,.06);color:#fff}.sidebar-nav-link.is-active{background:linear-gradient(90deg,rgba(79,70,229,.32),rgba(99,102,241,.18));color:#fff;box-shadow:inset 0 0 0 1px rgba(129,140,248,.16)}</style>
 </head>
 <body class="min-h-screen bg-page text-ink">
     <header class="border-b border-line bg-white">
         <div class="flex items-center justify-between px-8 py-5 lg:px-12">
-            <a href="{{ route('home') }}" class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">{{ __('MATCHPOINT') }}</a>
-            <nav class="flex items-center gap-6 text-[16px] font-medium text-[#52617f]">
-                <a href="{{ route('fields.index') }}" class="transition hover:text-indigoSoft">{{ __('Browse Fields') }}</a>
-                <a href="{{ route('dashboard') }}" class="transition hover:text-indigoSoft">{{ __('Dashboard') }}</a>
-                @include('partials.locale-switcher')
-                <a href="{{ route('notifications.index') }}" class="relative text-indigoSoft">
-                    {!! $iconSvg('bell') !!}
-                </a>
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-full bg-[#f4f6fb] px-3 py-2 text-ink">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#e6eaf5] text-[#5d6886]">{!! $iconSvg('user') !!}</span>
-                    <span class="font-semibold">{{ $user['first_name'] }}</span>
-                    <span class="text-[#7784a4]">{!! $iconSvg('chevron-down') !!}</span>
-                </a>
-            </nav>
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
+                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-11 w-11 object-contain">
+                <span class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">{{ __('MATCHPOINT') }}</span>
+            </a>
+            @include('partials.locale-switcher')
         </div>
     </header>
 
-    <main class="px-8 py-8 lg:px-12">
-        <section class="rounded-[28px] border border-line bg-white p-6 shadow-panel">
+    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside class="sidebar-shell border-r border-white/5 px-6 py-8">
+            <div class="mb-8 px-3">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-200/70">{{ __('Player Space') }}</p>
+                <h2 class="mt-3 font-heading text-[24px] font-bold text-white">{{ __('MatchPoint') }}</h2>
+                <p class="mt-2 text-[14px] leading-6 text-slate-300">{{ __('Track your bookings, payments, and public match activity in one place.') }}</p>
+            </div>
+            <nav class="space-y-2">
+                <a href="{{ route('dashboard') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('user') !!}</span><span>{{ __('Dashboard') }}</span></a>
+                <a href="{{ route('fields.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('check-circle') !!}</span><span>{{ __('Browse Fields') }}</span></a>
+                <a href="{{ route('bookings.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('clock') !!}</span><span>{{ __('My Bookings') }}</span></a>
+                <a href="{{ route('matches.create') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('check-circle') !!}</span><span>{{ __('Public Matches') }}</span></a>
+                <a href="{{ route('favorites.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('check-circle') !!}</span><span>{{ __('Favorites') }}</span></a>
+                <a href="{{ route('notifications.index') }}" class="sidebar-nav-link is-active flex items-center gap-4 rounded-2xl px-5 py-4 font-medium"><span class="h-6 w-6">{!! $iconSvg('bell') !!}</span><span>{{ __('Notifications') }}</span></a>
+                <a href="{{ route('profile.edit') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('user') !!}</span><span>{{ __('Profile') }}</span></a>
+                <form action="{{ route('logout') }}" method="POST" class="pt-3">@csrf<button type="submit" class="sidebar-nav-link flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left font-medium transition"><span class="h-6 w-6">{!! $iconSvg('chevron-down') !!}</span><span>{{ __('Logout') }}</span></button></form>
+            </nav>
+        </aside>
+
+        <main class="bg-[linear-gradient(180deg,#fbfcff_0%,#f7f8fc_100%)] px-8 py-8 lg:px-12">
+        <section class="surface-card rounded-[28px] bg-white p-6">
             <p class="text-[14px] font-semibold uppercase tracking-[0.24em] text-[#4f46e5]">{{ __('Notifications') }}</p>
             <h1 class="mt-3 font-heading text-[42px] font-bold text-ink">{{ __('Recent updates for your account') }}</h1>
             <p class="mt-3 max-w-[720px] text-[18px] leading-8 text-copy">{{ __('Payment reviews, booking reminders, and account updates are shown here from your database notifications.') }}</p>
@@ -64,7 +74,7 @@
 
         <section class="mt-6 space-y-4">
             @forelse ($page['notifications'] as $notification)
-                <article class="flex items-start gap-5 rounded-[28px] border border-line bg-white p-6 shadow-panel">
+                <article class="surface-card flex items-start gap-5 rounded-[28px] bg-white p-6">
                     <span class="mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-full {{ $toneClasses[$notification['tone']] ?? $toneClasses['indigo'] }}">
                         {!! $iconSvg($notification['tone'] === 'emerald' ? 'check-circle' : ($notification['tone'] === 'amber' ? 'clock' : 'bell')) !!}
                     </span>
@@ -81,9 +91,10 @@
                     </div>
                 </article>
             @empty
-                <div class="rounded-[28px] border border-dashed border-line bg-white px-6 py-10 text-center text-[18px] text-copy shadow-panel">{{ __('No notifications yet.') }}</div>
+                <div class="rounded-[28px] border border-dashed border-[#e7ecf4] bg-white px-6 py-10 text-center text-[18px] text-copy shadow-panel">{{ __('No notifications yet.') }}</div>
             @endforelse
         </section>
-    </main>
+        </main>
+    </div>
 </body>
 </html>

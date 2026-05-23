@@ -147,7 +147,9 @@ class DashboardController extends Controller
                     'profile' => route('profile.edit'),
                     'dashboard' => route('dashboard'),
                     'bookings_anchor' => route('bookings.index'),
-                    'notifications_anchor' => route('notifications.index'),
+                    'notifications_anchor' => route('notifications.index'),
+                    'create_match' => route('matches.create'),
+
                 ],
             ],
         ]);

@@ -17,81 +17,200 @@
             theme: {
                 extend: {
                     colors: {
-                        navy: '#1b2248',
-                        indigo: '#6d63ea',
-                        indigoDark: '#5747d8',
-                        softBg: '#f8f7ff',
-                        softBorder: '#e8e3fb',
-                        copy: '#6e7395',
+                        ink: '#13203a',
+                        copy: '#66748c',
+                        line: '#e7edf5',
+                        green: '#16c75a',
+                        greenDeep: '#0ea74b',
                     },
                     fontFamily: {
                         heading: ['Outfit', 'sans-serif'],
                         body: ['DM Sans', 'sans-serif'],
                     },
                     boxShadow: {
-                        auth: '0 24px 48px rgba(96, 85, 183, 0.18)',
-                        sport: '0 14px 26px rgba(106, 92, 224, 0.12)',
+                        panel: '0 28px 70px rgba(20, 32, 58, 0.14)',
+                        soft: '0 14px 30px rgba(20, 32, 58, 0.08)',
                     },
-                }
-            }
+                },
+            },
         };
     </script>
     <style>
         * { font-family: 'DM Sans', sans-serif; }
         h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Outfit', sans-serif; }
+        body {
+            overflow-x: hidden;
+            background: radial-gradient(circle at top center, rgba(255,255,255,0.96) 0%, rgba(245,248,253,0.96) 38%, rgba(232,238,247,0.98) 100%);
+        }
+        .arena-floor {
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 30vh;
+            background:
+                radial-gradient(circle at 50% -10%, rgba(255,255,255,0.95), rgba(255,255,255,0.5) 42%, transparent 62%),
+                linear-gradient(180deg, rgba(15, 29, 54, 0) 0%, rgba(10, 21, 40, 0.84) 24%, #071120 100%);
+            clip-path: ellipse(88% 100% at 50% 100%);
+        }
+        .arena-floor::before,
+        .arena-floor::after {
+            content: '';
+            position: absolute;
+            left: -8%;
+            right: -8%;
+            height: 2px;
+            border-radius: 999px;
+        }
+        .arena-floor::before {
+            top: 30%;
+            background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.85), transparent);
+            box-shadow: 0 0 22px rgba(74, 222, 128, 0.45);
+            transform: rotate(-7deg);
+        }
+        .arena-floor::after {
+            top: 54%;
+            background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.45), transparent);
+            box-shadow: 0 0 18px rgba(74, 222, 128, 0.28);
+            transform: rotate(8deg);
+        }
+        .motion-line {
+            position: absolute;
+            border-radius: 999px;
+            border: 1.5px solid rgba(34, 197, 94, 0.44);
+            border-color: rgba(34, 197, 94, 0.4) transparent transparent transparent;
+            animation: driftLine 18s ease-in-out infinite;
+        }
+        .motion-line.alt { animation-duration: 24s; animation-delay: -6s; }
+        .motion-line.soft { border-color: rgba(255,255,255,0.68) transparent transparent transparent; animation-duration: 28s; }
+        .particle {
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(134, 239, 172, 0.9);
+            box-shadow: 0 0 14px rgba(134, 239, 172, 0.55);
+            animation: floatParticle 12s ease-in-out infinite;
+        }
+        .spark {
+            position: absolute;
+            color: rgba(74, 222, 128, 0.7);
+            animation: pulseGlow 7s ease-in-out infinite;
+        }
+        .sport-asset {
+            position: absolute;
+            animation: floatGhost 16s ease-in-out infinite;
+        }
+        .sport-asset img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 16px 24px rgba(161, 175, 194, 0.22));
+        }
+        .register-card {
+            backdrop-filter: blur(18px);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: 0 28px 70px rgba(20, 32, 58, 0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .field-shell {
+            border: 1px solid #e7edf5;
+            box-shadow: 0 10px 24px rgba(20, 32, 58, 0.05);
+        }
+        .field-shell:focus-within {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+        }
+        @keyframes floatGhost {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            50% { transform: translate3d(0, -14px, 0) rotate(3deg); }
+        }
+        @keyframes floatParticle {
+            0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.72; }
+            50% { transform: translate3d(0, -18px, 0) scale(1.08); opacity: 1; }
+        }
+        @keyframes driftLine {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); opacity: 0.55; }
+            50% { transform: translate3d(12px, -8px, 0) rotate(-5deg); opacity: 0.9; }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.38; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(1.08); }
+        }
     </style>
 </head>
-<body class="min-h-screen bg-white text-[#22263d]">
-    <main class="grid min-h-screen lg:grid-cols-[0.4fr_0.6fr]">
-        <section class="relative hidden overflow-hidden lg:block">
-            <img src="{{ asset('landing/login-page-image.png') }}" alt="{{ __('MatchPoint multi-sport register') }}" class="absolute inset-0 h-full w-full object-cover object-left opacity-40">
-            <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,7,40,0.88)_0%,rgba(19,16,70,0.76)_34%,rgba(44,35,111,0.52)_64%,rgba(95,77,190,0.26)_100%)]"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(145,118,255,0.18),transparent_34%),linear-gradient(180deg,rgba(8,7,40,0.18)_0%,rgba(8,7,40,0.46)_100%)]"></div>
-
-            <div class="relative z-10 flex h-full items-start px-14 pt-12">
-                <div class="max-w-[430px] text-white">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="MatchPoint logo" class="h-12 w-12 object-contain">
-                        <span class="font-heading text-[32px] font-bold tracking-tight">{{ __('MatchPoint') }}</span>
-                    </div>
-
-                    <div class="mt-16 max-w-[290px]">
-                        <h2 class="font-heading text-[38px] font-bold leading-[1.08] tracking-tight">
-                            {{ __('Every Game.') }}<br>
-                            {{ __('Every Player.') }}<br>
-                            <span class="text-[#836dff]">{{ __('One Platform.') }}</span>
-                        </h2>
-                        <p class="mt-5 text-[16px] leading-8 text-white/88">
-                            {{ __('Book any sport, any time. Play, compete, and connect with players near you.') }}
-                        </p>
-                    </div>
-
-                    <div class="mt-20 grid max-w-[290px] grid-cols-3 gap-5 text-center">
-                        <div>
-                            <p class="font-heading text-[28px] font-bold text-[#8b78ff]">10K+</p>
-                            <p class="mt-1 text-[12px] text-white/78">{{ __('Active Players') }}</p>
-                        </div>
-                        <div>
-                            <p class="font-heading text-[28px] font-bold text-[#8b78ff]">500+</p>
-                            <p class="mt-1 text-[12px] text-white/78">{{ __('Fields') }}</p>
-                        </div>
-                        <div>
-                            <p class="font-heading text-[28px] font-bold text-[#8b78ff]">20+</p>
-                            <p class="mt-1 text-[12px] text-white/78">{{ __('Sports') }}</p>
-                        </div>
-                    </div>
+<body class="min-h-screen text-ink">
+    <main class="relative min-h-screen overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute left-8 top-8 z-20 flex items-center gap-3">
+                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-16 w-16 object-contain">
+                <div>
+                    <p class="font-heading text-[20px] font-bold tracking-tight text-[#12213d] md:text-[24px]">{{ __('MATCHPOINT') }}</p>
+                    <p class="text-[12px] font-medium text-copy md:text-[14px]">{{ __('Play. Connect. Compete') }}</p>
                 </div>
             </div>
-        </section>
 
-        <section class="flex items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(138,118,255,0.14),_transparent_22%),linear-gradient(180deg,_#ffffff_0%,_#faf8ff_100%)] px-5 py-8 lg:px-8">
-            <div class="w-full max-w-[760px] rounded-[2rem] border border-[#2f3253] bg-white p-6 shadow-auth md:p-8">
-                <div class="mb-5 flex justify-end">
-                    @include('partials.locale-switcher')
+            <div class="absolute right-8 top-8 z-20">
+                @include('partials.locale-switcher')
+            </div>
+
+            <div class="sport-asset left-[8%] top-[16%] hidden w-[220px] md:block">
+                <img src="{{ asset('landing/sports-football.svg') }}" alt="" aria-hidden="true">
+            </div>
+            <div class="sport-asset right-[16%] top-[12%] hidden w-[170px] opacity-70 xl:block" style="animation-delay:-4s;">
+                <img src="{{ asset('landing/sports-basketball-outline.svg') }}" alt="" aria-hidden="true">
+            </div>
+            <div class="sport-asset right-[9%] top-[31%] w-[185px] opacity-72" style="animation-delay:-8s;">
+                <img src="{{ asset('landing/sports-volleyball-outline.svg') }}" alt="" aria-hidden="true">
+            </div>
+            <div class="sport-asset left-[2%] bottom-[26%] w-[145px]" style="animation-delay:-2s;">
+                <img src="{{ asset('landing/sports-shuttlecock.svg') }}" alt="" aria-hidden="true">
+            </div>
+            <div class="sport-asset right-[8%] bottom-[14%] w-[138px]" style="animation-delay:-10s;">
+                <img src="{{ asset('landing/sports-tennis-ball.svg') }}" alt="" aria-hidden="true">
+            </div>
+
+            <div class="motion-line left-[-12%] bottom-[24%] h-[240px] w-[62%]"></div>
+            <div class="motion-line alt right-[-10%] bottom-[22%] h-[220px] w-[58%]"></div>
+            <div class="motion-line soft left-[18%] bottom-[36%] h-[180px] w-[40%]"></div>
+            <div class="motion-line soft right-[14%] bottom-[34%] h-[170px] w-[34%]"></div>
+
+            <span class="particle left-[11%] top-[20%] h-3 w-3" style="animation-delay:-2s;"></span>
+            <span class="particle left-[22%] top-[58%] h-2.5 w-2.5" style="animation-delay:-8s;"></span>
+            <span class="particle left-[73%] top-[24%] h-2 w-2" style="animation-delay:-4s;"></span>
+            <span class="particle right-[18%] top-[66%] h-4 w-4" style="animation-delay:-6s;"></span>
+            <span class="particle right-[8%] bottom-[14%] h-2.5 w-2.5" style="animation-delay:-10s;"></span>
+            <span class="particle left-[30%] bottom-[22%] h-5 w-5 opacity-70" style="animation-delay:-5s;"></span>
+
+            <div class="spark left-[17%] top-[44%]">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4V24M4 14H24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="spark right-[9%] top-[27%]" style="animation-delay:-3s;">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4V22M4 13H22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="spark right-[23%] top-[8%]" style="animation-delay:-6s;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3V17M3 10H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+
+            <div class="absolute right-[6%] top-[8%] hidden md:grid grid-cols-5 gap-3 opacity-50">
+                @for ($i = 0; $i < 20; $i++)
+                    <span class="h-1.5 w-1.5 rounded-full bg-green/60"></span>
+                @endfor
+            </div>
+
+            <div class="arena-floor"></div>
+        </div>
+
+        <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-24">
+            <section class="register-card w-full max-w-[560px] rounded-[32px] p-6 shadow-panel sm:p-8 md:p-10">
+                <div class="text-center">
+                    <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] bg-[linear-gradient(180deg,#f6fff9_0%,#ffffff_100%)] shadow-soft">
+                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-14 w-14 object-contain">
+                    </div>
+                    <h1 class="mt-6 font-heading text-[38px] font-bold tracking-tight text-ink sm:text-[44px]">{{ __('Create Your Account') }}</h1>
+                    <p class="mt-3 text-[18px] text-copy">
+                        {!! __('Join <span class="font-semibold text-green">MatchPoint</span> and start your game journey today.') !!}
+                    </p>
                 </div>
 
                 @if ($errors->any())
-                    <div class="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+                    <div class="mt-6 rounded-[22px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
                         <ul class="space-y-1">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -100,213 +219,77 @@
                     </div>
                 @endif
 
-                <div class="text-center">
-                    <h1 class="font-heading text-[42px] font-bold tracking-tight text-[#292d43] md:text-[48px]">{{ __('Create Your Account') }}</h1>
-                    <p class="mt-2 text-[17px] text-copy">{{ __('Join MatchPoint and start your game journey') }}</p>
-                </div>
-
-                <div class="mt-7 flex items-start justify-between gap-2 text-center">
-                    <div class="flex min-w-0 flex-1 items-start">
-                        <div class="w-full space-y-2">
-                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#6d63ea] text-sm font-bold text-white shadow-[0_10px_18px_rgba(96,85,183,0.22)]">1</div>
-                            <p class="text-[12px] font-semibold text-[#6d63ea]">{{ __('Personal Info') }}</p>
-                        </div>
-                        <span class="mt-5 h-px flex-1 bg-[#e5e0fb]"></span>
-                    </div>
-                    <div class="flex min-w-0 flex-1 items-start">
-                        <div class="w-full space-y-2">
-                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#cfc8f6] bg-white text-sm font-bold text-[#9a97bb]">2</div>
-                            <p class="text-[12px] text-[#9a97bb]">{{ __('Account Info') }}</p>
-                        </div>
-                        <span class="mt-5 h-px flex-1 bg-[#e5e0fb]"></span>
-                    </div>
-                    <div class="flex min-w-0 flex-1 items-start">
-                        <div class="w-full space-y-2">
-                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#cfc8f6] bg-white text-sm font-bold text-[#9a97bb]">3</div>
-                            <p class="text-[12px] text-[#9a97bb]">{{ __('Preferences') }}</p>
-                        </div>
-                        <span class="mt-5 h-px flex-1 bg-[#e5e0fb]"></span>
-                    </div>
-                    <div class="min-w-0 flex-1 space-y-2">
-                        <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[#cfc8f6] bg-white text-sm font-bold text-[#9a97bb]">4</div>
-                        <p class="text-[12px] text-[#9a97bb]">{{ __("You're In!") }}</p>
-                    </div>
-                </div>
-
-                <form action="{{ route('register.store') }}" method="POST" novalidate class="mt-7 space-y-4">
+                <form action="{{ route('register.store') }}" method="POST" novalidate class="mt-8 space-y-5">
                     @csrf
 
                     <label class="block">
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                            <input type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('Full Name') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                        <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Full Name') }}</span>
+                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                            <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('Enter your full name') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
                         </div>
                     </label>
 
                     <label class="block">
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8m-16 9h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2z"/>
-                            </svg>
-                            <input type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('Email Address') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
+                        <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Email Address') }}</span>
+                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                            <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8m-16 9h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('Enter your email address') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
                         </div>
                     </label>
 
                     <label class="block">
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4 text-[#5f6488]">
-                            <svg class="h-5 w-5 shrink-0 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 00-3-3.87"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75"/>
-                            </svg>
-                            <select name="role" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none" required>
-                                <option value="User" @selected(old('role', 'User') === 'User')>{{ __('Register as User') }}</option>
-                                <option value="FieldOwner" @selected(old('role') === 'FieldOwner')>{{ __('Register as Field Owner') }}</option>
+                        <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Password') }}</span>
+                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                            <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/></svg>
+                            <input type="password" name="password" placeholder="{{ __('Create a password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
+                            <svg class="h-5 w-5 text-[#97a2b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 19C5 19 1 12 1 12a21.77 21.77 0 015.08-6.38M9.9 4.24A10.8 10.8 0 0112 5c7 0 11 7 11 7a21.7 21.7 0 01-2.16 3.19M14.12 14.12a3 3 0 01-4.24-4.24"/><path stroke-linecap="round" stroke-linejoin="round" d="M1 1l22 22"/></svg>
+                        </div>
+                    </label>
+
+                    <label class="block">
+                        <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Confirm Password') }}</span>
+                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                            <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/></svg>
+                            <input type="password" name="password_confirmation" placeholder="{{ __('Confirm your password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
+                            <svg class="h-5 w-5 text-[#97a2b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 19C5 19 1 12 1 12a21.77 21.77 0 015.08-6.38M9.9 4.24A10.8 10.8 0 0112 5c7 0 11 7 11 7a21.7 21.7 0 01-2.16 3.19M14.12 14.12a3 3 0 01-4.24-4.24"/><path stroke-linecap="round" stroke-linejoin="round" d="M1 1l22 22"/></svg>
+                        </div>
+                    </label>
+
+                    <label class="block">
+                        <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Register as') }}</span>
+                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                            <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 00-3-3.87"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75"/></svg>
+                            <select name="role" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none" required>
+                                <option value="User" @selected(old('role', 'User') === 'User')>{{ __('Player') }}</option>
+                                <option value="FieldOwner" @selected(old('role') === 'FieldOwner')>{{ __('Field Owner') }}</option>
                             </select>
                         </div>
                     </label>
 
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4 text-[#9d98ba]">
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 2v4M8 2v4M3 10h18"/>
-                            </svg>
-                            <span class="text-[16px]">{{ __('Date of Birth') }}</span>
-                        </div>
-
-                        <div class="flex items-center justify-between gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4 text-[#9d98ba]">
-                            <div class="flex items-center gap-3">
-                                <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <circle cx="10" cy="8" r="3"></circle>
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 19a5 5 0 0110 0M19 8h3m-1.5-1.5v3"/>
-                                </svg>
-                                <span class="text-[16px]">{{ __('Gender') }}</span>
-                            </div>
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="pt-1">
-                        <div class="flex items-baseline gap-2">
-                            <h2 class="font-heading text-[19px] font-bold text-[#292d43]">{{ __('Choose Your Sport Interests') }}</h2>
-                            <span class="text-[12px] text-copy">{{ __('(Select all that you play)') }}</span>
-                        </div>
-
-                        <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 7.5 12 10l3.5-2.5M8 16l4-3 4 3M10 10l-1.5 4M14 10l1.5 4"/></svg>
-                                </div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Football / Futsal') }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path stroke-linecap="round" d="M12 4.5v15M4.5 12h15M6.5 7.5c2 1.5 3.5 2.3 5.5 2.3s3.5-.8 5.5-2.3M6.5 16.5c2-1.5 3.5-2.3 5.5-2.3s3.5.8 5.5 2.3"/></svg>
-                                </div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Basketball') }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="9" transform="rotate(35 12 12)"/><path stroke-linecap="round" d="M8.5 17.5 15.5 6.5"/></svg>
-                                </div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Tennis') }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5c3 0 5 2 5 5 0 4-4 7-7 9l-1-1c2-3 5-7 9-7 3 0 5 2 5 5 0 2-1 4-3 5"/><path stroke-linecap="round" d="m13 11 6 6"/></svg>
-                                </div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Badminton') }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path stroke-linecap="round" d="M12 4.5c2.5 2.2 3.8 4.7 3.8 7.5S14.5 17.8 12 19.5M12 4.5C9.5 6.2 8.2 8.7 8.2 12S9.5 17.8 12 19.5M4.8 9.5C7 10.8 9.5 11.5 12 11.5s5-.7 7.2-2M4.8 14.5c2.2-1.3 4.7-2 7.2-2s5 .7 7.2 2"/></svg>
-                                </div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Volleyball') }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-softBorder bg-white p-4 text-center">
-                                <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#f8f7ff] text-[#6d63ea]">
-                                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18" cy="12" r="1.8"/></svg>
-                                </div>
-                                <p class="mt-3 text-[13px] font-semibold text-[#5f6488]">{{ __('Other') }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <label class="block">
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>
-                            </svg>
-                            <input type="password" name="password" placeholder="{{ __('Create Password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </div>
-                    </label>
-
-                    <label class="block">
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>
-                            </svg>
-                            <input type="password" name="password_confirmation" placeholder="{{ __('Confirm Password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-[#363b55] outline-none placeholder:text-[#9d98ba]" required>
-                            <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </div>
-                    </label>
-
-                    <div class="rounded-2xl border border-[#e5e0fb] bg-[#f6f3ff] px-4 py-3">
-                        <p class="text-[12px] font-semibold text-[#6d63ea]">{{ __('Password must contain:') }}</p>
-                        <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#6a6f92]">
-                            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-green-500"></span> {{ __('At least 8 characters') }}</span>
-                            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-green-500"></span> {{ __('One uppercase letter') }}</span>
-                            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-green-500"></span> {{ __('One number or symbol') }}</span>
-                        </div>
-                    </div>
-
-                    <label class="flex items-start gap-3 pt-1 text-[14px] text-[#5f6488]">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-[#e8e3fb] text-[#6d63ea] focus:ring-[#6d63ea]">
-                        <span>{!! __('I agree to the :terms and :privacy', ['terms' => '<a href="'.route('terms').'" class="font-semibold text-[#6d63ea] hover:text-[#5747d8]">'.__('Terms & Conditions').'</a>', 'privacy' => '<a href="'.route('privacy').'" class="font-semibold text-[#6d63ea] hover:text-[#5747d8]">'.__('Privacy Policy').'</a>']) !!}</span>
-                    </label>
-
-                    <button type="submit" class="flex w-full items-center justify-center gap-3 rounded-2xl bg-[linear-gradient(90deg,#5747d8_0%,#6d63ea_100%)] px-6 py-4 text-[18px] font-bold text-white shadow-[0_18px_34px_rgba(99,89,237,0.24)] transition hover:opacity-95">
+                    <button type="submit" class="flex w-full items-center justify-center gap-3 rounded-[18px] bg-[linear-gradient(90deg,#0fb94f_0%,#16c75a_100%)] px-6 py-4 text-[19px] font-bold text-white shadow-[0_18px_34px_rgba(22,199,90,0.28)] transition hover:opacity-95">
                         <span>{{ __('Create Account') }}</span>
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/>
-                        </svg>
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/></svg>
                     </button>
 
-                    <div class="pt-1"></div>
-
-                    <div class="flex items-center gap-4">
-                        <div class="h-px flex-1 bg-softBorder"></div>
-                        <span class="text-[15px] text-copy">{{ __('OR') }}</span>
-                        <div class="h-px flex-1 bg-softBorder"></div>
+                    <div class="flex items-center gap-4 pt-1">
+                        <div class="h-px flex-1 bg-line"></div>
+                        <span class="text-[14px] text-copy">{{ __('OR') }}</span>
+                        <div class="h-px flex-1 bg-line"></div>
                     </div>
 
-                    <button type="button" class="flex w-full items-center justify-center gap-3 rounded-2xl border border-[#e8e3fb] bg-white px-6 py-4 text-[16px] font-semibold text-[#4a4f68] shadow-sm transition hover:bg-[#f8f7ff]">
+                    <button type="button" class="field-shell flex w-full items-center justify-center gap-3 rounded-[18px] bg-white px-6 py-4 text-[18px] font-semibold text-ink transition hover:bg-[#fbfdff]">
                         <img src="{{ asset('landing/social/google-logo.png') }}" alt="Google" class="h-6 w-6 object-contain">
-                        <span>{{ __('Sign up with Google') }}</span>
+                        <span>{{ __('Continue with Google') }}</span>
                     </button>
                 </form>
 
-                <p class="mt-6 text-center text-[15px] text-copy">
+                <p class="mt-7 text-center text-[16px] text-copy">
                     {{ __('Already have an account?') }}
-                    <a href="{{ route('login') }}" class="font-semibold text-[#6d63ea] hover:text-[#5747d8]">{{ __('Login here') }}</a>
+                    <a href="{{ route('login') }}" class="font-semibold text-green hover:text-greenDeep">{{ __('Login') }}</a>
                 </p>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 </body>
 </html>
