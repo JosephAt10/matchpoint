@@ -34,10 +34,6 @@
             <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ session('status') }}</div>
         @endif
 
-        @if ($errors->any())
-            <div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">{{ $errors->first() }}</div>
-        @endif
-
         <a href="{{ route('fields.show', ['field' => $booking->field, 'date' => $booking->date->toDateString()]) }}" class="mb-6 inline-flex items-center gap-2 text-[14px] font-medium text-[#4f5579] transition hover:text-indigoDeep">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>

@@ -32,6 +32,18 @@ class ProfileController extends Controller
             'email' => $data['email'],
         ];
 
+        $hasProfileChanges =
+            $payload['name'] !== $user->name ||
+            $payload['email'] !== $user->email;
+
+        if (! $hasProfileChanges && empty($data['password'])) {
+            return back()
+                ->withErrors([
+                    'profile' => __('There is nothing to save. Please update at least one field before saving.'),
+                ])
+                ->withInput();
+        }
+
         if (! empty($data['password'])) {
             $payload['password'] = Hash::make($data['password']);
         }

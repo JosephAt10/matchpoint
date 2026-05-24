@@ -120,7 +120,7 @@
                     </label>
                 </div>
 
-                <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-[#f97316] to-[#ff8a1e] px-6 py-4 text-[18px] font-bold text-white shadow-[0_18px_32px_rgba(249,115,22,0.24)] transition hover:opacity-95">
+                <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-[#5747d8] to-[#6d63ea] px-6 py-4 text-[18px] font-bold text-white shadow-[0_18px_32px_rgba(96,85,183,0.24)] transition hover:opacity-95">
                     {{ __('Save Changes') }}
                 </button>
             </form>

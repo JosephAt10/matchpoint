@@ -74,10 +74,18 @@
             color: #131a33;
             box-shadow: 0 8px 20px rgba(34, 43, 84, 0.04);
         }
+        .field.is-error {
+            border-color: #fb7185;
+            box-shadow: none;
+        }
         .field:focus {
             outline: none;
             border-color: #4f46e5;
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.10);
+        }
+        .field.is-error:focus {
+            border-color: #fb7185;
+            box-shadow: none;
         }
         .field[readonly] {
             background: #f8fafc;
@@ -142,7 +150,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-page text-ink">
-    <header class="border-b border-line bg-white">
+    <header class="bg-white/96 shadow-[0_14px_34px_rgba(34,43,84,0.05)] backdrop-blur">
         <div class="flex w-full items-center justify-between px-8 py-5 lg:px-12 xl:px-16 2xl:px-20">
             <a href="{{ route('home') }}" class="flex items-center gap-3">
                 <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-11 w-11 object-contain">
@@ -152,8 +160,8 @@
         </div>
     </header>
 
-    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside class="sidebar-shell border-r border-white/5 px-6 py-8">
+    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[292px_minmax(0,1fr)]">
+        <aside class="sidebar-shell border-r border-[#dde5f3] shadow-[1px_0_0_rgba(255,255,255,0.04)] px-6 py-8">
             <div class="mb-8 px-3">
                 <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/70">{{ __('Player Space') }}</p>
                 <h2 class="mt-3 font-heading text-[24px] font-bold text-white">{{ __('MatchPoint') }}</h2>
@@ -197,29 +205,19 @@
                 </form>
             </nav>
 
-            <div class="mt-12 rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-[0_18px_38px_rgba(0,0,0,0.20)] backdrop-blur">
-                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-400/16 text-emerald-300">
+            <div class="mt-12 rounded-[30px] border border-white/10 bg-white/5 p-7 shadow-[0_18px_38px_rgba(0,0,0,0.20)] backdrop-blur">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-400/16 text-emerald-300 shadow-[0_0_0_10px_rgba(52,211,153,0.08)]">
                     {!! $iconSvg('plus-square') !!}
                 </div>
-                <h3 class="mt-5 font-heading text-[24px] font-bold text-white">{{ __('Create Public Match') }}</h3>
-                <p class="mt-3 text-[16px] leading-7 text-slate-300">{{ __('Turn a confirmed booking into a public game that other players can join.') }}</p>
-                <a href="{{ route('matches.create') }}" class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-[linear-gradient(90deg,#22c55e_0%,#4ade80_100%)] px-5 py-3 text-[16px] font-semibold text-slate-950 shadow-[0_16px_28px_rgba(34,197,94,0.24)]">
-                    {{ __('Create Public Match') }}
+                <h3 class="mt-5 max-w-[13rem] font-heading text-[22px] font-bold leading-[1.15] text-white">{{ __('Create Public Match') }}</h3>
+                <p class="mt-3 max-w-[15rem] text-[15px] leading-7 text-slate-300">{{ __('Turn a confirmed booking into a public game that other players can join.') }}</p>
+                <a href="{{ route('matches.create') }}" class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-[linear-gradient(90deg,#22c55e_0%,#4ade80_100%)] px-5 py-3.5 text-[15px] font-semibold text-slate-950 shadow-[0_16px_28px_rgba(34,197,94,0.24)]">
+                    {{ __('Create Match') }}
                 </a>
             </div>
         </aside>
 
         <main class="bg-[linear-gradient(180deg,#fbfcff_0%,#f7f8fc_100%)] px-8 py-8 lg:px-10 xl:px-12">
-            @if ($errors->any())
-                <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
-                    <ul class="space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <section>
                 <div class="flex items-start gap-4">
                     <a href="{{ route('matches.index') }}" class="mt-1 text-[28px] text-ink">&larr;</a>
@@ -251,7 +249,7 @@
                                             </span>
                                             <span class="min-w-0 flex-1">
                                                 <span class="block font-heading text-[20px] font-semibold text-ink">{{ $option['field'] }}</span>
-                                                <span class="mt-1 block text-[15px] text-copy">{{ $option['sport'] }} • {{ $option['date'] }}</span>
+                                                <span class="mt-1 block text-[15px] text-copy">{{ $option['sport_label'] }} • {{ $option['date'] }}</span>
                                                 <span class="mt-1 block text-[15px] text-copy">{{ $option['start_time'] }}{{ $option['end_time'] ? ' - ' . $option['end_time'] : '' }}{{ $option['duration_label'] ? ' (' . $option['duration_label'] . ')' : '' }}</span>
                                             </span>
                                             <span class="flex flex-col items-end gap-3">
@@ -266,6 +264,7 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <x-forms.error field="booking_id" />
                         </div>
 
                         <div id="create-match-sections" hidden>
@@ -279,7 +278,8 @@
                             <div class="grid gap-5 md:grid-cols-2">
                                 <label>
                                     <span class="label required">{{ __('Match Title') }}</span>
-                                    <input id="title" name="title" maxlength="150" value="{{ old('title') }}" required class="field">
+                                    <input id="title" name="title" maxlength="150" value="{{ old('title') }}" required class="field {{ $errors->has('title') ? 'is-error' : '' }}">
+                                    <x-forms.error field="title" />
                                 </label>
                                 <label>
                                     <span class="label required">{{ __('Sport') }}</span>
@@ -288,8 +288,9 @@
                             </div>
                             <label class="mt-5 block">
                                 <span class="label">{{ __('Description') }}</span>
-                                <textarea id="description" name="description" maxlength="200" rows="4" required class="field">{{ old('description') }}</textarea>
+                                <textarea id="description" name="description" maxlength="200" rows="4" required class="field {{ $errors->has('description') ? 'is-error' : '' }}">{{ old('description') }}</textarea>
                                 <span id="description-count" class="mt-1 block text-right text-[12px] text-copy">0 / 200</span>
+                                <x-forms.error field="description" />
                             </label>
                         </div>
 
@@ -337,20 +338,23 @@
                             <div class="grid gap-5 md:grid-cols-2">
                                 <label>
                                     <span class="label required">{{ __('Max Participants') }}</span>
-                                    <input id="max_participants" name="max_participants" type="number" min="1" max="100" value="{{ old('max_participants', 10) }}" required class="field">
+                                    <input id="max_participants" name="max_participants" type="number" min="1" max="100" value="{{ old('max_participants', 10) }}" required class="field {{ $errors->has('max_participants') ? 'is-error' : '' }}">
+                                    <x-forms.error field="max_participants" />
                                 </label>
                                 <label>
                                     <span class="label required">{{ __('Participant Fee') }}</span>
-                                    <input id="participant_fee" name="participant_fee" type="number" min="0" step="1000" value="{{ old('participant_fee', 0) }}" required class="field">
+                                    <input id="participant_fee" name="participant_fee" type="number" min="0" step="1000" value="{{ old('participant_fee', 0) }}" required class="field {{ $errors->has('participant_fee') ? 'is-error' : '' }}">
+                                    <x-forms.error field="participant_fee" />
                                 </label>
                                 <label class="md:col-span-2">
                                     <span class="label">{{ __('Skill Level') }}</span>
-                                    <select id="skill_level" name="skill_level" class="field">
+                                    <select id="skill_level" name="skill_level" class="field {{ $errors->has('skill_level') ? 'is-error' : '' }}">
                                         <option value="">{{ __('All Levels') }}</option>
                                         @foreach (['All Levels', 'Beginner', 'Intermediate', 'Advanced'] as $level)
                                             <option value="{{ $level }}" @selected(old('skill_level', 'All Levels') === $level)>{{ __($level) }}</option>
                                         @endforeach
                                     </select>
+                                    <x-forms.error field="skill_level" />
                                 </label>
                             </div>
                         </div>
@@ -460,7 +464,7 @@
             const booking = selectedBooking();
 
             document.getElementById('field-display').value = booking?.field || '';
-            document.getElementById('sport-display').value = booking?.sport || '';
+            document.getElementById('sport-display').value = booking?.sport_label || '';
             document.getElementById('date-display').value = booking?.date || '';
             document.getElementById('start-display').value = booking?.start_time || '';
             document.getElementById('end-display').value = booking?.end_time || '';
@@ -472,7 +476,7 @@
 
             document.getElementById('summary-booking').textContent = booking ? `${booking.field || '-'} • ${booking.date || '-'} • ${booking.start_time || '-'}${booking.end_time ? ` - ${booking.end_time}` : ''}` : '-';
             document.getElementById('summary-title').textContent = inputs.title.value || booking?.default_title || '-';
-            document.getElementById('summary-sport').textContent = booking?.sport || '-';
+            document.getElementById('summary-sport').textContent = booking?.sport_label || '-';
             document.getElementById('summary-date').textContent = booking?.date || '-';
             document.getElementById('summary-time').textContent = booking?.start_time && booking?.end_time ? `${booking.start_time} - ${booking.end_time}${booking.duration_label ? ` (${booking.duration_label})` : ''}` : '-';
             document.getElementById('summary-location').textContent = booking ? `${booking.field || '-'}${booking.location ? `\n${booking.location}` : ''}` : '-';

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="floorShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(0, 0, 0, 0.6)"/>
+      <stop offset="50%" stop-color="rgba(0, 0, 0, 0.3)"/>
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/>
+    </radialGradient>
+
+    <radialGradient id="basketballBase" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ff914d"/>
+      <stop offset="40%" stop-color="#e65c00"/>
+      <stop offset="75%" stop-color="#993d00"/>
+      <stop offset="100%" stop-color="#4a1d00"/>
+    </radialGradient>
+
+    <radialGradient id="sphericalShadow" cx="30%" cy="25%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="85%" stop-color="#000000" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.95"/>
+    </radialGradient>
+
+    <linearGradient id="surfaceShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="70%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="recessedRibs" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#ff914d" flood-opacity="0.25"/>
+      <feDropShadow dx="-1" dy="-1" stdDeviation="1.2" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+
+    <filter id="leatherTexture" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise"/>
+      <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="1.5" result="light">
+        <feDistantLight azimuth="50" elevation="60" />
+      </feDiffuseLighting>
+      <feBlend mode="multiply" in="SourceGraphic" in2="light" result="blend"/>
+    </filter>
+
+    <clipPath id="ballClip">
+      <circle cx="200" cy="200" r="160" />
+    </clipPath>
+  </defs>
+
+  <ellipse cx="200" cy="370" rx="130" ry="20" fill="url(#floorShadow)" />
+
+  <g clip-path="url(#ballClip)">
+    <circle cx="200" cy="200" r="160" fill="url(#basketballBase)" filter="url(#leatherTexture)" />
+
+    <g fill="none" stroke="#111111" stroke-linecap="round" filter="url(#recessedRibs)">
+      <path d="M 40,200 Q 200,215 360,200" stroke-width="4.5"/>
+      
+      <path d="M 200,40 Q 205,200 200,360" stroke-width="4.5"/>
+      
+      <path d="M 90,75 Q 190,200 90,325" stroke-width="4"/>
+      
+      <path d="M 310,75 Q 210,200 310,325" stroke-width="4"/>
+
+      <circle cx="200" cy="200" r="158" stroke="#000000" stroke-width="3" opacity="0.4"/>
+    </g>
+
+    <circle cx="200" cy="200" r="160" fill="url(#sphericalShadow)" style="mix-blend-mode: multiply;" />
+
+    <ellipse cx="160" cy="100" rx="100" ry="50" transform="rotate(-20, 160, 100)" fill="url(#surfaceShine)" />
+  </g>
+
+  <circle cx="200" cy="200" r="159.5" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.25"/>
+</svg>

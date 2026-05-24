@@ -11,36 +11,15 @@
     @endif
 </head>
 <body class="min-h-screen bg-[linear-gradient(180deg,_#f7f5ff_0%,_#ece8ff_100%)] text-[#24283d]">
-    @php
-        $dashboardNavUrl = auth()->check() ? route('dashboard') : route('login');
-        $favoritesNavUrl = auth()->check() ? route('favorites.index') : route('login');
-        $profileNavUrl = auth()->check() ? route('profile.edit') : route('login');
-    @endphp
-    <header class="border-b border-[#e4defc] bg-white/92 backdrop-blur">
+    <header class="bg-white/96 shadow-[0_14px_34px_rgba(34,43,84,0.05)] backdrop-blur">
         <div class="flex w-full items-center justify-between px-6 py-4 lg:px-10 xl:px-14 2xl:px-20">
-            <a href="{{ route('home') }}" class="font-semibold tracking-[0.16em] text-[#352f6c]">{{ __('MATCHPOINT') }}</a>
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
+                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-11 w-11 object-contain">
+                <span class="font-heading text-[24px] font-bold tracking-[0.14em] text-[#1b2565]">{{ __('MATCHPOINT') }}</span>
+            </a>
 
-            <div class="flex items-center gap-6 lg:gap-10">
-                <nav class="flex items-center gap-3 text-sm">
-                    <a href="{{ route('fields.index') }}" class="rounded-full px-4 py-2 text-[#4b5070] transition hover:bg-[#f3efff] hover:text-[#4d43cb]">{{ __('Browse Fields') }}</a>
-                    <a href="{{ $dashboardNavUrl }}" class="rounded-full px-4 py-2 text-[#4b5070] transition hover:bg-[#f3efff] hover:text-[#4d43cb]">{{ __('Dashboard') }}</a>
-                    <a href="{{ $favoritesNavUrl }}" class="rounded-full px-4 py-2 text-[#4b5070] transition hover:bg-[#f3efff] hover:text-[#4d43cb]">{{ __('Favorites') }}</a>
-                    <a href="{{ $profileNavUrl }}" class="rounded-full px-4 py-2 text-[#4b5070] transition hover:bg-[#f3efff] hover:text-[#4d43cb]">{{ __('Profile') }}</a>
-
-                    @auth
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="rounded-full bg-[#5f55dc] px-4 py-2 font-medium text-white transition hover:bg-[#4d43cb]">{{ __('Logout') }}</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="rounded-full px-4 py-2 text-[#4b5070] transition hover:bg-[#f3efff] hover:text-[#4d43cb]">{{ __('Login') }}</a>
-                        <a href="{{ route('register') }}" class="rounded-full bg-[#5f55dc] px-4 py-2 font-medium text-white transition hover:bg-[#4d43cb]">{{ __('Register') }}</a>
-                    @endauth
-                </nav>
-
-                <div class="shrink-0">
-                    @include('partials.locale-switcher')
-                </div>
+            <div class="shrink-0">
+                @include('partials.locale-switcher')
             </div>
         </div>
     </header>
@@ -52,13 +31,9 @@
             </div>
         @endif
 
-        @if ($errors->any())
+        @if ($errors->has('profile'))
             <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
-                <ul class="space-y-1">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+                {{ $errors->first('profile') }}
             </div>
         @endif
 

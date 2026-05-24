@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="dropShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(0, 0, 0, 0.6)"/>
+      <stop offset="60%" stop-color="rgba(0, 0, 0, 0.3)"/>
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/>
+    </radialGradient>
+
+    <radialGradient id="sphereShading" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="40%" stop-color="#888888" stop-opacity="0.1"/>
+      <stop offset="80%" stop-color="#000000" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.95"/>
+    </radialGradient>
+
+    <linearGradient id="gloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="whitePanel" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="75%" stop-color="#ededed"/>
+      <stop offset="100%" stop-color="#d1d1d1"/>
+    </radialGradient>
+
+    <radialGradient id="blackPanel" cx="35%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#2c2c2c"/>
+      <stop offset="70%" stop-color="#151515"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </radialGradient>
+
+    <filter id="seamShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="200" cy="370" rx="140" ry="25" fill="url(#dropShadow)" />
+
+  <clipPath id="ballClip">
+    <circle cx="200" cy="200" r="160" />
+  </clipPath>
+
+  <g clip-path="url(#ballClip)">
+    <circle cx="200" cy="200" r="160" fill="#d1d1d1" />
+
+    <g stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" filter="url(#seamShadow)">
+      
+      <polygon points="180,165 220,165 232,203 200,227 168,203" fill="url(#blackPanel)" />
+
+      <path d="M 180,165 L 220,165 L 235,120 L 200,90 L 165,120 Z" fill="url(#whitePanel)" />
+      <path d="M 168,203 L 200,227 L 200,275 L 155,275 L 132,232 Z" fill="url(#whitePanel)" />
+      <path d="M 200,227 L 232,203 L 268,232 L 245,275 L 200,275 Z" fill="url(#whitePanel)" />
+      <path d="M 168,203 L 180,165 L 140,135 L 105,165 L 120,210 Z" fill="url(#whitePanel)" />
+      <path d="M 232,203 L 220,165 L 260,135 L 295,165 L 280,210 Z" fill="url(#whitePanel)" />
+
+      <path d="M 140,135 L 165,120 L 150,75 L 105,85 L 98,120 Z" fill="url(#blackPanel)" />
+      <path d="M 260,135 L 235,120 L 250,75 L 295,85 L 302,120 Z" fill="url(#blackPanel)" />
+      <path d="M 105,165 L 120,210 L 80,230 L 50,195 L 65,150 Z" fill="url(#blackPanel)" />
+      <path d="M 295,165 L 280,210 L 320,230 L 350,195 L 335,150 Z" fill="url(#blackPanel)" />
+      <path d="M 155,275 L 245,275 L 260,330 L 200,355 L 140,330 Z" fill="url(#blackPanel)" />
+
+      <path d="M 150,75 L 200,90 L 250,75 L 230,40 L 170,40 Z" fill="url(#whitePanel)" />
+      <path d="M 132,232 L 155,275 L 140,330 L 90,310 L 95,260 Z" fill="url(#whitePanel)" />
+      <path d="M 268,232 L 245,275 L 260,330 L 310,310 L 305,260 Z" fill="url(#whitePanel)" />
+      <path d="M 105,165 L 140,135 L 98,120 L 55,105 L 50,145 Z" fill="url(#whitePanel)" />
+      <path d="M 260,135 L 295,165 L 350,145 L 345,105 L 302,120 Z" fill="url(#whitePanel)" />
+    </g>
+
+    <circle cx="200" cy="200" r="160" fill="url(#sphereShading)" style="mix-blend-mode: multiply;" />
+
+    <ellipse cx="170" cy="90" rx="90" ry="40" transform="rotate(-15, 170, 90)" fill="url(#gloss)" />
+  </g>
+
+  <circle cx="200" cy="200" r="159.5" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+</svg>

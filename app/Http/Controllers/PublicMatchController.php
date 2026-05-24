@@ -121,6 +121,7 @@ class PublicMatchController extends Controller
             'image_url' => $booking->field?->image_url,
             'field' => $booking->field?->name,
             'sport' => $booking->field?->sport_type,
+            'sport_label' => __($booking->field?->sport_type ?? 'Sport'),
             'date' => $booking->date?->translatedFormat('d M Y'),
             'start_time' => $start,
             'end_time' => $end,
@@ -129,7 +130,7 @@ class PublicMatchController extends Controller
                 : '',
             'location' => $booking->field?->location,
             'organizer' => $booking->user?->name,
-            'default_title' => __('Friendly :sport Match', ['sport' => $booking->field?->sport_type ?? __('Sport')]),
+            'default_title' => __('Friendly :sport Match', ['sport' => __($booking->field?->sport_type ?? 'Sport')]),
             'default_description' => __('Let us play a friendly match. All skill levels are welcome.'),
         ];
     }

@@ -88,16 +88,6 @@
                     </div>
                 @endif
 
-                @if ($errors->any())
-                    <div class="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
-                        <ul class="space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <div class="text-center">
                     <h1 class="font-heading text-[48px] font-bold tracking-tight text-[#292d43] md:text-[52px]">{{ __('Welcome Back') }}</h1>
                     <p class="mt-3 text-[20px] text-copy md:text-[18px]">{{ __('Sign in to continue your match journey') }}</p>
@@ -108,17 +98,18 @@
 
                     <div>
                         <label for="email" class="mb-3 block text-[20px] font-semibold text-[#353a52] md:text-[16px]">{{ __('Email Address') }}</label>
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
+                        <div class="flex items-center gap-3 rounded-2xl border {{ $errors->has('email') ? 'border-rose-400' : 'border-softBorder' }} bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8m-16 9h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2z"/>
                             </svg>
                             <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('Email Address') }}" class="w-full border-0 p-0 text-[19px] text-[#363b55] outline-none placeholder:text-[#9d98ba] md:text-[16px]" required>
                         </div>
+                        <x-forms.error field="email" />
                     </div>
 
                     <div>
                         <label for="password" class="mb-3 block text-[20px] font-semibold text-[#353a52] md:text-[16px]">{{ __('Password') }}</label>
-                        <div class="flex items-center gap-3 rounded-2xl border border-softBorder bg-white px-4 py-4">
+                        <div class="flex items-center gap-3 rounded-2xl border {{ $errors->has('password') ? 'border-rose-400' : 'border-softBorder' }} bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>
@@ -137,6 +128,7 @@
                                 </svg>
                             </button>
                         </div>
+                        <x-forms.error field="password" />
                     </div>
 
                     <div class="flex flex-col gap-4 text-[18px] text-copy md:flex-row md:items-center md:justify-between md:text-[16px]">

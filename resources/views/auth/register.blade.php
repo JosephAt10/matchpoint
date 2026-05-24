@@ -113,9 +113,16 @@
             border: 1px solid #e7edf5;
             box-shadow: 0 10px 24px rgba(20, 32, 58, 0.05);
         }
+        .field-shell.is-error {
+            border-color: #fb7185;
+        }
         .field-shell:focus-within {
-            border-color: #22c55e;
-            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+            border-color: #6d63ea;
+            box-shadow: 0 0 0 4px rgba(109, 99, 234, 0.14);
+        }
+        .field-shell.is-error:focus-within {
+            border-color: #fb7185;
+            box-shadow: none;
         }
         @keyframes floatGhost {
             0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
@@ -138,12 +145,9 @@
 <body class="min-h-screen text-ink">
     <main class="relative min-h-screen overflow-hidden">
         <div class="absolute inset-0">
-            <div class="absolute left-8 top-8 z-20 flex items-center gap-3">
-                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-16 w-16 object-contain">
-                <div>
-                    <p class="font-heading text-[20px] font-bold tracking-tight text-[#12213d] md:text-[24px]">{{ __('MATCHPOINT') }}</p>
-                    <p class="text-[12px] font-medium text-copy md:text-[14px]">{{ __('Play. Connect. Compete') }}</p>
-                </div>
+            <div class="absolute left-8 top-8 z-20 flex items-center gap-4">
+                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-14 w-14 object-contain">
+                <p class="font-heading text-[28px] font-bold tracking-[0.14em] text-[#23357a] md:text-[32px]">{{ __('MATCHPOINT') }}</p>
             </div>
 
             <div class="absolute right-8 top-8 z-20">
@@ -151,19 +155,19 @@
             </div>
 
             <div class="sport-asset left-[8%] top-[16%] hidden w-[220px] md:block">
-                <img src="{{ asset('landing/sports-football.svg') }}" alt="" aria-hidden="true">
+                <img src="{{ asset('landing/futsal-svg.svg') }}" alt="" aria-hidden="true">
             </div>
             <div class="sport-asset right-[16%] top-[12%] hidden w-[170px] opacity-70 xl:block" style="animation-delay:-4s;">
-                <img src="{{ asset('landing/sports-basketball-outline.svg') }}" alt="" aria-hidden="true">
-            </div>
-            <div class="sport-asset right-[9%] top-[31%] w-[185px] opacity-72" style="animation-delay:-8s;">
-                <img src="{{ asset('landing/sports-volleyball-outline.svg') }}" alt="" aria-hidden="true">
+                <img src="{{ asset('landing/basketball-svg.svg') }}" alt="" aria-hidden="true">
             </div>
             <div class="sport-asset left-[2%] bottom-[26%] w-[145px]" style="animation-delay:-2s;">
-                <img src="{{ asset('landing/sports-shuttlecock.svg') }}" alt="" aria-hidden="true">
+                <img src="{{ asset('landing/BadmintoRacker-svg.svg') }}" alt="" aria-hidden="true">
             </div>
             <div class="sport-asset right-[8%] bottom-[14%] w-[138px]" style="animation-delay:-10s;">
-                <img src="{{ asset('landing/sports-tennis-ball.svg') }}" alt="" aria-hidden="true">
+                <img src="{{ asset('landing/Tennis-svg.svg') }}" alt="" aria-hidden="true">
+            </div>
+            <div class="sport-asset left-[18%] bottom-[10%] hidden w-[170px] opacity-80 lg:block" style="animation-delay:-7s;">
+                <img src="{{ asset('landing/Football-svg.svg') }}" alt="" aria-hidden="true">
             </div>
 
             <div class="motion-line left-[-12%] bottom-[24%] h-[240px] w-[62%]"></div>
@@ -200,74 +204,73 @@
         <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-24">
             <section class="register-card w-full max-w-[560px] rounded-[32px] p-6 shadow-panel sm:p-8 md:p-10">
                 <div class="text-center">
-                    <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] bg-[linear-gradient(180deg,#f6fff9_0%,#ffffff_100%)] shadow-soft">
-                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-14 w-14 object-contain">
+                    <div class="mx-auto flex h-28 w-28 items-center justify-center rounded-[32px] bg-[linear-gradient(180deg,#f6fff9_0%,#ffffff_100%)] shadow-soft">
+                        <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-20 w-20 object-contain">
                     </div>
                     <h1 class="mt-6 font-heading text-[38px] font-bold tracking-tight text-ink sm:text-[44px]">{{ __('Create Your Account') }}</h1>
-                    <p class="mt-3 text-[18px] text-copy">
-                        {!! __('Join <span class="font-semibold text-green">MatchPoint</span> and start your game journey today.') !!}
-                    </p>
+                    <p class="mt-3 text-[18px] text-copy">{{ __('Join MatchPoint and start your game journey today.') }}</p>
                 </div>
-
-                @if ($errors->any())
-                    <div class="mt-6 rounded-[22px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
-                        <ul class="space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
 
                 <form action="{{ route('register.store') }}" method="POST" novalidate class="mt-8 space-y-5">
                     @csrf
 
                     <label class="block">
                         <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Full Name') }}</span>
-                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                        <div class="field-shell {{ $errors->has('name') ? 'is-error' : '' }} flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             <input type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('Enter your full name') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
                         </div>
+                        <x-forms.error field="name" />
                     </label>
 
                     <label class="block">
                         <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Email Address') }}</span>
-                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                        <div class="field-shell {{ $errors->has('email') ? 'is-error' : '' }} flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8m-16 9h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
                             <input type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('Enter your email address') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
                         </div>
+                        <x-forms.error field="email" />
                     </label>
 
                     <label class="block">
                         <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Password') }}</span>
-                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                        <div class="field-shell {{ $errors->has('password') ? 'is-error' : '' }} flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/></svg>
-                            <input type="password" name="password" placeholder="{{ __('Create a password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
-                            <svg class="h-5 w-5 text-[#97a2b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 19C5 19 1 12 1 12a21.77 21.77 0 015.08-6.38M9.9 4.24A10.8 10.8 0 0112 5c7 0 11 7 11 7a21.7 21.7 0 01-2.16 3.19M14.12 14.12a3 3 0 01-4.24-4.24"/><path stroke-linecap="round" stroke-linejoin="round" d="M1 1l22 22"/></svg>
+                            <input id="register-password" type="password" name="password" placeholder="{{ __('Create a password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
+                            <button type="button" data-password-toggle="register-password" class="text-[#97a2b9] transition hover:text-[#6d63ea]" aria-label="{{ __('Password') }}" aria-pressed="false">
+                                <svg data-eye-open class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg data-eye-closed class="hidden h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.58 10.58A2 2 0 0012 14a2 2 0 001.42-.58"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.88 5.09A9.77 9.77 0 0112 5c7 0 11 7 11 7a21.76 21.76 0 01-5.17 5.94"/><path stroke-linecap="round" stroke-linejoin="round" d="M6.1 6.1A21.8 21.8 0 001 12s4 7 11 7a10.7 10.7 0 005.04-1.24"/></svg>
+                            </button>
                         </div>
+                        <x-forms.error field="password" />
                     </label>
 
                     <label class="block">
                         <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Confirm Password') }}</span>
-                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                        <div class="field-shell {{ $errors->has('password_confirmation') || $errors->has('password') ? 'is-error' : '' }} flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/></svg>
-                            <input type="password" name="password_confirmation" placeholder="{{ __('Confirm your password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
-                            <svg class="h-5 w-5 text-[#97a2b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 19C5 19 1 12 1 12a21.77 21.77 0 015.08-6.38M9.9 4.24A10.8 10.8 0 0112 5c7 0 11 7 11 7a21.7 21.7 0 01-2.16 3.19M14.12 14.12a3 3 0 01-4.24-4.24"/><path stroke-linecap="round" stroke-linejoin="round" d="M1 1l22 22"/></svg>
+                            <input id="register-password-confirmation" type="password" name="password_confirmation" placeholder="{{ __('Confirm your password') }}" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none placeholder:text-[#9d98ba]" required>
+                            <button type="button" data-password-toggle="register-password-confirmation" class="text-[#97a2b9] transition hover:text-[#6d63ea]" aria-label="{{ __('Confirm Password') }}" aria-pressed="false">
+                                <svg data-eye-open class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg data-eye-closed class="hidden h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.58 10.58A2 2 0 0012 14a2 2 0 001.42-.58"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.88 5.09A9.77 9.77 0 0112 5c7 0 11 7 11 7a21.76 21.76 0 01-5.17 5.94"/><path stroke-linecap="round" stroke-linejoin="round" d="M6.1 6.1A21.8 21.8 0 001 12s4 7 11 7a10.7 10.7 0 005.04-1.24"/></svg>
+                            </button>
                         </div>
+                        <x-forms.error field="password_confirmation" />
                     </label>
 
                     <label class="block">
                         <span class="mb-2 block text-[13px] font-semibold text-ink">{{ __('Register as') }}</span>
-                        <div class="field-shell flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
+                        <div class="field-shell {{ $errors->has('role') ? 'is-error' : '' }} flex items-center gap-3 rounded-[18px] bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 00-3-3.87"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75"/></svg>
                             <select name="role" class="w-full border-0 bg-transparent p-0 text-[16px] text-ink outline-none" required>
-                                <option value="User" @selected(old('role', 'User') === 'User')>{{ __('Player') }}</option>
+                                <option value="User" @selected(old('role', 'User') === 'User')>{{ __('User') }}</option>
                                 <option value="FieldOwner" @selected(old('role') === 'FieldOwner')>{{ __('Field Owner') }}</option>
                             </select>
                         </div>
+                        <x-forms.error field="role" />
                     </label>
 
-                    <button type="submit" class="flex w-full items-center justify-center gap-3 rounded-[18px] bg-[linear-gradient(90deg,#0fb94f_0%,#16c75a_100%)] px-6 py-4 text-[19px] font-bold text-white shadow-[0_18px_34px_rgba(22,199,90,0.28)] transition hover:opacity-95">
+                    <button type="submit" class="flex w-full items-center justify-center gap-3 rounded-[18px] bg-gradient-to-r from-[#5747d8] to-[#6d63ea] px-6 py-4 text-[19px] font-bold text-white shadow-[0_18px_34px_rgba(96,85,183,0.28)] transition hover:opacity-95">
                         <span>{{ __('Create Account') }}</span>
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/></svg>
                     </button>
@@ -291,5 +294,25 @@
             </section>
         </div>
     </main>
+    <script>
+        document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+            const input = document.getElementById(button.dataset.passwordToggle);
+            const eyeOpen = button.querySelector('[data-eye-open]');
+            const eyeClosed = button.querySelector('[data-eye-closed]');
+
+            if (!input || !eyeOpen || !eyeClosed) {
+                return;
+            }
+
+            button.addEventListener('click', () => {
+                const isHidden = input.type === 'password';
+
+                input.type = isHidden ? 'text' : 'password';
+                button.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+                eyeOpen.classList.toggle('hidden', isHidden);
+                eyeClosed.classList.toggle('hidden', !isHidden);
+            });
+        });
+    </script>
 </body>
 </html>

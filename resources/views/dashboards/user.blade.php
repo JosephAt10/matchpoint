@@ -92,7 +92,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-page text-ink">
-    <header class="border-b border-line bg-white">
+    <header class="bg-white/96 shadow-[0_14px_34px_rgba(34,43,84,0.05)] backdrop-blur">
         <div class="flex w-full items-center justify-between px-8 py-5 lg:px-12 xl:px-16 2xl:px-20">
             <a href="{{ route('home') }}" class="flex items-center gap-3">
                 <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-11 w-11 object-contain">
@@ -102,8 +102,8 @@
         </div>
     </header>
 
-    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside class="sidebar-shell border-r border-white/5 px-6 py-8">
+    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[292px_minmax(0,1fr)]">
+        <aside class="sidebar-shell border-r border-[#dde5f3] shadow-[1px_0_0_rgba(255,255,255,0.04)] px-6 py-8">
             <div class="mb-8 px-3">
                 <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-200/70">{{ __('Player Space') }}</p>
                 <h2 class="mt-3 font-heading text-[24px] font-bold text-white">{{ __('MatchPoint') }}</h2>
@@ -164,7 +164,7 @@
 
         <main class="bg-[linear-gradient(180deg,#fbfcff_0%,#f7f8fc_100%)] px-8 py-8 lg:px-10 xl:px-12">
             <section>
-                <h1 class="font-heading text-[48px] font-bold leading-tight text-ink">{{ __('Welcome back, :name!', ['name' => $user['first_name']]) }} <span class="text-[40px]">👋</span></h1>
+                <h1 class="font-heading text-[48px] font-bold leading-tight text-ink">{{ __('Welcome back, :name!', ['name' => $user['first_name']]) }} <span class="text-[40px]"></span></h1>
                 <p class="mt-3 text-[24px] text-copy">{{ __('Here\'s what\'s happening with your bookings.') }}</p>
             </section>
 

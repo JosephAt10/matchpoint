@@ -38,7 +38,7 @@
     <style>*{font-family:'DM Sans',sans-serif}h1,h2,h3,h4,h5,h6,.font-heading{font-family:'Outfit',sans-serif}.surface-card{border:1px solid #edf1f7;box-shadow:0 18px 42px rgba(34,43,84,.08)}.soft-card{border:1px solid #edf1f7;box-shadow:0 12px 28px rgba(34,43,84,.06)}.sidebar-shell{background:radial-gradient(circle at top left,rgba(99,102,241,.24),transparent 30%),linear-gradient(180deg,#0f172a 0%,#111827 52%,#0b1120 100%)}.sidebar-nav-link{color:rgba(226,232,240,.88)}.sidebar-nav-link:hover{background:rgba(255,255,255,.06);color:#fff}.sidebar-nav-link.is-active{background:linear-gradient(90deg,rgba(79,70,229,.32),rgba(99,102,241,.18));color:#fff;box-shadow:inset 0 0 0 1px rgba(129,140,248,.16)}</style>
 </head>
 <body class="min-h-screen bg-page text-ink">
-    <header class="border-b border-line bg-white">
+    <header class="bg-white/96 shadow-[0_14px_34px_rgba(34,43,84,0.05)] backdrop-blur">
         <div class="flex w-full items-center justify-between px-8 py-5 lg:px-12 xl:px-16 2xl:px-20">
             <a href="{{ route('home') }}" class="flex items-center gap-3">
                 <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-11 w-11 object-contain">
@@ -48,8 +48,8 @@
         </div>
     </header>
 
-    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside class="sidebar-shell border-r border-white/5 px-6 py-8">
+    <div class="grid min-h-[calc(100vh-85px)] lg:grid-cols-[292px_minmax(0,1fr)]">
+        <aside class="sidebar-shell border-r border-[#dde5f3] shadow-[1px_0_0_rgba(255,255,255,0.04)] px-6 py-8">
             <div class="mb-8 px-3">
                 <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-200/70">{{ __('Player Space') }}</p>
                 <h2 class="mt-3 font-heading text-[24px] font-bold text-white">{{ __('MatchPoint') }}</h2>

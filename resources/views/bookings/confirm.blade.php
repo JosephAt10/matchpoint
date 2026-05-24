@@ -30,12 +30,6 @@
     </header>
 
     <main class="mx-auto w-full max-w-5xl px-5 py-8 md:px-8">
-        @if ($errors->any())
-            <div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
         <a href="{{ route('fields.show', ['field' => $field, 'date' => $bookingDate->toDateString()]) }}" class="mb-6 inline-flex items-center gap-2 text-[14px] font-medium text-[#4f5579] transition hover:text-indigoDeep">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
@@ -94,10 +88,11 @@
                     <label class="block">
                         <span class="text-[14px] font-bold text-ink">{{ __('Upload payment proof') }}</span>
                         <input id="payment-proof-input" type="file" name="proof" accept="image/png,image/jpeg" required class="sr-only" data-file-name-target="payment-proof-file-name">
-                        <span class="mt-3 flex min-h-[52px] items-center gap-4 rounded-lg border border-[#dfdaf4] bg-white p-2 text-[14px]">
+                        <span class="mt-3 flex min-h-[52px] items-center gap-4 rounded-lg border {{ $errors->has('proof') ? 'border-rose-400' : 'border-[#dfdaf4]' }} bg-white p-2 text-[14px]">
                             <span class="inline-flex shrink-0 cursor-pointer rounded-lg bg-[#5a38d6] px-4 py-3 font-bold text-white">{{ __('Choose file') }}</span>
                             <span id="payment-proof-file-name" class="min-w-0 flex-1 truncate text-ink">{{ __('No file selected') }}</span>
                         </span>
+                        <x-forms.error field="proof" />
                     </label>
 
                     <button type="submit" class="flex w-full items-center justify-center rounded-lg bg-[#5a38d6] px-6 py-4 text-[16px] font-bold text-white shadow-[0_14px_28px_rgba(84,66,217,0.26)] transition hover:bg-[#4c2fbd]">{{ __('Confirm Booking') }}</button>
