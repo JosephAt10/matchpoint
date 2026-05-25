@@ -13,12 +13,19 @@ class UserActivityController extends Controller
         $user = $request->user();
 
         $payments = $user->payments()
-            ->with(['booking.field', 'booking.bookedSlots.timeSlot'])
-            ->where('type', 'BookingDP')
+            ->with([
+                'booking.field',
+                'booking.bookedSlots.timeSlot',
+                'matchParticipant.game.booking.field',
+                'matchParticipant.game.booking.bookedSlots.timeSlot',
+            ])
             ->latest()
             ->get()
             ->map(function ($payment): array {
-                $booking = $payment->booking;
+                $booking = $payment->isBookingDP()
+                    ? $payment->booking
+                    : $payment->matchParticipant?->game?->booking;
+                $match = $payment->matchParticipant?->game;
                 $slots = $booking?->bookedSlots
                     ->pluck('timeSlot')
                     ->filter()
@@ -30,9 +37,11 @@ class UserActivityController extends Controller
                     : __('Time not available');
 
                 return [
+                    'title' => $payment->isMatchFee() ? $match?->title : $booking?->field?->name,
                     'field_name' => $booking?->field?->name,
                     'location' => $booking?->field?->location,
                     'image_url' => $booking?->field?->image_url,
+                    'type_label' => $payment->isMatchFee() ? __('Match Fee') : __('Booking Payment'),
                     'amount' => 'Rp ' . number_format((float) $payment->amount, 0, ',', '.'),
                     'status' => $payment->status,
                     'status_tone' => match ($payment->status) {
@@ -44,6 +53,8 @@ class UserActivityController extends Controller
                     'time_label' => $timeRange,
                     'proof_url' => $payment->proof ? url('/storage/' . ltrim($payment->proof, '/')) : null,
                     'booking_url' => $booking ? route('bookings.show', $booking) : null,
+                    'match_url' => $match ? route('matches.show', $match) : null,
+                    'team_label' => $payment->isMatchFee() ? $payment->matchParticipant?->team : null,
                     'rejection_reason' => $payment->rejection_reason,
                     'submitted_at' => $payment->created_at?->translatedFormat('j M Y, H:i'),
                 ];

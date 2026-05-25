@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
 class Game extends Model
 {
     use HasFactory;
@@ -22,6 +21,11 @@ class Game extends Model
         'creator_id',
         'title',
         'description',
+        'team_a_name',
+        'team_b_name',
+        'team_a_logo',
+        'team_b_logo',
+        'max_per_team',
         'max_participants',
         'filled_slots',
         'participant_fee',
@@ -35,7 +39,8 @@ class Game extends Model
     {
         return [
             'participant_fee' => 'decimal:2',
-            'status'          => 'string',
+            'max_per_team' => 'integer',
+            'status' => 'string',
         ];
     }
 
@@ -68,14 +73,86 @@ class Game extends Model
         return $this->status === 'Cancelled';
     }
 
-    public function hasAvailableSlot(): bool
+    public function hasAvailableSlot(string $team): bool
     {
-        return $this->isOpen() && $this->filled_slots < $this->max_participants;
+        return $this->isOpen() && match (strtoupper($team)) {
+            'A' => $this->teamACount() < (int) $this->max_per_team,
+            'B' => $this->teamBCount() < (int) $this->max_per_team,
+            default => false,
+        };
     }
 
     public function slotsRemaining(): int
     {
         return max(0, $this->max_participants - $this->filled_slots);
+    }
+
+    public function hasTeamsConfigured(): bool
+    {
+        return filled($this->team_a_name) || filled($this->team_b_name);
+    }
+
+    public function teamACount(): int
+    {
+        return $this->confirmedParticipantsCollection()
+            ->where('team', 'A')
+            ->count();
+    }
+
+    public function teamBCount(): int
+    {
+        return $this->confirmedParticipantsCollection()
+            ->where('team', 'B')
+            ->count();
+    }
+
+    public function isCreator(int|string|null $userId): bool
+    {
+        return (int) $this->creator_id === (int) $userId;
+    }
+
+    public function teamSlotsRemaining(string $team): int
+    {
+        if (! $this->max_per_team) {
+            return 0;
+        }
+
+        return max(0, (int) $this->max_per_team - match (strtoupper($team)) {
+            'A' => $this->teamACount(),
+            'B' => $this->teamBCount(),
+            default => 0,
+        });
+    }
+
+    public function hasAvailableTeamSlot(string $team): bool
+    {
+        return $this->hasAvailableSlot($team);
+    }
+
+    public function refreshParticipationState(): void
+    {
+        $teamACount = $this->participants()
+            ->where('status', 'Confirmed')
+            ->where('team', 'A')
+            ->count();
+
+        $teamBCount = $this->participants()
+            ->where('status', 'Confirmed')
+            ->where('team', 'B')
+            ->count();
+
+        $attributes = [
+            'filled_slots' => $teamACount + $teamBCount,
+        ];
+
+        if (! $this->isCompleted() && ! $this->isCancelled()) {
+            $attributes['status'] = $this->max_per_team && $teamACount >= $this->max_per_team && $teamBCount >= $this->max_per_team
+                ? 'Full'
+                : 'Open';
+        }
+
+        $this->forceFill($attributes)->save();
+        $this->refresh();
     }
 
     // ── Relationships ─────────────────────────────────────────────────────────
@@ -98,5 +175,18 @@ class Game extends Model
     {
         return $this->hasMany(MatchParticipant::class, 'match_id')
             ->where('status', 'Confirmed');
+    }
+
+    private function confirmedParticipantsCollection()
+    {
+        $participants = $this->relationLoaded('participants')
+            ? $this->participants
+            : $this->participants()
+                ->where('status', 'Confirmed')
+                ->get();
+
+        return $participants
+            ->where('status', 'Confirmed')
+            ->values();
     }
 }

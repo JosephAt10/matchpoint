@@ -38,6 +38,7 @@ Route::middleware('guest')->group(function (): void {
 Route::get('/fields', [FieldBrowserController::class, 'index'])->name('fields.index');
 Route::get('/fields/{field}', [FieldBrowserController::class, 'show'])->name('fields.show');
 Route::get('/matches', [PublicMatchController::class, 'index'])->name('matches.index');
+Route::get('/matches/{match}', [PublicMatchController::class, 'show'])->whereNumber('match')->name('matches.show');
 
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
@@ -51,7 +52,9 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::post('/bookings/{booking}/payment-proof', [BookingController::class, 'uploadProof'])->name('bookings.payment-proof.store');
     Route::get('/payments', [UserActivityController::class, 'payments'])->name('payments.index');
     Route::get('/matches/create', [PublicMatchController::class, 'create'])->name('matches.create');
+    Route::get('/my-matches', [PublicMatchController::class, 'myMatches'])->name('matches.my');
     Route::post('/matches', [PublicMatchController::class, 'store'])->name('matches.store');
+    Route::post('/matches/{match}/join', [PublicMatchController::class, 'join'])->name('matches.join');
     Route::get('/notifications', [UserActivityController::class, 'notifications'])->name('notifications.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

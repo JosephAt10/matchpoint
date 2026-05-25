@@ -126,6 +126,10 @@
                     <span class="h-6 w-6">{!! $iconSvg('plus-square') !!}</span>
                     <span>{{ __('Public Matches') }}</span>
                 </a>
+                <a href="{{ $dashboard['links']['my_matches'] }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition">
+                    <span class="h-6 w-6">{!! $iconSvg('wallet') !!}</span>
+                    <span>{{ __('My Matches') }}</span>
+                </a>
                 <a href="{{ $dashboard['links']['favorites'] }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition">
                     <span class="h-6 w-6">{!! $iconSvg('heart') !!}</span>
                     <span>{{ __('Favorites') }}</span>

@@ -11,6 +11,8 @@ class MatchParticipant extends Model
     protected $fillable = [
         'match_id',
         'user_id',
+        'team',
+        'is_creator',
         'status',
         'joined_at',
     ];
@@ -18,7 +20,9 @@ class MatchParticipant extends Model
     protected function casts(): array
     {
         return [
-            'status'    => 'string',
+            'team' => 'string',
+            'is_creator' => 'boolean',
+            'status' => 'string',
             'joined_at' => 'datetime',
         ];
     }
@@ -28,6 +32,9 @@ class MatchParticipant extends Model
     public function isPending(): bool   { return $this->status === 'Pending'; }
     public function isConfirmed(): bool { return $this->status === 'Confirmed'; }
     public function isCancelled(): bool { return $this->status === 'Cancelled'; }
+    public function isTeamA(): bool     { return $this->team === 'A'; }
+    public function isTeamB(): bool     { return $this->team === 'B'; }
+    public function isCreator(): bool   { return $this->is_creator === true; }
 
     // ── Relationships ─────────────────────────────────────────────────────────
 

@@ -59,6 +59,7 @@
                 <a href="{{ route('fields.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('location') !!}</span><span>{{ __('Browse Fields') }}</span></a>
                 <a href="{{ route('bookings.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('calendar') !!}</span><span>{{ __('My Bookings') }}</span></a>
                 <a href="{{ route('matches.create') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('wallet') !!}</span><span>{{ __('Public Matches') }}</span></a>
+                <a href="{{ route('matches.my') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('wallet') !!}</span><span>{{ __('My Matches') }}</span></a>
                 <a href="{{ route('favorites.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('location') !!}</span><span>{{ __('Favorites') }}</span></a>
                 <a href="{{ route('notifications.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('bell') !!}</span><span>{{ __('Notifications') }}</span></a>
                 <a href="{{ route('profile.edit') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span class="h-6 w-6">{!! $iconSvg('user') !!}</span><span>{{ __('Profile') }}</span></a>
@@ -70,7 +71,7 @@
         <section class="surface-card rounded-[28px] bg-white p-6">
             <p class="text-[14px] font-semibold uppercase tracking-[0.24em] text-[#f08b20]">{{ __('Payments') }}</p>
             <h1 class="mt-3 font-heading text-[42px] font-bold text-ink">{{ __('Your payment activity') }}</h1>
-            <p class="mt-3 max-w-[720px] text-[18px] leading-8 text-copy">{{ __('Review pending proofs, verified payments, and any rejected submissions from your bookings.') }}</p>
+            <p class="mt-3 max-w-[720px] text-[18px] leading-8 text-copy">{{ __('Review pending proofs, verified payments, and any rejected submissions from your bookings and match joins.') }}</p>
 
             <div class="mt-6 grid gap-4 md:grid-cols-3">
                 <article class="rounded-[22px] bg-[#fff4e8] p-5">
@@ -95,12 +96,20 @@
                         <img src="{{ $payment['image_url'] ? url($payment['image_url']) : asset('landing/football-stadium.jpg') }}" alt="{{ $payment['field_name'] }}" class="h-[120px] w-full object-cover">
                     </div>
                     <div>
-                        <h2 class="font-heading text-[28px] font-bold text-ink">{{ $payment['field_name'] }}</h2>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <h2 class="font-heading text-[28px] font-bold text-ink">{{ $payment['title'] }}</h2>
+                            <span class="rounded-full bg-[#f4f5ff] px-3 py-1 text-[12px] font-semibold text-[#4f46e5]">{{ $payment['type_label'] }}</span>
+                        </div>
+                        <p class="mt-2 text-[16px] font-medium text-ink">{{ $payment['field_name'] }}</p>
                         <p class="mt-2 flex items-center gap-2 text-[17px] text-copy"><span class="h-5 w-5">{!! $iconSvg('location') !!}</span>{{ $payment['location'] }}</p>
                         <div class="mt-4 flex flex-wrap items-center gap-4 text-[17px] text-[#5c6988]">
                             <span class="inline-flex items-center gap-2"><span class="h-5 w-5">{!! $iconSvg('calendar') !!}</span>{{ $payment['date_label'] }}</span>
                             <span>&bull;</span>
                             <span>{{ $payment['time_label'] }}</span>
+                            @if ($payment['team_label'])
+                                <span>&bull;</span>
+                                <span>{{ __('Team :team', ['team' => $payment['team_label']]) }}</span>
+                            @endif
                             <span>&bull;</span>
                             <span>{{ __('Submitted :time', ['time' => $payment['submitted_at']]) }}</span>
                         </div>
@@ -118,11 +127,14 @@
                             @if ($payment['booking_url'])
                                 <a href="{{ $payment['booking_url'] }}" class="rounded-2xl border border-[#d9d8ff] px-4 py-2 text-[15px] font-semibold text-indigoSoft transition hover:bg-[#f7f5ff]">{{ __('View Booking') }}</a>
                             @endif
+                            @if ($payment['match_url'])
+                                <a href="{{ $payment['match_url'] }}" class="rounded-2xl border border-[#d9d8ff] px-4 py-2 text-[15px] font-semibold text-indigoSoft transition hover:bg-[#f7f5ff]">{{ __('View Match') }}</a>
+                            @endif
                         </div>
                     </div>
                 </article>
             @empty
-                <div class="rounded-[28px] border border-dashed border-[#e7ecf4] bg-white px-6 py-10 text-center text-[18px] text-copy shadow-panel">{{ __('No booking payments found yet.') }}</div>
+                <div class="rounded-[28px] border border-dashed border-[#e7ecf4] bg-white px-6 py-10 text-center text-[18px] text-copy shadow-panel">{{ __('No payments found yet.') }}</div>
             @endforelse
         </section>
         </main>
