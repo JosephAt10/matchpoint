@@ -25,6 +25,8 @@ class PublicMatchController extends Controller
 {
     public function index(): View
     {
+        $this->expirePastMatches();
+
         $user = auth()->user();
 
         $matches = $this->publicListingQuery()
@@ -32,8 +34,7 @@ class PublicMatchController extends Controller
                 'booking.field',
                 'booking.bookedSlots.timeSlot',
                 'creator',
-                'participants' => fn ($query) => $query
-                    ->where('user_id', $user?->id),
+                'participants',
             ])
             ->latest()
             ->paginate(9);
@@ -45,6 +46,8 @@ class PublicMatchController extends Controller
 
     public function show(Request $request, Game $match): View
     {
+        $this->expirePastMatches();
+
         $match->load([
             'booking.field.owner',
             'booking.bookedSlots.timeSlot',
@@ -282,6 +285,8 @@ class PublicMatchController extends Controller
 
     public function myMatches(Request $request): View
     {
+        $this->expirePastMatches();
+
         $user = $request->user();
 
         $matches = Game::query()
@@ -303,6 +308,90 @@ class PublicMatchController extends Controller
         return view('matches.my', [
             'matches' => $matches,
         ]);
+    }
+
+    public function confirmParticipant(Request $request, Game $match, MatchParticipant $participant): RedirectResponse
+    {
+        $this->authorizeMatchCreator($request, $match, $participant);
+
+        abort_unless($participant->payment?->isMatchFee() && $participant->payment->isPending(), 404);
+
+        $participant->payment->update([
+            'status' => 'Verified',
+            'rejection_reason' => null,
+        ]);
+
+        $participant->update([
+            'status' => 'Confirmed',
+        ]);
+
+        $match->refreshParticipationState();
+
+        Notification::create([
+            'user_id' => $participant->user_id,
+            'message' => __('Your join request for :title was confirmed on Team :team.', [
+                'title' => $match->title,
+                'team' => $participant->team,
+            ]),
+            'type' => 'Match',
+            'status' => 'Unread',
+            'notifiable_type' => MatchParticipant::class,
+            'notifiable_id' => $participant->id,
+        ]);
+
+        AuditLog::record('match.join_confirmed', $participant, [
+            'payment_id' => $participant->payment->id,
+            'match_id' => $match->id,
+            'team' => $participant->team,
+            'match_status' => $match->status,
+        ]);
+
+        return redirect()
+            ->route('matches.show', $match)
+            ->with('status', __('Participant fee confirmed successfully.'));
+    }
+
+    public function rejectParticipant(Request $request, Game $match, MatchParticipant $participant): RedirectResponse
+    {
+        $this->authorizeMatchCreator($request, $match, $participant);
+
+        $validated = $request->validate([
+            'rejection_reason' => ['required', 'string', 'max:500'],
+        ]);
+
+        abort_unless($participant->payment?->isMatchFee() && $participant->payment->isPending(), 404);
+
+        $participant->payment->update([
+            'status' => 'Rejected',
+            'rejection_reason' => $validated['rejection_reason'],
+        ]);
+
+        $participant->update([
+            'status' => 'Cancelled',
+        ]);
+
+        $match->refreshParticipationState();
+
+        Notification::create([
+            'user_id' => $participant->user_id,
+            'message' => __('Your join request for :title was rejected. Please review the organizer note and submit a new payment proof if needed.', [
+                'title' => $match->title,
+            ]),
+            'type' => 'Payment',
+            'status' => 'Unread',
+            'notifiable_type' => Payment::class,
+            'notifiable_id' => $participant->payment->id,
+        ]);
+
+        AuditLog::record('match.join_rejected', $participant, [
+            'payment_id' => $participant->payment->id,
+            'match_id' => $match->id,
+            'reason' => $validated['rejection_reason'],
+        ]);
+
+        return redirect()
+            ->route('matches.show', $match)
+            ->with('status', __('Participant fee rejected successfully.'));
     }
 
     private function notifyMatchFeeUploaded(string $payerName, Game $match, MatchParticipant $participant, Payment $payment): void
@@ -418,6 +507,10 @@ class PublicMatchController extends Controller
             ->select('matches.*')
             ->joinSub($scheduleQuery, 'booking_schedule', fn ($join) => $join->on('booking_schedule.booking_id', '=', 'matches.booking_id'))
             ->where('matches.status', 'Open')
+            ->whereNotNull('matches.title')
+            ->whereNotNull('matches.team_a_name')
+            ->whereNotNull('matches.team_b_name')
+            ->whereNotNull('matches.max_per_team')
             ->where('booking_schedule.booking_ends_at', '>', now());
     }
 
@@ -440,5 +533,44 @@ class PublicMatchController extends Controller
             : Carbon::parse($match->booking->date->toDateString() . ' ' . $latestSlot->end_time);
 
         return $endAt->lessThanOrEqualTo(now());
+    }
+
+    private function authorizeMatchCreator(Request $request, Game $match, MatchParticipant $participant): void
+    {
+        abort_unless($match->isCreator($request->user()->id), 403);
+        abort_unless($participant->match_id === $match->id, 404);
+
+        $participant->loadMissing('payment');
+    }
+
+    private function expirePastMatches(): void
+    {
+        $scheduleQuery = DB::table('bookings')
+            ->join('booked_slots', 'booked_slots.booking_id', '=', 'bookings.id')
+            ->join('time_slots', 'time_slots.id', '=', 'booked_slots.timeslot_id')
+            ->selectRaw("
+                bookings.id as booking_id,
+                MAX(
+                    CASE
+                        WHEN time_slots.end_time = '00:00:00'
+                            THEN DATE_ADD(TIMESTAMP(bookings.date, '00:00:00'), INTERVAL 1 DAY)
+                        ELSE TIMESTAMP(bookings.date, time_slots.end_time)
+                    END
+                ) as booking_ends_at
+            ")
+            ->groupBy('bookings.id');
+
+        $expiredMatchIds = Game::query()
+            ->select('matches.id')
+            ->joinSub($scheduleQuery, 'booking_schedule', fn ($join) => $join->on('booking_schedule.booking_id', '=', 'matches.booking_id'))
+            ->whereIn('matches.status', ['Open', 'Full'])
+            ->where('booking_schedule.booking_ends_at', '<=', now())
+            ->pluck('matches.id');
+
+        if ($expiredMatchIds->isNotEmpty()) {
+            Game::query()
+                ->whereIn('id', $expiredMatchIds)
+                ->update(['status' => 'Completed']);
+        }
     }
 }

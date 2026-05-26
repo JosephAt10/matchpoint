@@ -8,7 +8,6 @@ use App\Filament\Owner\Resources\FieldResource;
 use App\Filament\Owner\Resources\TimeSlotResource;
 use App\Filament\Resources\AppNotificationResource;
 use App\Filament\Resources\BookingResource;
-use App\Filament\Resources\MatchPaymentResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -42,7 +41,6 @@ class OwnerPanelProvider extends PanelProvider
             ->resources([
                 FieldResource::class,
                 BookingResource::class,
-                MatchPaymentResource::class,
                 TimeSlotResource::class,
                 AppNotificationResource::class,
             ])

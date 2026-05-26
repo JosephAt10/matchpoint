@@ -55,6 +55,8 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/my-matches', [PublicMatchController::class, 'myMatches'])->name('matches.my');
     Route::post('/matches', [PublicMatchController::class, 'store'])->name('matches.store');
     Route::post('/matches/{match}/join', [PublicMatchController::class, 'join'])->name('matches.join');
+    Route::post('/matches/{match}/participants/{participant}/confirm', [PublicMatchController::class, 'confirmParticipant'])->name('matches.participants.confirm');
+    Route::post('/matches/{match}/participants/{participant}/reject', [PublicMatchController::class, 'rejectParticipant'])->name('matches.participants.reject');
     Route::get('/notifications', [UserActivityController::class, 'notifications'])->name('notifications.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

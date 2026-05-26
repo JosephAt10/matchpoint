@@ -101,17 +101,9 @@
                 <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-10 w-10 object-contain">
                 <span class="font-heading text-[22px] font-bold tracking-[0.12em] text-[#352782]">{{ __('MATCHPOINT') }}</span>
             </a>
-            <nav class="flex items-center gap-4 text-[14px] font-medium text-[#4f5579]">
-                <a href="{{ route('fields.index') }}" class="transition hover:text-[#5542d9]">{{ __('Browse Fields') }}</a>
-                <a href="{{ route('matches.index') }}" class="text-[#5542d9]">{{ __('Matches') }}</a>
-                @auth
-                    <a href="{{ route('matches.my') }}" class="transition hover:text-[#5542d9]">{{ __('My Matches') }}</a>
-                    <a href="{{ route('matches.create') }}" class="rounded-full bg-[#5a38d6] px-5 py-3 font-semibold text-white">{{ __('Create Match') }}</a>
-                @else
-                    <a href="{{ route('login') }}" class="rounded-full bg-[#5a38d6] px-5 py-3 font-semibold text-white">{{ __('Login') }}</a>
-                @endauth
+            <div class="shrink-0">
                 @include('partials.locale-switcher')
-            </nav>
+            </div>
         </div>
     </header>
 
@@ -119,6 +111,13 @@
         @if (session('status'))
             <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ session('status') }}</div>
         @endif
+
+        <div class="mb-5">
+            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-[14px] font-semibold text-copy shadow-[0_10px_24px_rgba(34,43,84,.06)] transition hover:bg-[#f8f9fd] hover:text-ink">
+                <span class="text-[18px] leading-none">&larr;</span>
+                <span>{{ __('Back to Dashboard') }}</span>
+            </a>
+        </div>
 
         <section class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
             <article class="overflow-hidden rounded-[30px] border border-line bg-white shadow-panel">
@@ -143,9 +142,8 @@
                                 @endif
                                 <div>
                                     <p class="font-heading text-[28px] font-bold text-ink">{{ $match->team_a_name ?: __('Team A') }}</p>
-                                    <p class="text-[15px] text-copy">{{ __(':count of :max spots reserved', ['count' => $teamAReserved, 'max' => $match->max_per_team]) }}</p>
+                                    <p class="text-[15px] font-semibold text-ink">{{ $teamAReserved }}/{{ $match->max_per_team }}</p>
                                     <p class="mt-1 text-[14px] font-semibold text-[#16a34a]">{{ __(':count slot(s) left', ['count' => $teamARemaining]) }}</p>
-                                    <p class="mt-1 text-[12px] font-medium text-[#2563eb]">{{ __('1 slot reserved for organizer') }}</p>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -154,7 +152,7 @@
                             <div class="flex items-center justify-start gap-4 md:justify-end">
                                 <div class="text-left md:text-right">
                                     <p class="font-heading text-[28px] font-bold text-ink">{{ $match->team_b_name ?: __('Team B') }}</p>
-                                    <p class="text-[15px] text-copy">{{ __(':count of :max spots reserved', ['count' => $teamBReserved, 'max' => $match->max_per_team]) }}</p>
+                                    <p class="text-[15px] font-semibold text-ink">{{ $teamBReserved }}/{{ $match->max_per_team }}</p>
                                     <p class="mt-1 text-[14px] font-semibold text-[#16a34a]">{{ __(':count slot(s) left', ['count' => $teamBRemaining]) }}</p>
                                 </div>
                                 @if ($match->team_b_logo)
@@ -195,6 +193,55 @@
             <aside class="rounded-[30px] border border-line bg-white p-6 shadow-panel">
                 <h2 class="font-heading text-[28px] font-bold text-ink">{{ __('Join This Match') }}</h2>
                 <p class="mt-3 text-[15px] leading-7 text-copy">{{ __('Choose a team, upload your payment proof, and wait for verification. A match only accepts new players while its status is Open.') }}</p>
+
+                @if (auth()->check() && $match->isCreator(auth()->id()))
+                    @php
+                        $pendingRequests = $match->participants
+                            ->where('is_creator', false)
+                            ->filter(fn ($participant) => $participant->payment?->isPending());
+                    @endphp
+
+                    <div class="mt-6 rounded-[22px] border border-line bg-[#f8f9fd] p-5">
+                        <div class="flex items-center justify-between gap-3">
+                            <h3 class="font-heading text-[20px] font-bold text-ink">{{ __('Pending Participant Fees') }}</h3>
+                            <span class="rounded-full bg-[#eef2ff] px-3 py-1 text-[12px] font-semibold text-[#4f46e5]">{{ $pendingRequests->count() }}</span>
+                        </div>
+
+                        @if ($pendingRequests->isEmpty())
+                            <p class="mt-4 text-[14px] leading-6 text-copy">{{ __('No participant fees are waiting for your confirmation right now.') }}</p>
+                        @else
+                            <div class="mt-4 space-y-4">
+                                @foreach ($pendingRequests as $requestParticipant)
+                                    <article class="rounded-[18px] border border-line bg-white p-4">
+                                        <div class="flex items-start justify-between gap-3">
+                                            <div>
+                                                <p class="font-heading text-[18px] font-bold text-ink">{{ $requestParticipant->user?->name }}</p>
+                                                <p class="mt-1 text-[14px] text-copy">{{ __('Team :team', ['team' => $requestParticipant->team]) }} • {{ __('Fee') }}: Rp {{ number_format((float) $requestParticipant->payment?->amount, 0, ',', '.') }}</p>
+                                            </div>
+                                            @if ($requestParticipant->payment?->proof)
+                                                <a href="{{ Storage::url($requestParticipant->payment->proof) }}" target="_blank" class="rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-[#4f46e5]">{{ __('View Proof') }}</a>
+                                            @endif
+                                        </div>
+                                        <div class="mt-4 flex flex-wrap items-center gap-3">
+                                            <form action="{{ route('matches.participants.confirm', [$match, $requestParticipant]) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="rounded-xl bg-[#16a34a] px-4 py-2 text-[13px] font-bold text-white">{{ __('Confirm Fee') }}</button>
+                                            </form>
+                                            <details class="group">
+                                                <summary class="cursor-pointer rounded-xl bg-[#fff1f2] px-4 py-2 text-[13px] font-bold text-[#e11d48]">{{ __('Reject Fee') }}</summary>
+                                                <form action="{{ route('matches.participants.reject', [$match, $requestParticipant]) }}" method="POST" class="mt-3 space-y-3">
+                                                    @csrf
+                                                    <textarea name="rejection_reason" rows="3" class="field {{ $errors->has('rejection_reason') ? 'is-error' : '' }}" placeholder="{{ __('Tell the player why the fee proof was rejected') }}"></textarea>
+                                                    <button type="submit" class="rounded-xl border border-[#fecdd3] px-4 py-2 text-[13px] font-bold text-[#e11d48]">{{ __('Submit Rejection') }}</button>
+                                                </form>
+                                            </details>
+                                        </div>
+                                    </article>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endif
 
                 @if ($activeParticipant && $activeParticipant->isCreator())
                     <div class="mt-6 rounded-[22px] border border-[#d9d8ff] bg-[#f7f5ff] p-5">

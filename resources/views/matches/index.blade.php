@@ -73,21 +73,31 @@
                 <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-10 w-10 object-contain">
                 <span class="font-heading text-[22px] font-bold tracking-[0.12em] text-[#352782]">{{ __('MATCHPOINT') }}</span>
             </a>
-            <nav class="flex items-center gap-4 text-[14px] font-medium text-[#4f5579]">
-                <a href="{{ route('fields.index') }}" class="transition hover:text-indigoDeep">{{ __('Browse Fields') }}</a>
-                <a href="{{ route('matches.index') }}" class="text-indigoDeep">{{ __('Matches') }}</a>
-                @auth
-                    <a href="{{ route('matches.my') }}" class="transition hover:text-indigoDeep">{{ __('My Matches') }}</a>
-                    <a href="{{ route('matches.create') }}" class="rounded-full bg-[#5a38d6] px-5 py-3 font-semibold text-white">{{ __('Create Match') }}</a>
-                @else
+            @auth
+                <div class="shrink-0">
+                    @include('partials.locale-switcher')
+                </div>
+            @else
+                <nav class="flex items-center gap-4 text-[14px] font-medium text-[#4f5579]">
+                    <a href="{{ route('fields.index') }}" class="transition hover:text-indigoDeep">{{ __('Browse Fields') }}</a>
+                    <a href="{{ route('matches.index') }}" class="text-indigoDeep">{{ __('Matches') }}</a>
                     <a href="{{ route('login') }}" class="rounded-full bg-[#5a38d6] px-5 py-3 font-semibold text-white">{{ __('Login') }}</a>
-                @endauth
-                @include('partials.locale-switcher')
-            </nav>
+                    @include('partials.locale-switcher')
+                </nav>
+            @endauth
         </div>
     </header>
 
     <main class="w-full px-5 py-8 md:px-10 xl:px-16 2xl:px-24">
+        @auth
+            <div class="mb-5">
+                <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-[14px] font-semibold text-copy shadow-[0_10px_24px_rgba(34,43,84,.06)] transition hover:bg-[#f8f9fd] hover:text-ink">
+                    <span class="text-[18px] leading-none">&larr;</span>
+                    <span>{{ __('Back to Dashboard') }}</span>
+                </a>
+            </div>
+        @endauth
+
         @if (session('status'))
             <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ session('status') }}</div>
         @endif
@@ -100,7 +110,10 @@
                     <p class="mt-3 max-w-[820px] text-[17px] leading-8 text-copy">{{ __('Browse open matches linked to confirmed bookings, compare team slots, and submit your join request with the full participant fee.') }}</p>
                 </div>
                 @auth
-                    <a href="{{ route('matches.create') }}" class="inline-flex justify-center rounded-xl bg-[#5a38d6] px-6 py-4 font-bold text-white">{{ __('Create Match') }}</a>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <a href="{{ route('matches.my') }}" class="inline-flex justify-center rounded-xl border border-[#d9d8ff] px-5 py-4 text-[14px] font-bold text-[#4f46e5] transition hover:bg-[#f7f5ff]">{{ __('My Matches') }}</a>
+                        <a href="{{ route('matches.create') }}" class="inline-flex justify-center rounded-xl bg-[#5a38d6] px-6 py-4 font-bold text-white">{{ __('Create Public Match') }}</a>
+                    </div>
                 @endauth
             </div>
         </section>
@@ -111,13 +124,14 @@
                     $booking = $match->booking;
                     $teamAReserved = $match->teamACount();
                     $teamBReserved = $match->teamBCount();
-                    $teamARemaining = max(0, (int) $match->max_per_team - $teamAReserved);
-                    $teamBRemaining = max(0, (int) $match->max_per_team - $teamBReserved);
+                    $teamMax = max(0, (int) ($match->max_per_team ?? 0));
+                    $teamARemaining = max(0, $teamMax - $teamAReserved);
+                    $teamBRemaining = max(0, $teamMax - $teamBReserved);
                     $teamAPlaceholder = $logoPlaceholder($match->team_a_name ?: __('Team A'));
                     $teamBPlaceholder = $logoPlaceholder($match->team_b_name ?: __('Team B'), 'blue');
-                    $userParticipant = auth()->check() ? $match->participants->first() : null;
+                    $userParticipant = auth()->check() ? $match->participants->firstWhere('user_id', auth()->id()) : null;
                     $isOrganizer = auth()->check() && $match->isCreator(auth()->id());
-                    $isFull = $match->teamACount() >= (int) $match->max_per_team && $match->teamBCount() >= (int) $match->max_per_team;
+                    $isFull = $teamMax > 0 && $teamAReserved >= $teamMax && $teamBReserved >= $teamMax;
                 @endphp
                 <article class="overflow-hidden rounded-[30px] border border-line bg-white shadow-panel">
                     <img src="{{ $booking?->field?->image_url ? url($booking->field->image_url) : asset('landing/football-stadium.jpg') }}" alt="{{ $booking?->field?->name }}" class="h-[220px] w-full object-cover">
@@ -141,8 +155,8 @@
                                     @endif
                                     <div>
                                         <p class="font-heading text-[21px] font-bold text-ink">{{ $match->team_a_name ?: __('Team A') }}</p>
+                                        <p class="text-[13px] font-semibold text-ink">{{ $teamAReserved }}/{{ $teamMax }}</p>
                                         <p class="text-[13px] text-copy">{{ __(':count slot(s) left', ['count' => $teamARemaining]) }}</p>
-                                        <p class="mt-1 text-[12px] font-medium text-[#2563eb]">{{ __('1 slot reserved for organizer') }}</p>
                                     </div>
                                 </div>
                                 <div class="text-center">
@@ -151,6 +165,7 @@
                                 <div class="flex items-center justify-start gap-3 sm:justify-end">
                                     <div class="text-left sm:text-right">
                                         <p class="font-heading text-[21px] font-bold text-ink">{{ $match->team_b_name ?: __('Team B') }}</p>
+                                        <p class="text-[13px] font-semibold text-ink">{{ $teamBReserved }}/{{ $teamMax }}</p>
                                         <p class="text-[13px] text-copy">{{ __(':count slot(s) left', ['count' => $teamBRemaining]) }}</p>
                                     </div>
                                     @if ($match->team_b_logo)
@@ -174,15 +189,20 @@
 
                         <div class="mt-6 flex items-center justify-between gap-4">
                             <p class="max-w-[18rem] text-[14px] leading-6 text-copy">{{ __('Created by :name', ['name' => $match->creator?->name ?? __('Organizer')]) }}</p>
-                            @if ($isOrganizer)
-                                <span class="rounded-xl bg-[#eef2ff] px-5 py-3 text-[14px] font-bold text-[#4f46e5]">{{ __('You are the organizer') }}</span>
-                            @elseif ($userParticipant)
-                                <span class="rounded-xl bg-[#ecfdf3] px-5 py-3 text-[14px] font-bold text-[#15803d]">{{ __('You are in Team :team', ['team' => $userParticipant->team]) }}</span>
-                            @elseif ($isFull)
-                                <span class="rounded-xl bg-[#fff4e8] px-5 py-3 text-[14px] font-bold text-[#f08b20]">{{ __('Match is Full') }}</span>
-                            @else
-                                <a href="{{ route('matches.show', $match) }}" class="rounded-xl bg-[#16a34a] px-5 py-3 text-[14px] font-bold text-white shadow-[0_14px_24px_rgba(22,163,74,.18)]">{{ __('Join Match') }}</a>
-                            @endif
+                            <div class="flex flex-wrap items-center justify-end gap-3">
+                                <a href="{{ route('matches.show', $match) }}" class="rounded-xl border border-[#d9d8ff] px-5 py-3 text-[14px] font-bold text-[#4f46e5] transition hover:bg-[#f7f5ff]">{{ __('View Details') }}</a>
+                                @if ($isOrganizer)
+                                    <span class="rounded-xl bg-[#eef2ff] px-5 py-3 text-[14px] font-bold text-[#4f46e5]">{{ __('You are the organizer') }}</span>
+                                @elseif ($userParticipant)
+                                    <span class="rounded-xl bg-[#ecfdf3] px-5 py-3 text-[14px] font-bold text-[#15803d]">{{ __('You are in Team :team', ['team' => $userParticipant->team]) }}</span>
+                                @elseif ($isFull)
+                                    <span class="rounded-xl bg-[#fff4e8] px-5 py-3 text-[14px] font-bold text-[#f08b20]">{{ __('Match is Full') }}</span>
+                                @elseif (auth()->check())
+                                    <a href="{{ route('matches.show', $match) }}" class="rounded-xl bg-[#16a34a] px-5 py-3 text-[14px] font-bold text-white shadow-[0_14px_24px_rgba(22,163,74,.18)]">{{ __('Join Match') }}</a>
+                                @else
+                                    <a href="{{ route('login') }}" class="rounded-xl bg-[#16a34a] px-5 py-3 text-[14px] font-bold text-white shadow-[0_14px_24px_rgba(22,163,74,.18)]">{{ __('Join Match') }}</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </article>
