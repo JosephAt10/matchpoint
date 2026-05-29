@@ -169,9 +169,13 @@
                     <span class="h-6 w-6">{!! $iconSvg('calendar') !!}</span>
                     <span>{{ __('My Bookings') }}</span>
                 </a>
-                <a href="{{ route('matches.create') }}" class="sidebar-nav-link is-active flex items-center gap-4 rounded-2xl px-5 py-4 font-medium">
+                <a href="{{ route('matches.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition">
                     <span class="h-6 w-6">{!! $iconSvg('plus-square') !!}</span>
                     <span>{{ __('Public Matches') }}</span>
+                </a>
+                <a href="{{ route('matches.create') }}" class="sidebar-nav-link is-active flex items-center gap-4 rounded-2xl px-5 py-4 font-medium">
+                    <span class="h-6 w-6">{!! $iconSvg('plus-square') !!}</span>
+                    <span>{{ __('Create Public Match') }}</span>
                 </a>
                 <a href="{{ route('matches.my') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition">
                     <span class="h-6 w-6">{!! $iconSvg('users') !!}</span>

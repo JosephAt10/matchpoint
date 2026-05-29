@@ -122,7 +122,7 @@
                     <span class="h-6 w-6">{!! $iconSvg('calendar') !!}</span>
                     <span>{{ __('My Bookings') }}</span>
                 </a>
-                <a href="{{ $dashboard['links']['create_match'] }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition">
+                <a href="{{ $dashboard['links']['public_matches'] }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition">
                     <span class="h-6 w-6">{!! $iconSvg('plus-square') !!}</span>
                     <span>{{ __('Public Matches') }}</span>
                 </a>
@@ -170,6 +170,14 @@
             <section>
                 <h1 class="font-heading text-[48px] font-bold leading-tight text-ink">{{ __('Welcome back, :name!', ['name' => $user['first_name']]) }} <span class="text-[40px]"></span></h1>
                 <p class="mt-3 text-[24px] text-copy">{{ __('Here\'s what\'s happening with your bookings.') }}</p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <a href="{{ $dashboard['links']['public_matches'] }}" class="inline-flex items-center justify-center rounded-2xl bg-[#5a38d6] px-6 py-3 text-[16px] font-bold text-white shadow-[0_16px_28px_rgba(90,56,214,0.20)]">
+                        {{ __('Browse Public Matches') }}
+                    </a>
+                    <a href="{{ $dashboard['links']['create_match'] }}" class="inline-flex items-center justify-center rounded-2xl border border-[#d9d8ff] bg-white px-6 py-3 text-[16px] font-bold text-indigoSoft shadow-[0_12px_24px_rgba(34,43,84,0.06)] transition hover:bg-[#f7f5ff]">
+                        {{ __('Create Public Match') }}
+                    </a>
+                </div>
             </section>
 
             <section class="mt-8 grid gap-5 xl:grid-cols-4">
@@ -274,10 +282,18 @@
                                 </span>
                                 <span class="text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>
                             </a>
+                            <a href="{{ $dashboard['links']['public_matches'] }}" class="soft-card flex items-center gap-4 rounded-[22px] p-4 transition hover:-translate-y-0.5 hover:bg-[#fafbff]">
+                                <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf9ef] text-[#16a34a]">{!! $iconSvg('plus-square') !!}</span>
+                                <span class="min-w-0 flex-1">
+                                    <span class="block font-heading text-[22px] font-semibold text-ink">{{ __('Public Matches') }}</span>
+                                    <span class="mt-1 block text-[16px] text-copy">{{ __('Discover open team matches') }}</span>
+                                </span>
+                                <span class="text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>
+                            </a>
                             <a href="{{ $dashboard['links']['create_match'] }}" class="soft-card flex items-center gap-4 rounded-[22px] p-4 transition hover:-translate-y-0.5 hover:bg-[#fafbff]">
                                 <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f0edff] text-indigoSoft">{!! $iconSvg('gift') !!}</span>
                                 <span class="min-w-0 flex-1">
-                                    <span class="block font-heading text-[22px] font-semibold text-ink">{{ __('Create Match') }}</span>
+                                    <span class="block font-heading text-[22px] font-semibold text-ink">{{ __('Create Public Match') }}</span>
                                     <span class="mt-1 block text-[16px] text-copy">{{ __('Open a confirmed booking to public participants') }}</span>
                                 </span>
                                 <span class="text-[#9aa4bf]">{!! $iconSvg('chevron-right') !!}</span>

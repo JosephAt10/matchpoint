@@ -4,23 +4,6 @@
     $teamARemaining = $match->teamSlotsRemaining('A');
     $teamBRemaining = $match->teamSlotsRemaining('B');
 
-    $placeholder = function (string $name, string $tone = 'green'): array {
-        $initials = collect(explode(' ', trim($name)))
-            ->filter()
-            ->take(2)
-            ->map(fn (string $part): string => strtoupper(substr($part, 0, 1)))
-            ->implode('');
-
-        return [
-            'initials' => $initials ?: 'MP',
-            'class' => $tone === 'blue'
-                ? 'bg-[linear-gradient(135deg,#dbeafe_0%,#eef2ff_100%)] text-[#1d4ed8]'
-                : 'bg-[linear-gradient(135deg,#dcfce7_0%,#ecfdf5_100%)] text-[#15803d]',
-        ];
-    };
-
-    $teamAPlaceholder = $placeholder($match->team_a_name ?: __('Team A'));
-    $teamBPlaceholder = $placeholder($match->team_b_name ?: __('Team B'), 'blue');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -135,11 +118,7 @@
                     <div class="mt-8 rounded-[26px] bg-[#f7f8fc] p-6">
                         <div class="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
                             <div class="flex items-center gap-4">
-                                @if ($match->team_a_logo)
-                                    <img src="{{ Storage::url($match->team_a_logo) }}" alt="{{ $match->team_a_name }}" class="h-20 w-20 rounded-full object-cover shadow-[0_10px_24px_rgba(34,43,84,.14)]">
-                                @else
-                                    <div class="flex h-20 w-20 items-center justify-center rounded-full text-lg font-bold {{ $teamAPlaceholder['class'] }}">{{ $teamAPlaceholder['initials'] }}</div>
-                                @endif
+                                <img src="{{ $match->team_a_logo ? Storage::url($match->team_a_logo) : asset('landing/football-team-2.png') }}" alt="{{ $match->team_a_name ?: __('Team A') }}" class="h-20 w-20 rounded-full object-contain shadow-[0_10px_24px_rgba(34,43,84,.14)]">
                                 <div>
                                     <p class="font-heading text-[28px] font-bold text-ink">{{ $match->team_a_name ?: __('Team A') }}</p>
                                     <p class="text-[15px] font-semibold text-ink">{{ $teamAReserved }}/{{ $match->max_per_team }}</p>
@@ -147,7 +126,7 @@
                                 </div>
                             </div>
                             <div class="text-center">
-                                <p class="font-heading text-[14px] font-bold uppercase tracking-[0.28em] text-copy">VS</p>
+                                <p class="font-heading text-[14px] font-bold uppercase tracking-[0.28em] text-copy">{{ __('VS') }}</p>
                             </div>
                             <div class="flex items-center justify-start gap-4 md:justify-end">
                                 <div class="text-left md:text-right">
@@ -155,11 +134,7 @@
                                     <p class="text-[15px] font-semibold text-ink">{{ $teamBReserved }}/{{ $match->max_per_team }}</p>
                                     <p class="mt-1 text-[14px] font-semibold text-[#16a34a]">{{ __(':count slot(s) left', ['count' => $teamBRemaining]) }}</p>
                                 </div>
-                                @if ($match->team_b_logo)
-                                    <img src="{{ Storage::url($match->team_b_logo) }}" alt="{{ $match->team_b_name }}" class="h-20 w-20 rounded-full object-cover shadow-[0_10px_24px_rgba(34,43,84,.14)]">
-                                @else
-                                    <div class="flex h-20 w-20 items-center justify-center rounded-full text-lg font-bold {{ $teamBPlaceholder['class'] }}">{{ $teamBPlaceholder['initials'] }}</div>
-                                @endif
+                                <img src="{{ $match->team_b_logo ? Storage::url($match->team_b_logo) : asset('landing/football-team-1.png') }}" alt="{{ $match->team_b_name ?: __('Team B') }}" class="h-20 w-20 rounded-full object-contain shadow-[0_10px_24px_rgba(34,43,84,.14)]">
                             </div>
                         </div>
                     </div>

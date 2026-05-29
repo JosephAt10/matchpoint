@@ -11,20 +11,6 @@
             : __('Time not available');
     };
 
-    $logoPlaceholder = function (string $name, string $tone = 'green'): array {
-        $initials = collect(explode(' ', trim($name)))
-            ->filter()
-            ->take(2)
-            ->map(fn (string $part): string => strtoupper(substr($part, 0, 1)))
-            ->implode('');
-
-        return [
-            'initials' => $initials ?: 'MP',
-            'class' => $tone === 'blue'
-                ? 'bg-[linear-gradient(135deg,#dbeafe_0%,#eef2ff_100%)] text-[#1d4ed8]'
-                : 'bg-[linear-gradient(135deg,#dcfce7_0%,#ecfdf5_100%)] text-[#15803d]',
-        ];
-    };
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -93,8 +79,6 @@
                     $booking = $match->booking;
                     $participant = $match->participants->first();
                     $isOrganizer = $match->isCreator(auth()->id());
-                    $teamAPlaceholder = $logoPlaceholder($match->team_a_name ?: __('Team A'));
-                    $teamBPlaceholder = $logoPlaceholder($match->team_b_name ?: __('Team B'), 'blue');
                 @endphp
                 <article class="match-card flex h-full flex-col overflow-hidden rounded-[30px] bg-white transition">
                     <img src="{{ $booking?->field?->image_url ? url($booking->field->image_url) : asset('landing/football-stadium.jpg') }}" alt="{{ $booking?->field?->name }}" class="h-[190px] w-full object-cover">
@@ -102,29 +86,21 @@
                         <div class="-mt-12 mb-5 rounded-[24px] border border-[#e8ecf5] bg-white/96 p-4 shadow-[0_18px_34px_rgba(34,43,84,.10)] backdrop-blur">
                             <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center">
                                 <div class="flex items-center gap-3">
-                                    @if ($match->team_a_logo)
-                                        <img src="{{ Storage::url($match->team_a_logo) }}" alt="{{ $match->team_a_name }}" class="h-14 w-14 rounded-full object-cover shadow-[0_8px_18px_rgba(34,43,84,.12)]">
-                                    @else
-                                        <div class="flex h-14 w-14 items-center justify-center rounded-full text-sm font-bold {{ $teamAPlaceholder['class'] }}">{{ $teamAPlaceholder['initials'] }}</div>
-                                    @endif
+                                    <img src="{{ $match->team_a_logo ? Storage::url($match->team_a_logo) : asset('landing/football-team-2.png') }}" alt="{{ $match->team_a_name ?: __('Team A') }}" class="h-14 w-14 rounded-full object-contain shadow-[0_8px_18px_rgba(34,43,84,.12)]">
                                     <div class="min-w-0">
                                         <p class="font-heading text-[18px] font-bold text-ink">{{ $match->team_a_name }}</p>
                                         <p class="text-[12px] uppercase tracking-[0.18em] text-copy">{{ __('Team A') }}</p>
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <span class="inline-flex rounded-full bg-[#f4f5ff] px-3 py-1 text-[12px] font-bold uppercase tracking-[0.18em] text-[#4f46e5]">VS</span>
+                                    <span class="inline-flex rounded-full bg-[#f4f5ff] px-3 py-1 text-[12px] font-bold uppercase tracking-[0.18em] text-[#4f46e5]">{{ __('VS') }}</span>
                                 </div>
                                 <div class="flex items-center justify-start gap-3 sm:justify-end">
                                     <div class="min-w-0 text-left sm:text-right">
                                         <p class="font-heading text-[18px] font-bold text-ink">{{ $match->team_b_name }}</p>
                                         <p class="text-[12px] uppercase tracking-[0.18em] text-copy">{{ __('Team B') }}</p>
                                     </div>
-                                    @if ($match->team_b_logo)
-                                        <img src="{{ Storage::url($match->team_b_logo) }}" alt="{{ $match->team_b_name }}" class="h-14 w-14 rounded-full object-cover shadow-[0_8px_18px_rgba(34,43,84,.12)]">
-                                    @else
-                                        <div class="flex h-14 w-14 items-center justify-center rounded-full text-sm font-bold {{ $teamBPlaceholder['class'] }}">{{ $teamBPlaceholder['initials'] }}</div>
-                                    @endif
+                                    <img src="{{ $match->team_b_logo ? Storage::url($match->team_b_logo) : asset('landing/football-team-1.png') }}" alt="{{ $match->team_b_name ?: __('Team B') }}" class="h-14 w-14 rounded-full object-contain shadow-[0_8px_18px_rgba(34,43,84,.12)]">
                                 </div>
                             </div>
                         </div>

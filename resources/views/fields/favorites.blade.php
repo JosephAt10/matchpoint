@@ -41,7 +41,7 @@
                 <a href="{{ route('dashboard') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('Dashboard') }}</span></a>
                 <a href="{{ route('fields.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('Browse Fields') }}</span></a>
                 <a href="{{ route('bookings.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('My Bookings') }}</span></a>
-                <a href="{{ route('matches.create') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('Public Matches') }}</span></a>
+                <a href="{{ route('matches.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('Public Matches') }}</span></a>
                 <a href="{{ route('matches.my') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('My Matches') }}</span></a>
                 <a href="{{ $favoritesUrl }}" class="sidebar-nav-link is-active flex items-center gap-4 rounded-2xl px-5 py-4 font-medium"><span>{{ __('Favorites') }}</span></a>
                 <a href="{{ route('notifications.index') }}" class="sidebar-nav-link flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition"><span>{{ __('Notifications') }}</span></a>

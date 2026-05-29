@@ -67,11 +67,40 @@
             width: 18px;
             height: 18px;
         }
+
+        .hero-visual.is-panning {
+            animation: heroPanLeft .62s cubic-bezier(.22, .9, .3, 1) both;
+        }
+
+        .hero-details.is-leaving {
+            animation: detailSweepDown .34s cubic-bezier(.45, 0, .7, .2) forwards;
+        }
+
+        .hero-details.is-entering {
+            animation: detailRiseIn .46s cubic-bezier(.2, .9, .28, 1) both;
+        }
+
+        @keyframes heroPanLeft {
+            0% { opacity: 1; transform: translateX(0) scale(1); }
+            44% { opacity: .55; transform: translateX(-54px) scale(.985); }
+            45% { opacity: .42; transform: translateX(42px) scale(.985); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes detailSweepDown {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(42px); }
+        }
+
+        @keyframes detailRiseIn {
+            0% { opacity: 0; transform: translateY(-42px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="min-h-screen text-[#1f2740]">
     @php
-        $heroMatch = [
+        $fallbackHeroMatch = [
             'title' => __('Friendly Match'),
             'date' => __('Saturday, April 18'),
             'time' => '3:30 WIB',
@@ -79,7 +108,44 @@
             'slots' => '5/10',
             'home' => 'Gumbal FC',
             'away' => 'Ssunesia FC',
+            'fieldImage' => asset('landing/football-stadium.jpg'),
+            'homeLogo' => asset('landing/football-team-2.png'),
+            'awayLogo' => asset('landing/football-team-1.png'),
+            'centerLogo' => asset('landing/friendly-matche.png'),
+            'detailsUrl' => route('matches.index'),
         ];
+
+        $formatHeroMatch = function ($match): array {
+            $booking = $match->booking;
+            $slots = $booking?->bookedSlots
+                ?->pluck('timeSlot')
+                ->filter()
+                ->sortBy('start_time')
+                ->values();
+
+            return [
+                'title' => $match->title ?: __('Friendly Match'),
+                'date' => $booking?->date?->translatedFormat('l, F j') ?: __('Date'),
+                'time' => $slots?->isNotEmpty()
+                    ? substr($slots->first()->start_time, 0, 5) . ' - ' . substr($slots->last()->end_time, 0, 5)
+                    : __('Time not available'),
+                'location' => $booking?->field?->location ?: __('Location'),
+                'slots' => $match->filled_slots . '/' . $match->max_participants,
+                'home' => $match->team_a_name ?: __('Team A'),
+                'away' => $match->team_b_name ?: __('Team B'),
+                'fieldImage' => $booking?->field?->image_url ? url($booking->field->image_url) : asset('landing/football-stadium.jpg'),
+                'homeLogo' => $match->team_a_logo ? Storage::url($match->team_a_logo) : asset('landing/football-team-2.png'),
+                'awayLogo' => $match->team_b_logo ? Storage::url($match->team_b_logo) : asset('landing/football-team-1.png'),
+                'centerLogo' => asset('landing/friendly-matche.png'),
+                'detailsUrl' => route('matches.show', $match),
+            ];
+        };
+
+        $heroSlides = $matches->isNotEmpty()
+            ? $matches->map($formatHeroMatch)->values()->all()
+            : [$fallbackHeroMatch];
+
+        $heroMatch = $heroSlides[0];
 
         $matchCards = [
             [
@@ -169,11 +235,12 @@
     </header>
 
     <main class="w-full px-5 pb-14 pt-8 md:px-10 xl:px-16 2xl:px-24">
-        <section class="grid gap-10 md:grid-cols-[1.95fr_0.95fr] md:items-start">
-            <div class="relative overflow-hidden rounded-[2rem] shadow-soft">
+        <section id="landing-hero-match" class="grid gap-10 md:grid-cols-[1.95fr_0.95fr] md:items-start">
+            <div id="hero-visual" class="hero-visual relative overflow-hidden rounded-[2rem] shadow-soft">
                 <img
-                    src="{{ asset('landing/football-stadium.jpg') }}"
-                    alt="{{ __('Football stadium') }}"
+                    id="hero-field-image"
+                    src="{{ $heroMatch['fieldImage'] }}"
+                    alt="{{ $heroMatch['title'] }}"
                     class="h-[300px] w-full scale-[1.05] object-cover blur-[1.2px] md:h-[470px]"
                 >
                 <div class="absolute inset-0 bg-gradient-to-r from-[#0f1739]/66 via-[#162853]/30 to-transparent"></div>
@@ -181,27 +248,27 @@
                     <div class="flex w-full max-w-[760px] items-center justify-between gap-6 text-white">
                         <div class="flex flex-col items-center">
                             <div class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full shadow-xl md:h-36 md:w-36">
-                                <img src="{{ asset('landing/football-team-2.png') }}" alt="{{ $heroMatch['home'] }}" class="h-[86%] w-[86%] object-contain md:h-[84%] md:w-[84%]">
+                                <img id="hero-home-logo" src="{{ $heroMatch['homeLogo'] }}" alt="{{ $heroMatch['home'] }}" class="h-[86%] w-[86%] object-contain md:h-[84%] md:w-[84%]">
                             </div>
-                            <p class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 text-center font-heading text-[18px] font-bold tracking-wide text-[#10214a] shadow-lg md:text-[22px]">
+                            <p id="hero-home-name" class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 text-center font-heading text-[18px] font-bold tracking-wide text-[#10214a] shadow-lg md:text-[22px]">
                                 {{ $heroMatch['home'] }}
                             </p>
                         </div>
 
                         <div class="flex flex-col items-center">
                             <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white/70 bg-[#cfd6ff]/85 shadow-xl backdrop-blur md:h-32 md:w-32">
-                                <img src="{{ asset('landing/friendly-matche.png') }}" alt="{{ __('Friendly Match') }}" class="h-full w-full object-cover">
+                                <img id="hero-center-logo" src="{{ $heroMatch['centerLogo'] }}" alt="{{ __('Friendly Match') }}" class="h-full w-full object-cover">
                             </div>
                             <span class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 font-heading text-[16px] font-semibold tracking-[0.2em] text-[#10214a] shadow-lg md:text-[18px]">
-                                VS
+                                {{ __('VS') }}
                             </span>
                         </div>
 
                         <div class="flex flex-col items-center">
                             <div class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full shadow-xl md:h-36 md:w-36">
-                                <img src="{{ asset('landing/football-team-1.png') }}" alt="{{ $heroMatch['away'] }}" class="h-[96%] w-[96%] object-contain md:h-[94%] md:w-[94%]">
+                                <img id="hero-away-logo" src="{{ $heroMatch['awayLogo'] }}" alt="{{ $heroMatch['away'] }}" class="h-[96%] w-[96%] object-contain md:h-[94%] md:w-[94%]">
                             </div>
-                            <p class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 text-center font-heading text-[18px] font-bold tracking-wide text-[#10214a] shadow-lg md:text-[22px]">
+                            <p id="hero-away-name" class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 text-center font-heading text-[18px] font-bold tracking-wide text-[#10214a] shadow-lg md:text-[22px]">
                                 {{ $heroMatch['away'] }}
                             </p>
                         </div>
@@ -210,35 +277,36 @@
             </div>
 
             <div class="rounded-[2rem] bg-white p-6 shadow-soft">
-                <div class="rounded-[1.15rem] bg-navy px-5 py-7 text-white shadow-card">
-                    <h2 class="font-heading text-[20px] font-bold">{{ __($heroMatch['title']) }}</h2>
+                <div id="hero-details" class="hero-details rounded-[1.15rem] bg-navy px-5 py-7 text-white shadow-card">
+                    <h2 id="hero-title" class="font-heading text-[20px] font-bold">{{ __($heroMatch['title']) }}</h2>
                     <div class="mt-5 space-y-3 text-[15px] text-white/90">
                         <div class="mini-icon flex items-center gap-2">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
-                            <span>{{ __($heroMatch['date']) }} &nbsp; {{ $heroMatch['time'] }}</span>
+                            <span id="hero-date-time">{{ __($heroMatch['date']) }} &nbsp; {{ $heroMatch['time'] }}</span>
                         </div>
                         <div class="mini-icon flex items-center gap-2">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
-                            <span>{{ $heroMatch['location'] }}</span>
+                            <span id="hero-location">{{ $heroMatch['location'] }}</span>
                         </div>
                         <div class="mini-icon flex items-center gap-2">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/>
                             </svg>
-                            <span>{{ __('Slots Available: :slots', ['slots' => $heroMatch['slots']]) }}</span>
+                            <span id="hero-slots">{{ __('Slots Available: :slots', ['slots' => $heroMatch['slots']]) }}</span>
                         </div>
                     </div>
 
-                    <a href="{{ route('matches.index') }}" class="primary-btn mt-7 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
+                    <a id="hero-join-link" href="{{ $heroMatch['detailsUrl'] }}" class="primary-btn mt-7 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
                         {{ __('Join Match') }}
                     </a>
                 </div>
             </div>
+
         </section>
 
         <section class="mt-12 rounded-[2rem] bg-white px-10 py-10 shadow-soft">
@@ -527,6 +595,7 @@
         </div>
     </footer>
 
+    <script type="application/json" id="hero-match-slides">@json($heroSlides)</script>
     <script>
         const hamburger = document.getElementById('hamburger');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -535,6 +604,116 @@
             mobileMenu.classList.toggle('hidden');
             mobileMenu.classList.toggle('flex');
         });
+
+        const heroSlides = JSON.parse(document.getElementById('hero-match-slides')?.textContent || '[]');
+        const slotsTemplate = @json(__('Slots Available: :slots'));
+        const showMatchTemplate = @json(__('Show match :number'));
+        const heroElements = {
+            visual: document.getElementById('hero-visual'),
+            details: document.getElementById('hero-details'),
+            fieldImage: document.getElementById('hero-field-image'),
+            homeLogo: document.getElementById('hero-home-logo'),
+            homeName: document.getElementById('hero-home-name'),
+            centerLogo: document.getElementById('hero-center-logo'),
+            awayLogo: document.getElementById('hero-away-logo'),
+            awayName: document.getElementById('hero-away-name'),
+            title: document.getElementById('hero-title'),
+            dateTime: document.getElementById('hero-date-time'),
+            location: document.getElementById('hero-location'),
+            slots: document.getElementById('hero-slots'),
+            joinLink: document.getElementById('hero-join-link'),
+            dots: document.getElementById('hero-dots'),
+        };
+
+        let currentHeroIndex = 0;
+        let heroIsAnimating = false;
+        let heroInterval = null;
+
+        function renderHeroDots() {
+            if (!heroElements.dots) {
+                return;
+            }
+
+            heroElements.dots.innerHTML = '';
+
+            heroSlides.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = `h-3.5 w-3.5 rounded-full transition md:h-4 md:w-4 ${index === currentHeroIndex ? 'bg-navy shadow-[0_6px_14px_rgba(22,40,83,.24)]' : 'bg-white/80 ring-1 ring-[#a9aff3]/60 hover:bg-white'}`;
+                dot.addEventListener('click', () => {
+                    changeHeroMatch(index);
+                    restartHeroAutoplay();
+                });
+                heroElements.dots.appendChild(dot);
+            });
+        }
+
+        function updateHeroContent(slide) {
+            heroElements.fieldImage.src = slide.fieldImage;
+            heroElements.fieldImage.alt = slide.title;
+            heroElements.homeLogo.src = slide.homeLogo;
+            heroElements.homeLogo.alt = slide.home;
+            heroElements.homeName.textContent = slide.home;
+            heroElements.centerLogo.src = slide.centerLogo;
+            heroElements.awayLogo.src = slide.awayLogo;
+            heroElements.awayLogo.alt = slide.away;
+            heroElements.awayName.textContent = slide.away;
+            heroElements.title.textContent = slide.title;
+            heroElements.dateTime.textContent = `${slide.date}   ${slide.time}`;
+            heroElements.location.textContent = slide.location;
+            heroElements.slots.textContent = slotsTemplate.replace(':slots', slide.slots);
+            heroElements.joinLink.href = slide.detailsUrl;
+        }
+
+        function changeHeroMatch(targetIndex) {
+            if (heroIsAnimating || heroSlides.length < 2 || targetIndex === currentHeroIndex) {
+                return;
+            }
+
+            heroIsAnimating = true;
+            currentHeroIndex = (targetIndex + heroSlides.length) % heroSlides.length;
+
+            heroElements.visual.classList.remove('is-panning');
+            heroElements.details.classList.remove('is-leaving', 'is-entering');
+            void heroElements.visual.offsetWidth;
+
+            heroElements.visual.classList.add('is-panning');
+            heroElements.details.classList.add('is-leaving');
+
+            window.setTimeout(() => {
+                updateHeroContent(heroSlides[currentHeroIndex]);
+                renderHeroDots();
+                heroElements.details.classList.remove('is-leaving');
+                heroElements.details.classList.add('is-entering');
+            }, 260);
+
+            window.setTimeout(() => {
+                heroElements.visual.classList.remove('is-panning');
+                heroElements.details.classList.remove('is-entering');
+                heroIsAnimating = false;
+            }, 720);
+        }
+
+        function startHeroAutoplay() {
+            if (heroSlides.length < ) {
+                return;
+            }
+
+            heroInterval = window.setInterval(() => {
+                changeHeroMatch(currentHeroIndex + 1);
+            }, 5000);
+        }
+
+        function restartHeroAutoplay() {
+            if (heroInterval) {
+                window.clearInterval(heroInterval);
+            }
+
+            startHeroAutoplay();
+        }
+
+        renderHeroDots();
+        startHeroAutoplay();
     </script>
 </body>
 </html>
