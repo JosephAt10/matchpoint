@@ -695,7 +695,7 @@
         }
 
         function startHeroAutoplay() {
-            if (heroSlides.length < ) {
+            if (heroSlides.length < 2) {
                 return;
             }
 

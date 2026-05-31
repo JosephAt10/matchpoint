@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -68,6 +69,35 @@ class PublicMatchController extends Controller
             'activeParticipant' => $activeParticipant,
             'isExpired' => $this->matchHasExpired($match),
         ]);
+    }
+
+    public function downloadTicket(Request $request, Game $match)
+    {
+        $match->load([
+            'booking.field.owner',
+            'booking.bookedSlots.timeSlot',
+            'creator',
+            'participants.user',
+            'participants.payment',
+        ]);
+
+        $participant = $match->participants
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        abort_unless($participant?->isConfirmed(), 403);
+
+        $filename = 'matchpoint-match-ticket-' . Str::padLeft((string) $match->id, 5, '0') . '.html';
+
+        return response()
+            ->view('downloads.match-ticket', [
+                'match' => $match,
+                'participant' => $participant,
+                'slotRange' => $this->slotRange($match->booking),
+                'generatedAt' => now(),
+            ])
+            ->header('Content-Type', 'text/html; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 
     public function create(Request $request): View

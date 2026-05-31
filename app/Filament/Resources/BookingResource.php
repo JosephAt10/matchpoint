@@ -15,6 +15,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class BookingResource extends Resource
@@ -125,7 +126,7 @@ class BookingResource extends Resource
                         'danger' => 'Rejected',
                     ]),
                 Tables\Columns\TextColumn::make('payment_deadline')
-                    ->label(__('Deadline'))
+                    ->label(__('Confirmation Deadline'))
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(),
@@ -182,7 +183,7 @@ class BookingResource extends Resource
                     ->visible(fn (Booking $record): bool => $record->isPending() && $record->payment?->isPending() && static::canReviewBooking($record))
                     ->requiresConfirmation()
                     ->modalHeading(__('Reject this payment proof?'))
-                    ->modalDescription(__('The user will be asked to upload a new payment proof.'))
+                    ->modalDescription(__('The booking will be cancelled, the selected slot will be released, and the user will be notified.'))
                     ->modalSubmitActionLabel(__('Reject'))
                     ->schema([
                         Textarea::make('rejection_reason')
@@ -291,26 +292,40 @@ class BookingResource extends Resource
         abort_unless($booking->payment?->isBookingDP(), 404);
         abort_unless(static::canReviewBooking($booking), 403);
 
-        $booking->loadMissing('payment', 'user', 'field');
+        DB::transaction(function () use ($booking, $reason): void {
+            $booking->loadMissing('payment', 'user', 'field', 'bookedSlots');
 
-        $booking->payment->update([
-            'status' => 'Rejected',
-            'rejection_reason' => $reason,
-        ]);
+            $booking->payment->update([
+                'status' => 'Rejected',
+                'rejection_reason' => $reason,
+            ]);
 
-        Notification::create([
-            'user_id' => $booking->user_id,
-            'message' => __('Your payment proof for :field was rejected. Please upload a new proof.', ['field' => $booking->field->name]),
-            'type' => 'Payment',
-            'status' => 'Unread',
-            'notifiable_type' => $booking->payment::class,
-            'notifiable_id' => $booking->payment->id,
-        ]);
+            $booking->update([
+                'status' => 'Cancelled',
+                'version' => $booking->version + 1,
+            ]);
 
-        AuditLog::record('payment.rejected', $booking->payment, [
-            'booking_id' => $booking->id,
-            'reason' => $reason,
-        ]);
+            $booking->bookedSlots()->delete();
+
+            Notification::create([
+                'user_id' => $booking->user_id,
+                'message' => __('Your payment proof for :field was rejected and the booking was cancelled. Reason: :reason', [
+                    'field' => $booking->field->name,
+                    'reason' => $reason,
+                ]),
+                'type' => 'Payment',
+                'status' => 'Unread',
+                'notifiable_type' => $booking->payment::class,
+                'notifiable_id' => $booking->payment->id,
+            ]);
+
+            AuditLog::record('payment.rejected', $booking->payment, [
+                'booking_id' => $booking->id,
+                'booking_status' => 'Cancelled',
+                'released_slots' => true,
+                'reason' => $reason,
+            ]);
+        });
     }
 
     private static function slotRange(Booking $booking): string

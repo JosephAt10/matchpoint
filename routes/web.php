@@ -49,12 +49,17 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/fields/{field}/bookings/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('/fields/{field}/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/bookings/{booking}/evidence', [BookingController::class, 'downloadEvidence'])->name('bookings.evidence.download');
+    Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::get('/bookings/{booking}/reschedule', [BookingController::class, 'reschedule'])->name('bookings.reschedule');
+    Route::patch('/bookings/{booking}/reschedule', [BookingController::class, 'updateReschedule'])->name('bookings.reschedule.update');
     Route::post('/bookings/{booking}/payment-proof', [BookingController::class, 'uploadProof'])->name('bookings.payment-proof.store');
     Route::get('/payments', [UserActivityController::class, 'payments'])->name('payments.index');
     Route::get('/matches/create', [PublicMatchController::class, 'create'])->name('matches.create');
     Route::get('/my-matches', [PublicMatchController::class, 'myMatches'])->name('matches.my');
     Route::post('/matches', [PublicMatchController::class, 'store'])->name('matches.store');
     Route::post('/matches/{match}/join', [PublicMatchController::class, 'join'])->name('matches.join');
+    Route::get('/matches/{match}/ticket', [PublicMatchController::class, 'downloadTicket'])->name('matches.ticket.download');
     Route::post('/matches/{match}/participants/{participant}/confirm', [PublicMatchController::class, 'confirmParticipant'])->name('matches.participants.confirm');
     Route::post('/matches/{match}/participants/{participant}/reject', [PublicMatchController::class, 'rejectParticipant'])->name('matches.participants.reject');
     Route::get('/notifications', [UserActivityController::class, 'notifications'])->name('notifications.index');

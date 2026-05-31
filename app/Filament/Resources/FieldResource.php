@@ -112,12 +112,21 @@ class FieldResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('is_approved')
+                SelectFilter::make('approval_status')
                     ->label(__('Approval'))
                     ->options([
-                        '0' => __('Pending'),
-                        '1' => __('Approved'),
-                    ]),
+                        'Pending' => __('Pending'),
+                        'Approved' => __('Approved'),
+                        'Rejected' => __('Rejected'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return match ($data['value'] ?? null) {
+                            'Pending' => $query->where('is_approved', false)->whereNull('rejected_at'),
+                            'Approved' => $query->where('is_approved', true),
+                            'Rejected' => $query->where('is_approved', false)->whereNotNull('rejected_at'),
+                            default => $query,
+                        };
+                    }),
                 SelectFilter::make('sport_type')
                     ->label(__('Sport'))
                     ->options(fn (): array => Field::query()
@@ -139,7 +148,7 @@ class FieldResource extends Resource
                     ->label(__('Approve'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn (Field $record): bool => ! $record->is_approved)
+                    ->visible(fn (Field $record): bool => $record->isPendingApproval())
                     ->requiresConfirmation()
                     ->modalHeading(__('Approve this field?'))
                     ->modalDescription(__('The field will become visible to users after approval.'))
@@ -149,17 +158,17 @@ class FieldResource extends Resource
                     ->label(__('Reject'))
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
-                    ->visible(fn (Field $record): bool => ! $record->is_approved)
+                    ->visible(fn (Field $record): bool => $record->isPendingApproval())
                     ->requiresConfirmation()
                     ->modalHeading(__('Reject this field?'))
-                    ->modalDescription(__('The field will remain hidden until it is reviewed again.'))
+                    ->modalDescription(__('The field will remain hidden and approval actions will no longer be available for this request.'))
                     ->modalSubmitActionLabel(__('Reject'))
                     ->action(fn (Field $record) => $record->update(['is_approved' => false, 'rejected_at' => now()])),
                 Action::make('markPending')
                     ->label(__('Pending'))
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
-                    ->visible(fn (Field $record): bool => $record->is_approved || $record->isRejected())
+                    ->visible(fn (Field $record): bool => $record->is_approved)
                     ->requiresConfirmation()
                     ->modalHeading(__('Mark this field as pending?'))
                     ->modalDescription(__('The field will be hidden from users until it is approved again.'))

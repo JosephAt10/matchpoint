@@ -109,7 +109,7 @@
 
                     <div>
                         <label for="password" class="mb-3 block text-[20px] font-semibold text-[#353a52] md:text-[16px]">{{ __('Password') }}</label>
-                        <div class="flex items-center gap-3 rounded-2xl border {{ $errors->has('password') ? 'border-rose-400' : 'border-softBorder' }} bg-white px-4 py-4">
+                        <div class="flex items-center gap-3 rounded-2xl border {{ $errors->has('password') || $errors->has('email') ? 'border-rose-400' : 'border-softBorder' }} bg-white px-4 py-4">
                             <svg class="h-5 w-5 text-[#9994b9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.105 0 2 .672 2 1.5S13.105 14 12 14s-2-.672-2-1.5S10.895 11 12 11z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 11V8a5 5 0 10-10 0v3M6 11h12a1 1 0 011 1v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6a1 1 0 011-1z"/>

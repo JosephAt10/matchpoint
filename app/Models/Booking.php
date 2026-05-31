@@ -53,7 +53,7 @@ class Booking extends Model
         return $query->where('status', 'Cancelled');
     }
 
-    /** Bookings past their payment deadline with no verified payment (for auto-cancel scheduler) */
+    /** Pending bookings past the field-owner confirmation deadline. */
     public function scopeOverdue($query)
     {
         return $query->pending()->where('payment_deadline', '<', now());

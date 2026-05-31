@@ -54,7 +54,7 @@
 
                 <div class="mt-6 rounded-xl bg-[#f6f2ff] p-4">
                     <h2 class="font-heading text-[18px] font-bold text-ink">{{ __('Payment Instructions') }}</h2>
-                    <p class="mt-2 text-[14px] leading-6 text-copy">{{ __('Transfer the down payment first, then upload the proof below. Once submitted, the booking will enter Pending status with a 24-hour review window.') }}</p>
+                    <p class="mt-2 text-[14px] leading-6 text-copy">{{ __('Transfer the down payment first, then upload the proof below. Once submitted, the booking will enter Pending status while the Field Owner reviews it within 48 hours.') }}</p>
                 </div>
             </article>
 

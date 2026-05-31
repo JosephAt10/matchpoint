@@ -8,7 +8,6 @@ use App\Filament\Resources\AppNotificationResource;
 use App\Filament\Resources\AuditLogResource;
 use App\Filament\Resources\BookingResource;
 use App\Filament\Resources\FieldResource;
-use App\Filament\Resources\MatchPaymentResource;
 use App\Filament\Resources\UserResource;
 use App\Filament\Widgets\AdminOverviewWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -41,7 +40,6 @@ class AdminPanelProvider extends PanelProvider
                 UserResource::class,
                 FieldResource::class,
                 BookingResource::class,
-                MatchPaymentResource::class,
                 AppNotificationResource::class,
                 AuditLogResource::class,
             ])

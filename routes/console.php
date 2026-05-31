@@ -5,6 +5,7 @@ use App\Models\Booking;
 use App\Models\Notification;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -16,43 +17,78 @@ Artisan::command('bookings:cancel-overdue', function () {
 
     Booking::query()
         ->pending()
-        ->where('payment_deadline', '<', now())
-        ->whereDoesntHave('payment', fn ($query) => $query->whereNotNull('proof'))
-        ->with(['field.owner'])
+        ->where('created_at', '<=', now()->subHours(48))
+        ->whereHas('payment', fn ($query) => $query
+            ->where('type', 'BookingDP')
+            ->where('status', 'Pending')
+            ->whereNotNull('proof'))
+        ->with(['field.owner', 'payment', 'bookedSlots'])
         ->chunkById(100, function ($bookings) use (&$cancelled) {
             foreach ($bookings as $booking) {
-                $booking->update([
-                    'status' => 'Cancelled',
-                    'version' => $booking->version + 1,
-                ]);
+                DB::transaction(function () use ($booking, &$cancelled): void {
+                    $booking = Booking::query()
+                        ->with(['field.owner', 'payment', 'bookedSlots'])
+                        ->lockForUpdate()
+                        ->find($booking->id);
 
-                Notification::create([
-                    'user_id' => $booking->user_id,
-                    'message' => "Your booking for {$booking->field->name} was cancelled because no payment proof was uploaded before the deadline.",
-                    'type' => 'Booking',
-                    'status' => 'Unread',
-                    'notifiable_type' => Booking::class,
-                    'notifiable_id' => $booking->id,
-                ]);
+                    if (
+                        ! $booking
+                        || ! $booking->isPending()
+                        || ! $booking->payment?->isBookingDP()
+                        || ! $booking->payment?->isPending()
+                        || blank($booking->payment->proof)
+                        || $booking->created_at->gt(now()->subHours(48))
+                    ) {
+                        return;
+                    }
 
-                Notification::create([
-                    'user_id' => $booking->field->owner_id,
-                    'message' => "A booking for {$booking->field->name} was cancelled because the payment deadline expired.",
-                    'type' => 'Booking',
-                    'status' => 'Unread',
-                    'notifiable_type' => Booking::class,
-                    'notifiable_id' => $booking->id,
-                ]);
+                    $releasedSlotIds = $booking->bookedSlots->pluck('timeslot_id')->all();
+                    $reason = 'Field owner did not confirm the booking within 48 hours.';
 
-                AuditLog::record('booking.auto_cancelled', $booking, [
-                    'reason' => 'payment_deadline_expired_without_proof',
-                ]);
+                    $booking->payment->update([
+                        'status' => 'Rejected',
+                        'rejection_reason' => $reason,
+                    ]);
 
-                $cancelled++;
+                    $booking->update([
+                        'status' => 'Cancelled',
+                        'version' => $booking->version + 1,
+                    ]);
+
+                    $booking->bookedSlots()->delete();
+
+                    Notification::create([
+                        'user_id' => $booking->user_id,
+                        'message' => "Your booking for {$booking->field->name} was automatically cancelled because the Field Owner did not confirm it within 48 hours. The time slot has been released.",
+                        'type' => 'Booking',
+                        'status' => 'Unread',
+                        'notifiable_type' => Booking::class,
+                        'notifiable_id' => $booking->id,
+                    ]);
+
+                    Notification::create([
+                        'user_id' => $booking->field->owner_id,
+                        'message' => "A pending booking for {$booking->field->name} was automatically cancelled because it was not confirmed within 48 hours. The time slot has been released.",
+                        'type' => 'Booking',
+                        'status' => 'Unread',
+                        'notifiable_type' => Booking::class,
+                        'notifiable_id' => $booking->id,
+                    ]);
+
+                    AuditLog::record('booking.auto_cancelled', $booking, [
+                        'reason' => 'field_owner_confirmation_timeout',
+                        'released_slots' => true,
+                        'slot_ids' => $releasedSlotIds,
+                        'payment_status' => 'Rejected',
+                        'timeout_hours' => 48,
+                    ]);
+
+                    $cancelled++;
+                });
             }
         });
 
     $this->info("Cancelled {$cancelled} overdue bookings.");
-})->purpose('Cancel overdue pending bookings that have no uploaded payment proof.');
+})->purpose('Cancel pending bookings not confirmed by field owners within 48 hours.');
 
 Schedule::command('bookings:cancel-overdue')->hourly();

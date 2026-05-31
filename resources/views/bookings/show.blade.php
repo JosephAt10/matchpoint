@@ -20,12 +20,13 @@
 <body class="min-h-screen bg-[linear-gradient(180deg,#ffffff_0%,#f8f6ff_50%,#ffffff_100%)] text-ink">
     <header class="border-b border-[#ede9ff] bg-white/95">
         <div class="flex w-full items-center justify-between px-5 py-4 md:px-10 xl:px-16 2xl:px-24">
-            <a href="{{ route('home') }}" class="font-heading text-[22px] font-bold tracking-[0.12em] text-[#352782]">{{ __('MATCHPOINT') }}</a>
-            <nav class="flex items-center gap-4 text-[14px] font-medium text-[#4f5579]">
-                <a href="{{ route('fields.index') }}" class="transition hover:text-indigoDeep">{{ __('Browse Fields') }}</a>
-                <a href="{{ route('dashboard') }}" class="transition hover:text-indigoDeep">{{ __('Dashboard') }}</a>
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
+                <img src="{{ asset('landing/matchpoint-logo.png') }}" alt="{{ __('MatchPoint logo') }}" class="h-10 w-10 object-contain">
+                <span class="font-heading text-[22px] font-bold tracking-[0.12em] text-[#352782]">{{ __('MATCHPOINT') }}</span>
+            </a>
+            <div class="shrink-0">
                 @include('partials.locale-switcher')
-            </nav>
+            </div>
         </div>
     </header>
 
@@ -52,7 +53,7 @@
                     <div class="flex items-center justify-between gap-4 py-4"><span class="text-copy">{{ __('Time') }}</span><span class="font-bold text-ink">{{ $slotRange }}</span></div>
                     <div class="flex items-center justify-between gap-4 py-4"><span class="text-copy">{{ __('Duration') }}</span><span class="font-bold text-ink">{{ $booking->bookedSlots->count() }} {{ $booking->bookedSlots->count() === 1 ? __('hour') : __('hours') }}</span></div>
                     <div class="flex items-center justify-between gap-4 py-4"><span class="text-copy">{{ __('Booking Status') }}</span><span class="rounded-full bg-[#fff7db] px-3 py-1 text-sm font-bold text-[#9b6a00]">{{ __($booking->status) }}</span></div>
-                    <div class="flex items-center justify-between gap-4 py-4"><span class="text-copy">{{ __('Payment Deadline') }}</span><span class="font-bold text-ink">{{ $booking->payment_deadline->translatedFormat('M j, Y H:i') }}</span></div>
+                    <div class="flex items-center justify-between gap-4 py-4"><span class="text-copy">{{ __('Confirmation Deadline') }}</span><span class="font-bold text-ink">{{ $booking->payment_deadline->translatedFormat('M j, Y H:i') }}</span></div>
                 </div>
             </article>
 
@@ -65,6 +66,32 @@
                 </div>
 
                 <div class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ __('Proof uploaded. Status: :status.', ['status' => __($booking->payment?->status ?? $booking->status)]) }}</div>
+
+                @if ($booking->isConfirmed())
+                    <a href="{{ route('bookings.evidence.download', $booking) }}" class="mt-5 block rounded-xl bg-[#5a38d6] px-4 py-3 text-center text-[15px] font-bold text-white shadow-[0_14px_24px_rgba(90,56,214,.18)]">
+                        {{ __('Download Booking Evidence') }}
+                    </a>
+                @endif
+
+                @if ($booking->canBeRescheduled())
+                    <a href="{{ route('bookings.reschedule', $booking) }}" class="mt-4 block rounded-xl border border-[#d9d2ff] bg-[#f6f2ff] px-4 py-3 text-center text-[15px] font-bold text-[#5a38d6] transition hover:bg-[#eee8ff]">
+                        {{ __('Request Reschedule') }}
+                    </a>
+                @endif
+
+                @if ($booking->isPending())
+                    <div class="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
+                        <p class="font-bold">{{ __('Need to cancel this booking?') }}</p>
+                        <p class="mt-1">{{ __('Cancelling will release the selected time slot immediately. Down payment refunds are handled directly between you and the Field Owner outside MatchPoint.') }}</p>
+                    </div>
+
+                    <form action="{{ route('bookings.cancel', $booking) }}" method="POST" class="mt-4" onsubmit="return confirm(@js(__('Cancel this pending booking? The slot will be released and refund handling stays outside MatchPoint.')));">
+                        @csrf
+                        <button type="submit" class="w-full rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-center text-[15px] font-bold text-rose-700 transition hover:bg-rose-100">
+                            {{ __('Cancel Booking') }}
+                        </button>
+                    </form>
+                @endif
             </aside>
         </section>
     </main>

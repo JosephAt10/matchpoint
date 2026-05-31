@@ -222,6 +222,9 @@
                     <div class="mt-6 rounded-[22px] border border-[#d9d8ff] bg-[#f7f5ff] p-5">
                         <p class="font-heading text-[18px] font-bold text-ink">{{ __('You are the organizer') }}</p>
                         <p class="mt-2 text-[14px] leading-6 text-copy">{{ __('Your organizer slot is already confirmed in Team A.') }}</p>
+                        @if ($activeParticipant->isConfirmed())
+                            <a href="{{ route('matches.ticket.download', $match) }}" class="mt-4 inline-flex rounded-xl bg-[#5a38d6] px-4 py-2 text-[14px] font-bold text-white shadow-[0_12px_22px_rgba(90,56,214,.18)]">{{ __('Download Match Ticket') }}</a>
+                        @endif
                     </div>
                 @elseif ($activeParticipant)
                     <div class="mt-6 rounded-[22px] border border-[#d9d8ff] bg-[#f7f5ff] p-5">
@@ -229,6 +232,9 @@
                         <p class="mt-2 text-[14px] leading-6 text-copy">{{ __('Status: :status', ['status' => __($activeParticipant->status)]) }}</p>
                         @if ($activeParticipant->payment?->proof)
                             <a href="{{ Storage::url($activeParticipant->payment->proof) }}" target="_blank" class="mt-4 inline-flex rounded-xl border border-line px-4 py-2 text-[14px] font-semibold text-[#4f46e5]">{{ __('View Payment Proof') }}</a>
+                        @endif
+                        @if ($activeParticipant->isConfirmed())
+                            <a href="{{ route('matches.ticket.download', $match) }}" class="mt-4 inline-flex rounded-xl bg-[#5a38d6] px-4 py-2 text-[14px] font-bold text-white shadow-[0_12px_22px_rgba(90,56,214,.18)]">{{ __('Download Match Ticket') }}</a>
                         @endif
                     </div>
                 @elseif (! auth()->check())

@@ -98,7 +98,7 @@
                             <span>{{ $booking['amount'] }}</span>
                         </div>
                         @if ($booking['payment_deadline'])
-                            <p class="mt-4 text-[15px] text-copy">{{ __('Payment deadline: :time', ['time' => $booking['payment_deadline']]) }}</p>
+                            <p class="mt-4 text-[15px] text-copy">{{ __('Confirmation deadline: :time', ['time' => $booking['payment_deadline']]) }}</p>
                         @endif
                     </div>
                     <div class="flex flex-col items-start gap-4 lg:items-end">

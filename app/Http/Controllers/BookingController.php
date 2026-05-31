@@ -19,6 +19,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
@@ -118,7 +119,7 @@ class BookingController extends Controller
                     'timeslot_id' => $slots->first()->id,
                     'date' => $bookingDate,
                     'status' => 'Pending',
-                    'payment_deadline' => now()->addDay(),
+                    'payment_deadline' => now()->addHours(48),
                 ]);
 
                 foreach ($slots as $slot) {
@@ -180,6 +181,233 @@ class BookingController extends Controller
             'booking' => $booking,
             'slotRange' => $this->slotRange($booking),
         ]);
+    }
+
+    public function reschedule(Request $request, Booking $booking): View
+    {
+        $this->authorizeBookingOwner($booking);
+
+        $booking->load(['field.owner', 'bookedSlots.timeSlot', 'payment']);
+        abort_unless($booking->canBeRescheduled(), 403);
+
+        $minimumDate = now()->addDay()->startOfDay();
+        $selectedDate = $request->date('date')
+            ?? ($booking->date->greaterThan($minimumDate) ? $booking->date->copy() : $minimumDate);
+        $selectedDate = $selectedDate->startOfDay();
+        $selectedDay = $selectedDate->format('l');
+
+        $slots = $booking->field->timeSlots()
+            ->where('day_of_week', $selectedDay)
+            ->orderBy('start_time')
+            ->get();
+
+        $previewSlots = $slots
+            ->values()
+            ->map(function (TimeSlot $slot, int $index) use ($selectedDate): array {
+                $available = $slot->isAvailableOn($selectedDate);
+
+                return [
+                    'id' => $slot->id,
+                    'index' => $index,
+                    'label' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
+                    'start' => substr($slot->start_time, 0, 5),
+                    'end' => substr($slot->end_time, 0, 5),
+                    'available' => $available,
+                ];
+            });
+
+        return view('bookings.reschedule', [
+            'booking' => $booking,
+            'currentSlotRange' => $this->slotRange($booking),
+            'selectedDate' => $selectedDate,
+            'previewSlots' => $previewSlots,
+        ]);
+    }
+
+    public function updateReschedule(Request $request, Booking $booking): RedirectResponse
+    {
+        $this->authorizeBookingOwner($booking);
+
+        $validated = $request->validate([
+            'date' => ['required', 'date', 'after_or_equal:tomorrow'],
+            'slot_ids' => ['required', 'array', 'min:1'],
+            'slot_ids.*' => ['integer', 'distinct', 'exists:time_slots,id'],
+        ], [
+            'date.after_or_equal' => __('Please choose a reschedule date from tomorrow onward.'),
+        ]);
+
+        $newDate = Carbon::parse($validated['date'])->startOfDay();
+        $slotIds = collect($validated['slot_ids'])->map(fn ($id) => (int) $id)->sort()->values();
+
+        DB::transaction(function () use ($booking, $newDate, $slotIds, $request): void {
+            $booking = Booking::query()
+                ->with(['user', 'field.owner', 'bookedSlots.timeSlot'])
+                ->lockForUpdate()
+                ->findOrFail($booking->id);
+
+            $this->authorizeBookingOwner($booking);
+            abort_unless($booking->canBeRescheduled(), 403);
+
+            $oldDate = $booking->date->copy();
+            $oldSlotIds = $booking->bookedSlots->pluck('timeslot_id')->sort()->values();
+
+            if ($oldDate->isSameDay($newDate) && $oldSlotIds->values()->all() === $slotIds->all()) {
+                throw ValidationException::withMessages([
+                    'slot_ids' => __('Please choose a different available time slot.'),
+                ]);
+            }
+
+            $newSlots = $this->resolveSlots($booking->field, $newDate, $slotIds, true);
+            $oldSlotRange = $this->slotRange($booking);
+            $newSlotRange = $this->slotRangeFromTimeSlots($newSlots);
+
+            $booking->bookedSlots()->delete();
+
+            foreach ($newSlots as $slot) {
+                BookedSlot::create([
+                    'timeslot_id' => $slot->id,
+                    'booking_id' => $booking->id,
+                    'date' => $newDate,
+                ]);
+            }
+
+            $booking->update([
+                'timeslot_id' => $newSlots->first()->id,
+                'date' => $newDate,
+                'version' => $booking->version + 1,
+            ]);
+
+            Notification::create([
+                'user_id' => $booking->user_id,
+                'message' => __('Your booking for :field was rescheduled to :date, :time.', [
+                    'field' => $booking->field->name,
+                    'date' => $newDate->translatedFormat('j M Y'),
+                    'time' => $newSlotRange,
+                ]),
+                'type' => 'Booking',
+                'status' => 'Unread',
+                'notifiable_type' => Booking::class,
+                'notifiable_id' => $booking->id,
+            ]);
+
+            if ($booking->field?->owner_id) {
+                Notification::create([
+                    'user_id' => $booking->field->owner_id,
+                    'message' => __(':user rescheduled their booking for :field from :old_date, :old_time to :new_date, :new_time.', [
+                        'user' => $booking->user?->name ?? __('A user'),
+                        'field' => $booking->field->name,
+                        'old_date' => $oldDate->translatedFormat('j M Y'),
+                        'old_time' => $oldSlotRange,
+                        'new_date' => $newDate->translatedFormat('j M Y'),
+                        'new_time' => $newSlotRange,
+                    ]),
+                    'type' => 'Booking',
+                    'status' => 'Unread',
+                    'notifiable_type' => Booking::class,
+                    'notifiable_id' => $booking->id,
+                ]);
+            }
+
+            AuditLog::record('booking.rescheduled', $booking, [
+                'old_date' => $oldDate->toDateString(),
+                'old_slot_ids' => $oldSlotIds->all(),
+                'old_slot_range' => $oldSlotRange,
+                'new_date' => $newDate->toDateString(),
+                'new_slot_ids' => $slotIds->all(),
+                'new_slot_range' => $newSlotRange,
+                'released_old_slots' => true,
+            ], $request->user()->id);
+        });
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('status', __('Booking rescheduled successfully.'));
+    }
+
+    public function downloadEvidence(Request $request, Booking $booking)
+    {
+        $this->authorizeBookingOwner($booking);
+
+        abort_unless($booking->isConfirmed(), 403);
+
+        $booking->load(['user', 'field.owner', 'bookedSlots.timeSlot', 'payment']);
+        $filename = 'matchpoint-booking-' . Str::padLeft((string) $booking->id, 5, '0') . '.html';
+
+        return response()
+            ->view('downloads.booking-evidence', [
+                'booking' => $booking,
+                'slotRange' => $this->slotRange($booking),
+                'generatedAt' => now(),
+            ])
+            ->header('Content-Type', 'text/html; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    }
+
+    public function cancel(Request $request, Booking $booking): RedirectResponse
+    {
+        $this->authorizeBookingOwner($booking);
+
+        DB::transaction(function () use ($booking): void {
+            $booking = Booking::query()
+                ->with(['user', 'field.owner', 'payment', 'bookedSlots'])
+                ->lockForUpdate()
+                ->findOrFail($booking->id);
+
+            $this->authorizeBookingOwner($booking);
+            abort_unless($booking->isPending(), 403);
+
+            $reason = __('Cancelled by user before field owner confirmation. Down payment refunds are handled directly between the user and Field Owner outside MatchPoint.');
+
+            if ($booking->payment && ! $booking->payment->isVerified()) {
+                $booking->payment->update([
+                    'status' => 'Rejected',
+                    'rejection_reason' => $reason,
+                ]);
+            }
+
+            $releasedSlotIds = $booking->bookedSlots->pluck('timeslot_id')->all();
+
+            $booking->update([
+                'status' => 'Cancelled',
+                'version' => $booking->version + 1,
+            ]);
+
+            $booking->bookedSlots()->delete();
+
+            Notification::create([
+                'user_id' => $booking->user_id,
+                'message' => __('Your booking for :field was cancelled. The time slot has been released. Refunds must be handled directly with the Field Owner outside MatchPoint.', [
+                    'field' => $booking->field->name,
+                ]),
+                'type' => 'Booking',
+                'status' => 'Unread',
+                'notifiable_type' => Booking::class,
+                'notifiable_id' => $booking->id,
+            ]);
+
+            if ($booking->field?->owner_id) {
+                Notification::create([
+                    'user_id' => $booking->field->owner_id,
+                    'message' => __(':user cancelled their pending booking for :field. The time slot has been released. Any down payment refund is handled directly outside MatchPoint.', [
+                        'user' => $booking->user?->name ?? __('A user'),
+                        'field' => $booking->field->name,
+                    ]),
+                    'type' => 'Booking',
+                    'status' => 'Unread',
+                    'notifiable_type' => Booking::class,
+                    'notifiable_id' => $booking->id,
+                ]);
+            }
+
+            AuditLog::record('booking.cancelled_by_user', $booking, [
+                'released_slots' => true,
+                'slot_ids' => $releasedSlotIds,
+                'payment_status' => $booking->payment?->status,
+                'refund_handling' => 'outside_system',
+            ]);
+        });
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('status', __('Booking cancelled successfully. The slot is available again. Refunds must be handled directly with the Field Owner outside MatchPoint.'));
     }
 
     public function uploadProof(Request $request, Booking $booking): RedirectResponse
