@@ -25,6 +25,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::view('/contact', 'Footer Info.contact')->name('contact');
 Route::view('/help', 'Footer Info.help')->name('help');
+Route::view('/how-it-works', 'Footer Info.how')->name('how-it-works');
 Route::view('/privacy', 'Footer Info.privacy')->name('privacy');
 Route::view('/terms', 'Footer Info.terms')->name('terms');
 

@@ -568,7 +568,7 @@
                         <a href="{{ route('help') }}" class="flex items-center gap-3 hover:text-indigo">
                             <span class="text-indigo">›</span><span>{{ __('Help / FAQ') }}</span>
                         </a>
-                        <a href="{{ route('help') }}" class="flex items-center gap-3 hover:text-indigo">
+                        <a href="{{ route('how-it-works') }}" class="flex items-center gap-3 hover:text-indigo">
                             <span class="text-indigo">›</span><span>{{ __('How It Works') }}</span>
                         </a>
                         <a href="{{ route('terms') }}" class="flex items-center gap-3 hover:text-indigo">

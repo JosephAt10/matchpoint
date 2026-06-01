@@ -1,21 +1,27 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('Contact') }} - MatchPoint</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-[#E8E8F5] text-[#1a1f3a]">
-    <main class="mx-auto max-w-3xl px-4 py-16">
-        <div class="flex items-center justify-between gap-4">
-            <a href="{{ route('home') }}" class="text-sm font-medium text-[#5B5BD6] hover:underline">{{ __('Back to home') }}</a>
-            @include('partials.locale-switcher')
+@component('Footer Info.support-layout', [
+    'pageTitle' => __('support.contact.title'),
+    'pageSubtitle' => __('support.contact.subtitle'),
+    'active' => 'contact',
+])
+    <div class="grid gap-6 xl:grid-cols-3">
+        @foreach (trans('support.contact.channels') as $channel)
+            <article class="rounded-[1.6rem] border border-[#e7e1ff] bg-white p-7 shadow-card 2xl:p-8">
+                <p class="text-[14px] font-bold uppercase tracking-[0.18em] text-[#5a38d6]">{{ $channel['label'] }}</p>
+                <h2 class="mt-4 font-heading text-[26px] font-bold leading-tight text-ink 2xl:text-[30px]">{{ $channel['value'] }}</h2>
+                <p class="mt-4 text-[16px] leading-8 text-copy">{{ $channel['description'] }}</p>
+            </article>
+        @endforeach
+    </div>
+
+    <section class="mt-8 rounded-[1.8rem] border border-[#e7e1ff] bg-white p-7 shadow-card 2xl:p-8">
+        <h2 class="font-heading text-[30px] font-bold text-ink">{{ __('support.contact.before_contact_title') }}</h2>
+        <div class="mt-6 grid gap-5 lg:grid-cols-2">
+            @foreach (trans('support.contact.before_contact') as $item)
+                <div class="rounded-2xl bg-[#f7f5ff] p-6">
+                    <p class="font-heading text-[21px] font-bold text-ink">{{ $item['title'] }}</p>
+                    <p class="mt-3 text-[16px] leading-8 text-copy">{{ $item['body'] }}</p>
+                </div>
+            @endforeach
         </div>
-        <section class="mt-6 rounded-3xl bg-white p-8 shadow-sm">
-            <h1 class="text-3xl font-bold">{{ __('Contact') }}</h1>
-            <p class="mt-4 text-sm text-slate-600">{{ __('Reach the MatchPoint team here once your final support details are ready.') }}</p>
-        </section>
-    </main>
-</body>
-</html>
+    </section>
+@endcomponent
