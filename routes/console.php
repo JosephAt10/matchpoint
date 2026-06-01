@@ -92,3 +92,96 @@ Artisan::command('bookings:cancel-overdue', function () {
 })->purpose('Cancel pending bookings not confirmed by field owners within 48 hours.');
 
 Schedule::command('bookings:cancel-overdue')->hourly();
+
+Artisan::command('bookings:complete-finished', function () {
+    $completed = 0;
+
+    $scheduleQuery = DB::table('booked_slots')
+        ->join('time_slots', 'time_slots.id', '=', 'booked_slots.timeslot_id')
+        ->selectRaw("
+            booked_slots.booking_id,
+            MAX(
+                CASE
+                    WHEN time_slots.end_time = '00:00:00'
+                        THEN DATE_ADD(TIMESTAMP(booked_slots.date, '00:00:00'), INTERVAL 1 DAY)
+                    ELSE TIMESTAMP(booked_slots.date, time_slots.end_time)
+                END
+            ) as booking_ends_at
+        ")
+        ->groupBy('booked_slots.booking_id');
+
+    Booking::query()
+        ->select('bookings.*')
+        ->joinSub($scheduleQuery, 'booking_schedule', fn ($join) => $join->on('booking_schedule.booking_id', '=', 'bookings.id'))
+        ->where('bookings.status', 'Confirmed')
+        ->where('booking_schedule.booking_ends_at', '<=', now())
+        ->with(['field.owner', 'user', 'bookedSlots.timeSlot'])
+        ->chunkById(100, function ($bookings) use (&$completed): void {
+            foreach ($bookings as $booking) {
+                DB::transaction(function () use ($booking, &$completed): void {
+                    $booking = Booking::query()
+                        ->with(['field.owner', 'user', 'bookedSlots.timeSlot'])
+                        ->lockForUpdate()
+                        ->find($booking->id);
+
+                    if (! $booking || ! $booking->isConfirmed()) {
+                        return;
+                    }
+
+                    $latestSlot = $booking->bookedSlots
+                        ->pluck('timeSlot')
+                        ->filter()
+                        ->sortByDesc(fn ($slot) => $slot->end_time === '00:00:00' ? '24:00:00' : $slot->end_time)
+                        ->first();
+
+                    if (! $latestSlot) {
+                        return;
+                    }
+
+                    $bookingEndsAt = $latestSlot->end_time === '00:00:00'
+                        ? $booking->date->copy()->addDay()->startOfDay()
+                        : \Illuminate\Support\Carbon::parse($booking->date->toDateString() . ' ' . $latestSlot->end_time);
+
+                    if ($bookingEndsAt->isFuture()) {
+                        return;
+                    }
+
+                    $booking->update([
+                        'status' => 'Completed',
+                        'version' => $booking->version + 1,
+                    ]);
+
+                    Notification::create([
+                        'user_id' => $booking->user_id,
+                        'message' => "Your booking for {$booking->field->name} has been marked as completed.",
+                        'type' => 'Booking',
+                        'status' => 'Unread',
+                        'notifiable_type' => Booking::class,
+                        'notifiable_id' => $booking->id,
+                    ]);
+
+                    if ($booking->field?->owner_id) {
+                        Notification::create([
+                            'user_id' => $booking->field->owner_id,
+                            'message' => "A booking for {$booking->field->name} has been marked as completed.",
+                            'type' => 'Booking',
+                            'status' => 'Unread',
+                            'notifiable_type' => Booking::class,
+                            'notifiable_id' => $booking->id,
+                        ]);
+                    }
+
+                    AuditLog::record('booking.completed', $booking, [
+                        'completed_at' => now()->toDateTimeString(),
+                        'booking_ends_at' => $bookingEndsAt->toDateTimeString(),
+                    ]);
+
+                    $completed++;
+                });
+            }
+        }, 'bookings.id');
+
+    $this->info("Completed {$completed} finished bookings.");
+})->purpose('Mark confirmed bookings as completed after their booked time has passed.');
+
+Schedule::command('bookings:complete-finished')->hourly();

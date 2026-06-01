@@ -68,23 +68,35 @@
             height: 18px;
         }
 
-        .hero-visual.is-panning {
-            animation: heroPanLeft .62s cubic-bezier(.22, .9, .3, 1) both;
+        .hero-field-image {
+            transform: scale(1.05);
+            transform-origin: center;
+        }
+
+        .hero-field-image.is-zooming {
+            animation: heroFieldZoom 8.4s linear forwards;
+        }
+
+        .hero-team-layer {
+            transition: opacity .42s ease, transform .42s ease;
+        }
+
+        .hero-team-layer.is-hidden {
+            opacity: 0;
+            transform: scale(.985);
         }
 
         .hero-details.is-leaving {
-            animation: detailSweepDown .34s cubic-bezier(.45, 0, .7, .2) forwards;
+            animation: detailSweepDown .42s cubic-bezier(.45, 0, .7, .2) forwards;
         }
 
         .hero-details.is-entering {
-            animation: detailRiseIn .46s cubic-bezier(.2, .9, .28, 1) both;
+            animation: detailRiseIn .54s cubic-bezier(.2, .9, .28, 1) both;
         }
 
-        @keyframes heroPanLeft {
-            0% { opacity: 1; transform: translateX(0) scale(1); }
-            44% { opacity: .55; transform: translateX(-54px) scale(.985); }
-            45% { opacity: .42; transform: translateX(42px) scale(.985); }
-            100% { opacity: 1; transform: translateX(0) scale(1); }
+        @keyframes heroFieldZoom {
+            0% { transform: scale(1.05); }
+            100% { transform: scale(1.19); }
         }
 
         @keyframes detailSweepDown {
@@ -100,6 +112,14 @@
 </head>
 <body class="min-h-screen text-[#1f2740]">
     @php
+        $initialsFor = function (?string $name): string {
+            return collect(explode(' ', trim($name ?: 'MP')))
+                ->filter()
+                ->take(2)
+                ->map(fn (string $part) => strtoupper(substr($part, 0, 1)))
+                ->implode('') ?: 'MP';
+        };
+
         $fallbackHeroMatch = [
             'title' => __('Friendly Match'),
             'date' => __('Saturday, April 18'),
@@ -111,11 +131,13 @@
             'fieldImage' => asset('landing/football-stadium.jpg'),
             'homeLogo' => asset('landing/football-team-2.png'),
             'awayLogo' => asset('landing/football-team-1.png'),
+            'homeInitials' => 'GF',
+            'awayInitials' => 'SF',
             'centerLogo' => asset('landing/friendly-matche.png'),
             'detailsUrl' => route('matches.index'),
         ];
 
-        $formatHeroMatch = function ($match): array {
+        $formatHeroMatch = function ($match) use ($initialsFor): array {
             $booking = $match->booking;
             $slots = $booking?->bookedSlots
                 ?->pluck('timeSlot')
@@ -134,8 +156,10 @@
                 'home' => $match->team_a_name ?: __('Team A'),
                 'away' => $match->team_b_name ?: __('Team B'),
                 'fieldImage' => $booking?->field?->image_url ? url($booking->field->image_url) : asset('landing/football-stadium.jpg'),
-                'homeLogo' => $match->team_a_logo ? Storage::url($match->team_a_logo) : asset('landing/football-team-2.png'),
-                'awayLogo' => $match->team_b_logo ? Storage::url($match->team_b_logo) : asset('landing/football-team-1.png'),
+                'homeLogo' => $match->team_a_logo ? Storage::url($match->team_a_logo) : null,
+                'awayLogo' => $match->team_b_logo ? Storage::url($match->team_b_logo) : null,
+                'homeInitials' => $initialsFor($match->team_a_name ?: __('Team A')),
+                'awayInitials' => $initialsFor($match->team_b_name ?: __('Team B')),
                 'centerLogo' => asset('landing/friendly-matche.png'),
                 'detailsUrl' => route('matches.show', $match),
             ];
@@ -241,14 +265,15 @@
                     id="hero-field-image"
                     src="{{ $heroMatch['fieldImage'] }}"
                     alt="{{ $heroMatch['title'] }}"
-                    class="h-[300px] w-full scale-[1.05] object-cover blur-[1.2px] md:h-[470px]"
+                    class="hero-field-image h-[300px] w-full object-cover blur-[1.2px] md:h-[470px]"
                 >
                 <div class="absolute inset-0 bg-gradient-to-r from-[#0f1739]/66 via-[#162853]/30 to-transparent"></div>
-                <div class="absolute inset-0 flex items-center justify-center px-6">
+                <div id="hero-team-layer" class="hero-team-layer absolute inset-0 flex items-center justify-center px-6">
                     <div class="flex w-full max-w-[760px] items-center justify-between gap-6 text-white">
                         <div class="flex flex-col items-center">
-                            <div class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full shadow-xl md:h-36 md:w-36">
-                                <img id="hero-home-logo" src="{{ $heroMatch['homeLogo'] }}" alt="{{ $heroMatch['home'] }}" class="h-[86%] w-[86%] object-contain md:h-[84%] md:w-[84%]">
+                            <div class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-[#cfd6ff]/90 shadow-xl md:h-36 md:w-36">
+                                <img id="hero-home-logo" src="{{ $heroMatch['homeLogo'] ?? '' }}" alt="{{ $heroMatch['home'] }}" class="{{ $heroMatch['homeLogo'] ? '' : 'hidden' }} h-[86%] w-[86%] object-contain md:h-[84%] md:w-[84%]">
+                                <span id="hero-home-initials" class="{{ $heroMatch['homeLogo'] ? 'hidden' : '' }} font-heading text-[34px] font-extrabold tracking-[0.08em] text-[#10214a] md:text-[42px]">{{ $heroMatch['homeInitials'] ?? 'A' }}</span>
                             </div>
                             <p id="hero-home-name" class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 text-center font-heading text-[18px] font-bold tracking-wide text-[#10214a] shadow-lg md:text-[22px]">
                                 {{ $heroMatch['home'] }}
@@ -265,8 +290,9 @@
                         </div>
 
                         <div class="flex flex-col items-center">
-                            <div class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full shadow-xl md:h-36 md:w-36">
-                                <img id="hero-away-logo" src="{{ $heroMatch['awayLogo'] }}" alt="{{ $heroMatch['away'] }}" class="h-[96%] w-[96%] object-contain md:h-[94%] md:w-[94%]">
+                            <div class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-[#cfd6ff]/90 shadow-xl md:h-36 md:w-36">
+                                <img id="hero-away-logo" src="{{ $heroMatch['awayLogo'] ?? '' }}" alt="{{ $heroMatch['away'] }}" class="{{ $heroMatch['awayLogo'] ? '' : 'hidden' }} h-[96%] w-[96%] object-contain md:h-[94%] md:w-[94%]">
+                                <span id="hero-away-initials" class="{{ $heroMatch['awayLogo'] ? 'hidden' : '' }} font-heading text-[34px] font-extrabold tracking-[0.08em] text-[#10214a] md:text-[42px]">{{ $heroMatch['awayInitials'] ?? 'B' }}</span>
                             </div>
                             <p id="hero-away-name" class="mt-4 rounded-full bg-[#cfd6ff]/85 px-4 py-2 text-center font-heading text-[18px] font-bold tracking-wide text-[#10214a] shadow-lg md:text-[22px]">
                                 {{ $heroMatch['away'] }}
@@ -607,55 +633,57 @@
 
         const heroSlides = JSON.parse(document.getElementById('hero-match-slides')?.textContent || '[]');
         const slotsTemplate = @json(__('Slots Available: :slots'));
-        const showMatchTemplate = @json(__('Show match :number'));
         const heroElements = {
             visual: document.getElementById('hero-visual'),
+            teamLayer: document.getElementById('hero-team-layer'),
             details: document.getElementById('hero-details'),
             fieldImage: document.getElementById('hero-field-image'),
             homeLogo: document.getElementById('hero-home-logo'),
+            homeInitials: document.getElementById('hero-home-initials'),
             homeName: document.getElementById('hero-home-name'),
             centerLogo: document.getElementById('hero-center-logo'),
             awayLogo: document.getElementById('hero-away-logo'),
+            awayInitials: document.getElementById('hero-away-initials'),
             awayName: document.getElementById('hero-away-name'),
             title: document.getElementById('hero-title'),
             dateTime: document.getElementById('hero-date-time'),
             location: document.getElementById('hero-location'),
             slots: document.getElementById('hero-slots'),
             joinLink: document.getElementById('hero-join-link'),
-            dots: document.getElementById('hero-dots'),
         };
 
         let currentHeroIndex = 0;
         let heroIsAnimating = false;
-        let heroInterval = null;
-
-        function renderHeroDots() {
-            if (!heroElements.dots) {
-                return;
-            }
-
-            heroElements.dots.innerHTML = '';
-
-            heroSlides.forEach((_, index) => {
-                const dot = document.createElement('button');
-                dot.type = 'button';
-                dot.className = `h-3.5 w-3.5 rounded-full transition md:h-4 md:w-4 ${index === currentHeroIndex ? 'bg-navy shadow-[0_6px_14px_rgba(22,40,83,.24)]' : 'bg-white/80 ring-1 ring-[#a9aff3]/60 hover:bg-white'}`;
-                dot.addEventListener('click', () => {
-                    changeHeroMatch(index);
-                    restartHeroAutoplay();
-                });
-                heroElements.dots.appendChild(dot);
-            });
-        }
+        let heroCycleTimer = null;
+        const heroZoomDuration = 8400;
+        const heroCycleDelay = 9000;
 
         function updateHeroContent(slide) {
-            heroElements.fieldImage.src = slide.fieldImage;
-            heroElements.fieldImage.alt = slide.title;
-            heroElements.homeLogo.src = slide.homeLogo;
+            if (slide.homeLogo) {
+                heroElements.homeLogo.src = slide.homeLogo;
+                heroElements.homeLogo.classList.remove('hidden');
+                heroElements.homeInitials.classList.add('hidden');
+            } else {
+                heroElements.homeLogo.removeAttribute('src');
+                heroElements.homeLogo.classList.add('hidden');
+                heroElements.homeInitials.textContent = slide.homeInitials || 'A';
+                heroElements.homeInitials.classList.remove('hidden');
+            }
+
             heroElements.homeLogo.alt = slide.home;
             heroElements.homeName.textContent = slide.home;
             heroElements.centerLogo.src = slide.centerLogo;
-            heroElements.awayLogo.src = slide.awayLogo;
+            if (slide.awayLogo) {
+                heroElements.awayLogo.src = slide.awayLogo;
+                heroElements.awayLogo.classList.remove('hidden');
+                heroElements.awayInitials.classList.add('hidden');
+            } else {
+                heroElements.awayLogo.removeAttribute('src');
+                heroElements.awayLogo.classList.add('hidden');
+                heroElements.awayInitials.textContent = slide.awayInitials || 'B';
+                heroElements.awayInitials.classList.remove('hidden');
+            }
+
             heroElements.awayLogo.alt = slide.away;
             heroElements.awayName.textContent = slide.away;
             heroElements.title.textContent = slide.title;
@@ -665,54 +693,77 @@
             heroElements.joinLink.href = slide.detailsUrl;
         }
 
-        function changeHeroMatch(targetIndex) {
-            if (heroIsAnimating || heroSlides.length < 2 || targetIndex === currentHeroIndex) {
+        function resetHeroZoom() {
+            heroElements.fieldImage.style.animationDuration = `${heroZoomDuration}ms`;
+            heroElements.fieldImage.classList.remove('is-zooming');
+            void heroElements.fieldImage.offsetWidth;
+            heroElements.fieldImage.classList.add('is-zooming');
+        }
+
+        function scheduleHeroCycle() {
+            window.clearTimeout(heroCycleTimer);
+            heroCycleTimer = window.setTimeout(() => {
+                changeHeroMatch(heroSlides.length > 1 ? currentHeroIndex + 1 : currentHeroIndex);
+            }, heroCycleDelay);
+        }
+
+        function changeHeroMatch(targetIndex, manual = false) {
+            if (heroIsAnimating || !heroSlides.length) {
+                return;
+            }
+
+            const normalizedIndex = (targetIndex + heroSlides.length) % heroSlides.length;
+            const isChangingSlide = heroSlides.length > 1 && normalizedIndex !== currentHeroIndex;
+
+            if (manual && !isChangingSlide) {
+                restartHeroAutoplay();
                 return;
             }
 
             heroIsAnimating = true;
-            currentHeroIndex = (targetIndex + heroSlides.length) % heroSlides.length;
+            currentHeroIndex = normalizedIndex;
+            const nextSlide = heroSlides[currentHeroIndex];
 
-            heroElements.visual.classList.remove('is-panning');
             heroElements.details.classList.remove('is-leaving', 'is-entering');
-            void heroElements.visual.offsetWidth;
-
-            heroElements.visual.classList.add('is-panning');
+            heroElements.teamLayer.classList.add('is-hidden');
             heroElements.details.classList.add('is-leaving');
 
             window.setTimeout(() => {
-                updateHeroContent(heroSlides[currentHeroIndex]);
-                renderHeroDots();
-                heroElements.details.classList.remove('is-leaving');
-                heroElements.details.classList.add('is-entering');
-            }, 260);
+                if (isChangingSlide) {
+                    heroElements.fieldImage.src = nextSlide.fieldImage;
+                    heroElements.fieldImage.alt = nextSlide.title;
+                }
+
+                resetHeroZoom();
+
+                window.setTimeout(() => {
+                    if (isChangingSlide) {
+                        updateHeroContent(nextSlide);
+                    }
+
+                    heroElements.teamLayer.classList.remove('is-hidden');
+                    heroElements.details.classList.remove('is-leaving');
+                    heroElements.details.classList.add('is-entering');
+                }, 140);
+            }, 80);
 
             window.setTimeout(() => {
-                heroElements.visual.classList.remove('is-panning');
                 heroElements.details.classList.remove('is-entering');
                 heroIsAnimating = false;
-            }, 720);
+                scheduleHeroCycle();
+            }, 820);
         }
 
         function startHeroAutoplay() {
-            if (heroSlides.length < 2) {
-                return;
-            }
-
-            heroInterval = window.setInterval(() => {
-                changeHeroMatch(currentHeroIndex + 1);
-            }, 5000);
+            resetHeroZoom();
+            scheduleHeroCycle();
         }
 
         function restartHeroAutoplay() {
-            if (heroInterval) {
-                window.clearInterval(heroInterval);
-            }
-
+            window.clearTimeout(heroCycleTimer);
             startHeroAutoplay();
         }
 
-        renderHeroDots();
         startHeroAutoplay();
     </script>
 </body>
