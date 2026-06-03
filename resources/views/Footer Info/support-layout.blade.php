@@ -79,8 +79,8 @@
                 <div class="absolute right-0 top-0 h-full w-[42%] bg-[radial-gradient(circle_at_top_right,rgba(255,154,31,0.18),transparent_38%),linear-gradient(135deg,transparent,rgba(90,56,214,0.09))]"></div>
                 <div class="relative max-w-[980px]">
                     <p class="text-[15px] font-bold uppercase tracking-[0.22em] text-[#ff9a1f]">{{ __('support.common.support') }}</p>
-                    <h1 class="mt-4 font-heading text-[44px] font-extrabold leading-[1.05] tracking-tight text-ink md:text-[56px] 2xl:text-[64px]">{{ $pageTitle }}</h1>
-                    <p class="mt-5 max-w-[840px] text-[18px] leading-9 text-copy 2xl:text-[20px]">{{ $pageSubtitle }}</p>
+                    <h1 class="mt-4 font-heading text-[38px] font-extrabold leading-[1.08] tracking-tight text-ink md:text-[48px] 2xl:text-[54px]">{{ $pageTitle }}</h1>
+                    <p class="mt-5 max-w-[820px] text-[16px] leading-8 text-copy 2xl:text-[18px]">{{ $pageSubtitle }}</p>
                 </div>
             </div>
 

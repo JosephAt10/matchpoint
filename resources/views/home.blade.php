@@ -171,42 +171,26 @@
 
         $heroMatch = $heroSlides[0];
 
-        $matchCards = [
-            [
-                'sport' => __('Football'),
-                'home' => 'Gumbal FC',
-                'away' => 'Ssunesia FC',
-                'date' => __('Saturday, April 18'),
-                'time' => '7:30 WIB',
-                'location' => __('Kanjuruhan Stadium Malang'),
+        $matchCards = $matches->map(function ($match) use ($initialsFor): array {
+            $booking = $match->booking;
+            $field = $booking?->field;
+
+            return [
+                'title' => $match->title ?: __('Friendly Match'),
+                'sport' => $field?->sport_type ?: __('Sport'),
+                'home' => $match->team_a_name ?: __('Team A'),
+                'away' => $match->team_b_name ?: __('Team B'),
+                'homeInitials' => $initialsFor($match->team_a_name ?: __('Team A')),
+                'awayInitials' => $initialsFor($match->team_b_name ?: __('Team B')),
+                'date' => $booking?->date?->translatedFormat('l, F j, Y') ?: __('Date'),
+                'location' => $field?->location ?: __('Location'),
                 'button' => __('Join Match'),
-                'homeLogo' => asset('landing/football-team-2.png'),
-                'awayLogo' => asset('landing/football-team-1.png'),
+                'homeLogo' => $match->team_a_logo ? Storage::url($match->team_a_logo) : null,
+                'awayLogo' => $match->team_b_logo ? Storage::url($match->team_b_logo) : null,
                 'centerIcon' => asset('landing/friendly-matche.png'),
-            ],
-            [
-                'sport' => __('Basketball'),
-                'home' => 'Jieng',
-                'away' => 'Duor',
-                'date' => __('Sunday, April 19'),
-                'time' => '2:30 WIB',
-                'location' => __('Malang Arena Basket Hall'),
-                'button' => __('Join Match'),
-                'homeLogo' => asset('landing/basketball-team-1.png'),
-                'awayLogo' => asset('landing/basketball-team-2.png'),
-            ],
-            [
-                'sport' => __('Volleyball'),
-                'home' => 'Shirkat',
-                'away' => 'Jebel Lemon',
-                'date' => __('Saturday, April 18'),
-                'time' => '7:30 WIB',
-                'location' => __('Merdeka Volleyball Court'),
-                'button' => __('Join Match'),
-                'homeLogo' => asset('landing/volleyball-team-1.png'),
-                'awayLogo' => asset('landing/volleyball-team-2.png'),
-            ],
-        ];
+                'detailsUrl' => route('matches.show', $match),
+            ];
+        })->values();
 
     @endphp
 
@@ -389,74 +373,71 @@
             </div>
 
             <div class="mt-5 grid gap-5 md:grid-cols-3">
-                @foreach ($matchCards as $match)
+                @forelse ($matchCards as $match)
                     <article class="overflow-hidden rounded-[1.45rem] bg-navy shadow-card">
                         <div class="flex items-center justify-between gap-2 px-4 py-4 text-white">
                             <div class="flex flex-col items-center gap-2">
-                                <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full">
+                                <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/10">
                                     @if (!empty($match['homeLogo']))
                                         <img src="{{ $match['homeLogo'] }}" alt="{{ $match['home'] }}" class="h-[88%] w-[88%] object-contain">
-                                    @elseif ($match['sport'] === 'Basketball')
-                                        <span class="text-lg">🏀</span>
                                     @else
-                                        <span class="text-lg">🏐</span>
+                                        <span class="font-heading text-[13px] font-extrabold tracking-[0.08em] text-white">{{ $match['homeInitials'] }}</span>
                                     @endif
                                 </div>
-                                <span class="text-[14px]">{{ $match['home'] }}</span>
+                                <span class="max-w-[92px] truncate text-[14px]">{{ $match['home'] }}</span>
                             </div>
 
                             <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-white/10">
-                                @if ($match['sport'] === 'Football')
-                                    <span class="text-xl leading-none text-indigo">⚽</span>
-                                @elseif ($match['sport'] === 'Volleyball')
-                                    <span class="text-xl leading-none text-indigo">🏐</span>
-                                @elseif (!empty($match['centerIcon']))
+                                @if (!empty($match['centerIcon']))
                                     <img src="{{ $match['centerIcon'] }}" alt="{{ __('Friendly Match') }}" class="h-full w-full object-cover">
-                                @elseif ($match['sport'] === 'Basketball')
-                                    <span class="text-xl text-indigo">🏀</span>
                                 @else
-                                    <span class="text-xl text-indigo">🏐</span>
+                                    <span class="font-heading text-[11px] font-bold text-indigo">VS</span>
                                 @endif
                             </div>
 
                             <div class="flex flex-col items-center gap-2">
-                                <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full">
+                                <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/10">
                                     @if (!empty($match['awayLogo']))
                                         <img src="{{ $match['awayLogo'] }}" alt="{{ $match['away'] }}" class="h-[96%] w-[96%] object-contain">
-                                    @elseif ($match['sport'] === 'Basketball')
-                                        <span class="text-lg">🏀</span>
                                     @else
-                                        <span class="text-lg">🏐</span>
+                                        <span class="font-heading text-[13px] font-extrabold tracking-[0.08em] text-white">{{ $match['awayInitials'] }}</span>
                                     @endif
                                 </div>
-                                <span class="text-[14px]">{{ $match['away'] }}</span>
+                                <span class="max-w-[92px] truncate text-[14px]">{{ $match['away'] }}</span>
                             </div>
                         </div>
 
                         <div class="rounded-t-[1.35rem] bg-white px-4 py-4">
-                            <h3 class="font-heading text-[20px] font-bold text-[#263452]">{{ __($match['sport']) }} {{ __('Friendly Match') }}</h3>
+                            <p class="text-[12px] font-bold uppercase tracking-[0.18em] text-indigo">{{ __($match['sport']) }}</p>
+                            <h3 class="mt-1 line-clamp-2 min-h-[56px] font-heading text-[20px] font-bold leading-7 text-[#263452]">{{ $match['title'] }}</h3>
                             <div class="mt-3 space-y-2 text-[14px] text-[#3f4863]">
                                 <div class="flex items-center gap-2">
                                     <svg class="h-4 w-4 text-[#222f53]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
-                                    <span>{{ __($match['date']) }} &nbsp; {{ $match['time'] }}</span>
+                                    <span>{{ $match['date'] }}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <svg class="h-4 w-4 text-[#222f53]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     </svg>
-                                    <span>{{ $match['location'] }}</span>
+                                    <span class="line-clamp-1">{{ $match['location'] }}</span>
                                 </div>
                             </div>
 
-                            <a href="{{ route('login') }}" class="primary-btn mt-5 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
+                            <a href="{{ $match['detailsUrl'] }}" class="primary-btn mt-5 block rounded-[0.55rem] px-4 py-3 text-center text-[17px] font-bold text-white">
                                 {{ __($match['button']) }}
                             </a>
                         </div>
                     </article>
-                @endforeach
+                @empty
+                    <div class="rounded-[1.45rem] bg-white px-6 py-8 text-center text-[#3f4863] shadow-card md:col-span-3">
+                        <p class="font-heading text-[22px] font-bold text-[#263452]">{{ __('No public matches available yet.') }}</p>
+                        <p class="mt-2 text-[15px] text-textsoft">{{ __('Check back later or create a public match after confirming a booking.') }}</p>
+                        <a href="{{ route('matches.index') }}" class="primary-btn mt-5 inline-flex rounded-[0.55rem] px-6 py-3 text-[16px] font-bold text-white">{{ __('Explore Matches') }}</a>
+                    </div>
+                @endforelse
             </div>
         </section>
 
@@ -506,9 +487,9 @@
                             <span class="text-indigo">📍</span>
                             <span>{{ __('Malang, Indonesia') }}</span>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex min-w-0 items-center gap-3">
                             <span class="text-indigo">✉</span>
-                            <span>support@matchpoint.com</span>
+                            <span class="min-w-0 break-words [overflow-wrap:anywhere]">support@matchpoint.com</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="text-indigo">☎</span>

@@ -17,7 +17,7 @@ return [
         'subtitle' => 'Need help with a booking, public match, or field owner account? Use these support details to reach the MatchPoint team.',
         'channels' => [
             ['label' => 'Email', 'value' => 'support@matchpoint.com', 'description' => 'Best for account access, booking issues, and support questions that need a written record.'],
-            ['label' => 'Phone', 'value' => '+62 812 1727 5362', 'description' => 'Use this for urgent booking questions during support hours.'],
+            ['label' => 'Phone', 'value' => ['+62 812 1727 5362', '+62 813 2468 9011'], 'description' => 'Use these numbers for urgent booking questions during support hours.'],
             ['label' => 'Location', 'value' => 'Malang, Indonesia', 'description' => 'MatchPoint currently supports sports venue booking around Malang and nearby areas.'],
         ],
         'before_contact_title' => 'Before contacting support',
