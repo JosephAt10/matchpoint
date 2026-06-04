@@ -300,6 +300,7 @@
     "This Week": "This Week",
     "My Fields": "My Fields",
     "Overview of your venues and their status.": "Overview of your venues and their status.",
+    "View Bookings": "View Bookings",
     "No fields yet": "No fields yet",
     "Add your first field to start configuring availability and receiving bookings.": "Add your first field to start configuring availability and receiving bookings.",
     "Create your first field": "Create your first field",
@@ -330,6 +331,7 @@
     "Uploaded By": "Uploaded By",
     "Uploaded At": "Uploaded At",
     "Pending Review": "Pending Review",
+    "Pending Match Payments": "Pending Match Payments",
     "Sign out": "Sign out",
     "Are you sure you want to log out?": "Are you sure you want to log out?",
     "This will end your current session.": "This will end your current session.",
@@ -532,5 +534,14 @@
     "Please choose a different available time slot.": "Please choose a different available time slot.",
     "Your booking for :field was rescheduled to :date, :time.": "Your booking for :field was rescheduled to :date, :time.",
     ":user rescheduled their booking for :field from :old_date, :old_time to :new_date, :new_time.": ":user rescheduled their booking for :field from :old_date, :old_time to :new_date, :new_time.",
-    "Booking rescheduled successfully.": "Booking rescheduled successfully."
+    "Booking rescheduled successfully.": "Booking rescheduled successfully.",
+    ":field removed from favorites.": ":field removed from favorites.",
+    ":field added to favorites.": ":field added to favorites.",
+    "Please choose a booking date from tomorrow onward.": "Please choose a booking date from tomorrow onward.",
+    "One or more selected slots are not valid for this field and date.": "One or more selected slots are not valid for this field and date.",
+    "One or more selected slots are not currently offered by this field.": "One or more selected slots are not currently offered by this field.",
+    "Please select continuous time slots for one booking.": "Please select continuous time slots for one booking.",
+    "One or more selected slots were just booked. Please choose another time.": "One or more selected slots were just booked. Please choose another time.",
+    "Payment proof has already been uploaded and is waiting for review.": "Payment proof has already been uploaded and is waiting for review.",
+    "Payment proof uploaded. Please wait for verification.": "Payment proof uploaded. Please wait for verification."
 }

@@ -300,6 +300,7 @@
     "This Week": "Minggu Ini",
     "My Fields": "Lapangan Saya",
     "Overview of your venues and their status.": "Ringkasan venue Anda dan statusnya.",
+    "View Bookings": "Lihat Booking",
     "No fields yet": "Belum ada lapangan",
     "Add your first field to start configuring availability and receiving bookings.": "Tambahkan lapangan pertama Anda untuk mulai mengatur ketersediaan dan menerima booking.",
     "Create your first field": "Buat lapangan pertama Anda",
@@ -330,6 +331,7 @@
     "Uploaded By": "Diunggah Oleh",
     "Uploaded At": "Waktu Unggah",
     "Pending Review": "Menunggu Tinjauan",
+    "Pending Match Payments": "Pembayaran Pertandingan Tertunda",
     "Sign out": "Keluar",
     "Are you sure you want to log out?": "Apakah Anda yakin ingin keluar?",
     "This will end your current session.": "Tindakan ini akan mengakhiri sesi Anda saat ini.",
@@ -657,5 +659,14 @@
     "Please choose a different available time slot.": "Silakan pilih slot waktu tersedia yang berbeda.",
     "Your booking for :field was rescheduled to :date, :time.": "Pemesanan Anda untuk :field telah dijadwalkan ulang ke :date, :time.",
     ":user rescheduled their booking for :field from :old_date, :old_time to :new_date, :new_time.": ":user menjadwalkan ulang pemesanan untuk :field dari :old_date, :old_time ke :new_date, :new_time.",
-    "Booking rescheduled successfully.": "Pemesanan berhasil dijadwalkan ulang."
+    "Booking rescheduled successfully.": "Pemesanan berhasil dijadwalkan ulang.",
+    ":field removed from favorites.": ":field dihapus dari favorit.",
+    ":field added to favorites.": ":field ditambahkan ke favorit.",
+    "Please choose a booking date from tomorrow onward.": "Silakan pilih tanggal pemesanan mulai besok dan seterusnya.",
+    "One or more selected slots are not valid for this field and date.": "Satu atau beberapa slot yang dipilih tidak valid untuk lapangan dan tanggal ini.",
+    "One or more selected slots are not currently offered by this field.": "Satu atau beberapa slot yang dipilih saat ini tidak ditawarkan oleh lapangan ini.",
+    "Please select continuous time slots for one booking.": "Silakan pilih slot waktu yang berurutan untuk satu pemesanan.",
+    "One or more selected slots were just booked. Please choose another time.": "Satu atau beberapa slot yang dipilih baru saja dipesan. Silakan pilih waktu lain.",
+    "Payment proof has already been uploaded and is waiting for review.": "Bukti pembayaran sudah diunggah dan sedang menunggu peninjauan.",
+    "Payment proof uploaded. Please wait for verification.": "Bukti pembayaran berhasil diunggah. Silakan tunggu verifikasi."
 }

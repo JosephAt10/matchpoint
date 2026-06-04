@@ -61,12 +61,10 @@ This project is developed as a final project (PBL II) for the D-4 Informatics En
 | Layer | Technology |
 |---|---|
 | Backend | Laravel 12 (PHP 8.2+) |
-| Frontend | Blade Templates + Tailwind CSS |
+| Frontend | Blade Templates + Tailwind CSS + JavaScript |
 | Admin Panel | Filament |
 | Database | MySQL |
-| Authentication | Laravel Sanctum |
-| Notifications | Laravel Mail + SMTP |
-| Dev Environment | Laragon / XAMPP |
+| Dev Tools | Laragon / Github / Vscode |
 
 ---
 
@@ -135,7 +133,7 @@ Visit `http://localhost:8000`
 | Field Owner | mutias@matchpoint.test | Owner@123456 |
 | Field Owner | james@matchpoint.test | Owner@123456 |
 | User | gabby@matchpoint.test | User@123456 |
-| User | budi@matchpoint.test | User@123456 |
+| User | kuol@matchpoint.test | User@123456 |
 
 ---
 
@@ -176,7 +174,7 @@ users
 |---|---|
 | BR-01 | 50% down payment required to confirm a field booking |
 | BR-02 | Match participation fee paid in full (no DP rule) |
-| BR-03 | Booking auto-cancelled if no payment uploaded within 24 hours |
+| BR-03 | Booking auto-cancelled if no verification by FieldOwner within 48 hours |
 | BR-04 | Only outdoor bookings can be rescheduled |
 | BR-05 | Indoor bookings cannot be rescheduled under any circumstances |
 | BR-06 | No refund once payment is verified |
@@ -247,9 +245,9 @@ This project is currently in active development as part of PBL II.
 | Phase | Description | Status |
 |---|---|---|
 | Phase 1 | Foundation — migrations, models, seeders, auth | ✅ Done |
-| Phase 2 | Core booking — search, book field, payments, scheduler | 🟡 In progress |
-| Phase 3 | Match & admin — public matches, Filament admin panel | 🟡 In progress |
-| Phase 4 | Polish — notifications, audit logs, testing, UI | ❌ Not started |
+| Phase 2 | Core booking — search, book field, payments, scheduler | ✅ Done |
+| Phase 3 | Match & admin — public matches, Filament admin panel | ✅ Done |
+| Phase 4 | Polish — notifications, audit logs, testing, UI | 🟡 In progress |
 
 ---
 

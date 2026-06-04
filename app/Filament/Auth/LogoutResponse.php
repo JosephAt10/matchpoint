@@ -10,9 +10,12 @@ class LogoutResponse implements LogoutResponseContract
 {
     public function toResponse($request): RedirectResponse
     {
-        $request->session()->put('locale', $request->session()->get('locale', Config::get('app.locale')));
+        $locale = $request->session()->get('locale') ?: $request->cookie('locale', Config::get('app.locale'));
+        $request->session()->put('locale', $locale);
 
-        return redirect()->route('login');
+        return redirect()
+            ->route('login')
+            ->withCookie(cookie('locale', $locale, 60 * 24 * 365));
     }
 }
 

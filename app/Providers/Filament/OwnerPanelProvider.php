@@ -8,6 +8,7 @@ use App\Filament\Owner\Resources\FieldResource;
 use App\Filament\Owner\Resources\TimeSlotResource;
 use App\Filament\Resources\AppNotificationResource;
 use App\Filament\Resources\BookingResource;
+use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -56,10 +57,15 @@ class OwnerPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_FOOTER,
                 fn (): \Illuminate\Contracts\View\View => view('filament.owner.components.sidebar-footer'),
             )
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_END,
+                fn (): \Illuminate\Contracts\View\View => view('filament.components.locale-switcher'),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                SetLocale::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,

@@ -43,7 +43,9 @@ class AuthController extends Controller
             $request->session()->regenerateToken();
             $request->session()->put('locale', $locale);
 
-            return to_route('login')->withErrors([
+            return to_route('login')
+                ->withCookie(cookie('locale', $locale, 60 * 24 * 365))
+                ->withErrors([
                 'email' => $user->isRejected()
                     ? __('Your field owner account request was rejected. Please contact the admin if you need more information.')
                     : __('Your account is not active yet. Please wait for admin approval.'),
@@ -106,6 +108,8 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         $request->session()->put('locale', $locale);
 
-        return to_route('home')->with('status', __('You have been logged out.'));
+        return to_route('home')
+            ->withCookie(cookie('locale', $locale, 60 * 24 * 365))
+            ->with('status', __('You have been logged out.'));
     }
 }

@@ -11,14 +11,13 @@ use App\Http\Controllers\PublicMatchController;
 use App\Http\Controllers\UserActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Cookie;
 
 Route::get('/locale/{locale}', function (Request $request, string $locale) {
     abort_unless(in_array($locale, config('app.supported_locales', ['en', 'id']), true), 404);
 
     $request->session()->put('locale', $locale);
 
-    return redirect()->back();
+    return redirect()->back()->withCookie(cookie('locale', $locale, 60 * 24 * 365));
 })->name('locale.switch');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
