@@ -247,7 +247,7 @@ This project is currently in active development as part of PBL II.
 | Phase 1 | Foundation — migrations, models, seeders, auth | ✅ Done |
 | Phase 2 | Core booking — search, book field, payments, scheduler | ✅ Done |
 | Phase 3 | Match & admin — public matches, Filament admin panel | ✅ Done |
-| Phase 4 | Polish — notifications, audit logs, testing, UI | 🟡 In progress |
+| Phase 4 | Polish — notifications, audit logs, testing, UI | ✅ Done |
 
 ---
 
