@@ -1,3 +1,16 @@
+FROM php:8.2-cli-bookworm AS vendor
+
+WORKDIR /var/www/html
+
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends git unzip libicu-dev libzip-dev
+RUN docker-php-ext-install intl pdo_mysql zip bcmath
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
 FROM node:22-bookworm AS assets
 
 WORKDIR /app
@@ -5,6 +18,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
+COPY --from=vendor /var/www/html/vendor ./vendor
 COPY resources ./resources
 COPY public ./public
 COPY vite.config.js ./
@@ -20,11 +34,8 @@ RUN docker-php-ext-install intl pdo_mysql zip bcmath
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-
 COPY . .
+COPY --from=vendor /var/www/html/vendor ./vendor
 COPY --from=assets /app/public/build ./public/build
 
 RUN composer dump-autoload --optimize \
