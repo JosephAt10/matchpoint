@@ -40,11 +40,18 @@ COPY --from=assets /app/public/build ./public/build
 
 RUN composer dump-autoload --optimize \
     && php artisan package:discover --ansi \
+    && mkdir -p storage/app/public/fields \
+    && cp public/landing/futsal-court.png storage/app/public/fields/gor-pertamina-futsal.png \
+    && cp public/landing/badminton-court.png storage/app/public/fields/arena-badminton-mawar.png \
+    && cp public/landing/football-stadium.jpg storage/app/public/fields/desi-stadium.jpg \
+    && cp public/landing/basketball-court.jpg storage/app/public/fields/lapangan-basket-kota.jpg \
+    && cp public/landing/tennis-court.png storage/app/public/fields/tennis-club-merdeka.png \
+    && cp public/landing/volleyball-court.png storage/app/public/fields/volly-arena-malang.png \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan storage:link \
+CMD php artisan storage:link --force \
     && php artisan migrate --force \
     && php artisan config:cache \
     && php artisan view:cache \
