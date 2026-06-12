@@ -32,6 +32,7 @@ WORKDIR /var/www/html
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends git unzip libicu-dev libzip-dev
 RUN docker-php-ext-install intl pdo_mysql zip bcmath
+RUN printf "file_uploads=On\nupload_max_filesize=10M\npost_max_size=12M\nmemory_limit=256M\n" > /usr/local/etc/php/conf.d/matchpoint-uploads.ini
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
